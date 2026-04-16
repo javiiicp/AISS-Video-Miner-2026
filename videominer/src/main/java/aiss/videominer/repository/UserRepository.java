@@ -9,6 +9,5 @@ import aiss.videominer.model.User;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, String> {
-    // Este método para filtrar por nombre (ignora mayúsculas/minúsculas)
     Page<User> findByNameContainingIgnoreCase(String name, Pageable pageable);
 }
