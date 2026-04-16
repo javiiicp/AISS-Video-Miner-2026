@@ -1,12 +1,14 @@
 package aiss.videominer.controller;
 
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.RequestMapping;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
-import org.springframework.http.HttpStatus;
 
 import aiss.videominer.model.Video;
 import aiss.videominer.repository.VideoRepository;
@@ -21,8 +23,13 @@ public class VideoController {
         this.videoRepository = videoRepository;
     }
 
+     @GetMapping
+    public List<Video> findAll() {
+        return videoRepository.findAll();
+    }
+
     @GetMapping("/{id}")
-    public Video getVideoById(@PathVariable String id) {
+    public Video findOne(@PathVariable String id) {
     Video video = videoRepository.findOneById(id);
     if (video == null) {
         throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Video no encontrado");
