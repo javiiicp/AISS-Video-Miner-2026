@@ -1,9 +1,0 @@
-aiss\videominer\model\Channel.class
-aiss\videominer\model\User.class
-aiss\videominer\repository\VideoRepository.class
-aiss\videominer\model\Caption.class
-aiss\videominer\controller\UserController.class
-aiss\videominer\model\Comment.class
-aiss\videominer\repository\UserRepository.class
-aiss\videominer\model\Video.class
-aiss\videominer\VideominerApplication.class
