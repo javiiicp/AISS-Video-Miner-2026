@@ -1,8 +1,10 @@
 package aiss.videominer.repository;
 
-import org.springframework.stereotype.Repository;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.springframework.stereotype.Repository;
+
 import aiss.videominer.model.Video;
 
 @Repository
