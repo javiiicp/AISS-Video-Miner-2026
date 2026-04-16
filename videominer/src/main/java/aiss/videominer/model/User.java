@@ -28,7 +28,7 @@ public class User {
     private String picture_link;
 
     @OneToOne(mappedBy = "author") 
-    private Video videos;
+    private Video video;
 
     public String getId() {
         return id;
@@ -62,12 +62,12 @@ public class User {
         this.picture_link = picture_link;
     }
 
-    public Video getVideos() {
-        return videos;
+    public Video getVideo() {
+        return video;
     }
 
-    public void setVideos(Video videos) {
-        this.videos = videos;
+    public void setVideo(Video video) {
+        this.video = video;
     }
 
     @Override
@@ -77,7 +77,7 @@ public class User {
                 ", name='" + name + '\'' +
                 ", user_link='" + user_link + '\'' +
                 ", picture_link='" + picture_link + '\'' +
-                ", video=" + videos +
+                ", video=" + video +
                 '}';
     }
 
