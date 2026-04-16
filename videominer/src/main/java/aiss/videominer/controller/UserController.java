@@ -30,10 +30,17 @@ public class UserController {
     @Operation(summary = "Listar todos los usuarios", description = "Devuelve una lista con todos los usuarios registrados en el sistema")
     @GetMapping
     public Page<User> findAll(
+        @RequestParam(required = false) String name,
         @RequestParam(defaultValue = "0") int page,
         @RequestParam(defaultValue = "10") int size,
         @RequestParam(defaultValue = "id") String sortBy) {
+        
         Pageable paging = PageRequest.of(page, size, Sort.by(sortBy));
+        
+        if (name != null) {
+            return repository.findByNameContainingIgnoreCase(name, paging);
+        }
+        
         return repository.findAll(paging);
     }
 
