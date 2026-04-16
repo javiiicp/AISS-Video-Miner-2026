@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 /**
@@ -25,6 +26,9 @@ public class User {
 
     @JsonProperty("picture_link")
     private String picture_link;
+
+    @OneToOne(mappedBy = "author") 
+    private Video videos;
 
     public String getId() {
         return id;
@@ -58,6 +62,14 @@ public class User {
         this.picture_link = picture_link;
     }
 
+    public Video getVideos() {
+        return videos;
+    }
+
+    public void setVideos(Video videos) {
+        this.videos = videos;
+    }
+
     @Override
     public String toString() {
         return "User{" +
@@ -65,6 +77,7 @@ public class User {
                 ", name='" + name + '\'' +
                 ", user_link='" + user_link + '\'' +
                 ", picture_link='" + picture_link + '\'' +
+                ", video=" + videos +
                 '}';
     }
 
