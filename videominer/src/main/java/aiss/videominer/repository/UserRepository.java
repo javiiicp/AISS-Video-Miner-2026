@@ -1,14 +1,30 @@
 package aiss.videominer.repository;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.JpaRepository;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.stereotype.Repository;
 
 import aiss.videominer.model.User;
 
 @Repository
-public interface UserRepository extends JpaRepository<User, String> {
-    // Este método para filtrar por nombre (ignora mayúsculas/minúsculas)
-    Page<User> findByNameContainingIgnoreCase(String name, Pageable pageable);
+public class UserRepository {
+    private List<User> users = new ArrayList<>();
+
+    public List<User> findAll() {
+        return users;
+    }
+
+    public User findById(String id) {
+        return users.stream()
+                .filter(u -> u.getId().equals(id))
+                .findFirst()
+                .orElse(null);
+    }
+    
+    // Método para poder guardar usuarios que vengan de los mineros
+    public void save(User user) {
+        users.add(user);
+    }
 }
+
