@@ -1,17 +1,22 @@
 package aiss.videominer.controller;
 
-import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 import aiss.videominer.model.User;
 import aiss.videominer.repository.UserRepository;
@@ -48,7 +53,35 @@ public class UserController {
     @Operation(summary = "Obtener un usuario por ID", description = "Devuelve un usuario específico según su ID")
     @GetMapping("/{id}")
     public User findOne(@PathVariable String id) {
-        Optional<User> user = repository.findById(id);
-        return user.orElse(null);
+        return repository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario no encontrado"));
+    }
+
+    // POST http://localhost:8080/videominer/users
+    @Operation(summary = "Crear un nuevo usuario", description = "Crea un usuario manualmente en el sistema")
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public User create(@RequestBody User user) {
+        return repository.save(user);
+    }
+
+    // PUT http://localhost:8080/videominer/users/{id}
+    @Operation(summary = "Actualizar un usuario", description = "Modifica los datos de un usuario existente")
+    @PutMapping("/{id}")
+    public User update(@PathVariable String id, @RequestBody User updatedUser) {
+        updatedUser.setId(id); // Aseguramos que se actualiza el ID correcto
+        return repository.save(updatedUser);
+    }
+
+    // DELETE http://localhost:8080/videominer/users/{id}
+    @Operation(summary = "Eliminar un usuario", description = "Borra permanentemente un usuario por su ID")
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable String id) {
+        if (repository.existsById(id)) {
+            repository.deleteById(id);
+        } else {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario no encontrado");
+        }
     }
 }
