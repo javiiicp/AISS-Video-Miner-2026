@@ -1,4 +1,4 @@
-package aiss.videominer.model;
+package aiss.peertube_miner.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;

@@ -1,7 +1,8 @@
-package aiss.videominer.model;
+package aiss.peertube_miner.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 
 /**
  * @author Juan C. Alonso
@@ -20,12 +21,6 @@ public class Comment {
 
     @JsonProperty("createdOn")
     private String createdOn;
-
-    @ManyToOne(cascade = CascadeType.ALL) // Un comentario pertenece a un vídeo
-    @JoinColumn(name = "videoId") // Columna de unión en la BD
-    @NotNull(message = "El comentario debe estar asociado a un vídeo")
-    private Video video;
-
 
     public String getId() {
         return id;
@@ -51,13 +46,6 @@ public class Comment {
         this.createdOn = createdOn;
     }
 
-    public Video getVideo() {
-    return video;
-    }
-
-    public void setVideo(Video video) {
-        this.video = video;
-    }
 
     @Override
     public String toString() {
