@@ -1,6 +1,5 @@
 package aiss.videominer.controller;
 
-import java.util.function.Supplier;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -22,8 +21,11 @@ import org.springframework.web.server.ResponseStatusException;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import aiss.videominer.model.Caption;
 import aiss.videominer.model.Video;
 import aiss.videominer.repository.VideoRepository;
+import java.util.List;
+import aiss.videominer.repository.CaptionRepository;
 
 @RestController
 @RequestMapping("/videominer/videos") // Añadido /videos para mayor orden
@@ -32,6 +34,8 @@ public class VideoController {
 
     @Autowired
     VideoRepository repository;
+    @Autowired
+    CaptionRepository captionRepository;
 
     // GET http://localhost:8080/videominer/videos
     @Operation(summary = "Listar vídeos", description = "Lista vídeos con paginación, ordenación y filtro por nombre")
@@ -84,5 +88,15 @@ public class VideoController {
         } else {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Vídeo no encontrado");
         }
+    }
+
+    // GET http://localhost:8080/videominer/videos/{id}/captions
+    @Operation(summary = "Obtener subtítulos de un vídeo")
+    @GetMapping("/{id}/captions")
+    public List<Caption> getCaptionsByVideo(@PathVariable String id) {
+        // Verificar que el video existe
+        repository.findById(id)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Vídeo no encontrado"));
+        return captionRepository.findByVideoId(id);
     }
 }

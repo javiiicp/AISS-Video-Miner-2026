@@ -1,7 +1,6 @@
 package aiss.videominer.controller;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,11 +21,6 @@ public class CaptionController {
     @Autowired
     CaptionRepository captionRepository;
 
-    @Autowired
-    public CaptionController(CaptionRepository captionRepository){
-        this.captionRepository = captionRepository;
-    }
-
 
     // GET http://localhost:8080/videominer/captions
     @GetMapping
@@ -36,14 +30,10 @@ public class CaptionController {
 
     // GET http://localhost:8080/videominer/captions/{id}
     @GetMapping("/{id}")
-    public Caption findCapiontById(@PathVariable String id) throws CaptiontNotFoundException {
-        Optional<Caption> caption = captionRepository.findById(id);
-        if (!caption.isPresent()){
-            throw new CaptiontNotFoundException();
-        }
-        return caption.get();
+    public Caption findCaptionById(@PathVariable String id){
+        return captionRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Subtítulo no encontrado"));
     }
-
     // GET http://localhost:8080/videominer/captions/video/{videoId}
     @GetMapping("/video/{videoId}")
     public List<Caption> findByVideoId(@PathVariable String videoId) {
