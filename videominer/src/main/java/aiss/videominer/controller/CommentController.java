@@ -15,10 +15,15 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.media.Content;
+
 
 import aiss.videominer.model.Comment;
 import aiss.videominer.repository.CommentRepository;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
@@ -32,7 +37,17 @@ public class CommentController {
      @Autowired
 
     // GET http://localhost:8080/videominer/comments
-    @Operation(summary = "Listar todos los comentarios", description = "Devuelve una lista con todos los comentarios registrados en el sistema")
+    @Operation(
+        summary = "Listar todos los comentarios", 
+        description = "Devuelve una lista con todos los comentarios registrados en el sistema",
+        tags = { "comment", "get"}
+    )
+
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(contentSchema = Comment.class), mediaType = "application/json")}),
+        @ApiResponse(responseCode = "404", content = { @Content(schema = @Schema()) })
+    })
+
     @GetMapping
     public Page<Comment> findAll(
         @RequestParam(defaultValue = "0") int page,
