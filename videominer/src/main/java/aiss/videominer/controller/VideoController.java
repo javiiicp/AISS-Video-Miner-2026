@@ -1,7 +1,5 @@
 package aiss.videominer.controller;
 
-import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -71,9 +69,8 @@ public class VideoController {
     @Operation(summary = "Actualizar un vídeo", description = "Modifica los datos de un vídeo existente")
     @PutMapping("/{id}")
     public Video update(@PathVariable String id,@Valid @RequestBody Video updatedVideo) {
-       Optional<Video> videoData = repository.findById(id);
-
-       Video video = videoData.get();
+           Video video = repository.findById(id)
+               .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Vídeo no encontrado"));
        video.setName(updatedVideo.getName());
        video.setDescription(updatedVideo.getDescription());
        video.setAuthor(updatedVideo.getAuthor());
