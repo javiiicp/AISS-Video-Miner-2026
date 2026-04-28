@@ -3,7 +3,7 @@ package aiss.videominer.exception;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-@ResponseStatus(code = HttpStatus.NOT_FOUND, reason = "Caption didn't found")
+@ResponseStatus(code = HttpStatus.NOT_FOUND, reason = "Channel didn't found")
 public class ChannelNotFoundException extends Exception{
     
 }
