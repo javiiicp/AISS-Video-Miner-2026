@@ -1,7 +1,13 @@
 package aiss.videominer.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.persistence.*;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 
 /**
@@ -22,7 +28,7 @@ public class Comment {
     @JsonProperty("createdOn")
     private String createdOn;
 
-    @ManyToOne(cascade = CascadeType.ALL) // Un comentario pertenece a un vídeo
+    @ManyToOne() // Un comentario pertenece a un vídeo
     @JoinColumn(name = "videoId") // Columna de unión en la BD
     @NotNull(message = "El comentario debe estar asociado a un vídeo")
     private Video video;

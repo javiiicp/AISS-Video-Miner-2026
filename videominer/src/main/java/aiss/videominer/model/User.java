@@ -6,6 +6,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotEmpty;
 
 /**
  * @author Juan C. Alonso
@@ -19,6 +20,7 @@ public class User {
     private String id;
 
     @JsonProperty("name")
+    @NotEmpty(message = "El nombre del usuario no puede estar vacío")
     private String name;
 
     @JsonProperty("user_link")
