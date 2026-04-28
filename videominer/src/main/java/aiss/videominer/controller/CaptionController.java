@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
+
+import aiss.videominer.exception.CaptionNotFoundException;
 import aiss.videominer.model.Caption;
 import aiss.videominer.repository.CaptionRepository;
 
@@ -36,10 +38,10 @@ public class CaptionController {
 
     // GET http://localhost:8080/videominer/captions/{id}
     @GetMapping("/{id}")
-    public Caption findCapiontById(@PathVariable String id) throws CaptiontNotFoundException {
+    public Caption findCaptionById(@PathVariable String id) throws CaptionNotFoundException {
         Optional<Caption> caption = captionRepository.findById(id);
         if (!caption.isPresent()){
-            throw new CaptiontNotFoundException();
+            throw new CaptionNotFoundException();
         }
         return caption.get();
     }
