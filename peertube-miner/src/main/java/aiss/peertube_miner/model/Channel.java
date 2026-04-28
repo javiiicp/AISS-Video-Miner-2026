@@ -1,41 +1,29 @@
 package aiss.peertube_miner.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.persistence.*;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
-
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * @author Juan C. Alonso
- */
-@Entity
-@Table(name = "Channel")
 public class Channel {
 
-    @Id
     @JsonProperty("id")
     private String id;
 
     @JsonProperty("name")
-    @NotEmpty(message = "Channel name cannot be empty")
     private String name;
 
     @JsonProperty("description")
-    @Column(columnDefinition="TEXT")
     private String description;
 
     @JsonProperty("createdTime")
-    @NotEmpty(message = "Channel creation time cannot be empty")
     private String createdTime;
 
     @JsonProperty("videos")
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "channelId")
-    @NotNull(message = "Channel videos cannot be null")
     private List<Video> videos;
+
+    public Channel() {
+        this.videos = new ArrayList<>();
+    }
 
     public Channel() {
         this.videos = new ArrayList<>();

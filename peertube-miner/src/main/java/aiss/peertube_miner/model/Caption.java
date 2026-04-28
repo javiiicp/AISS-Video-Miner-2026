@@ -1,18 +1,9 @@
 package aiss.peertube_miner.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
 
-/**
- * @author Juan C. Alonso
- */
-@Entity
-@Table(name = "Caption")
 public class Caption {
 
-    @Id
     @JsonProperty("id")
     private String id;
 

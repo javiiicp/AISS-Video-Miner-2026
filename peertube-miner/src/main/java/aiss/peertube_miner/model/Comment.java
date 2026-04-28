@@ -4,14 +4,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 
-/**
- * @author Juan C. Alonso
- */
-@Entity
-@Table(name = "Comment")
 public class Comment {
 
-    @Id
     @JsonProperty("id")
     private String id;
 
@@ -45,7 +39,6 @@ public class Comment {
     public void setCreatedOn(String createdOn) {
         this.createdOn = createdOn;
     }
-
 
     @Override
     public String toString() {
