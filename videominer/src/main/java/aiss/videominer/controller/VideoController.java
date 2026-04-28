@@ -1,5 +1,7 @@
 package aiss.videominer.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -18,7 +20,9 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
+import aiss.videominer.model.Caption;
 import aiss.videominer.model.Video;
+import aiss.videominer.repository.CaptionRepository;
 import aiss.videominer.repository.VideoRepository;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -96,12 +100,18 @@ public class VideoController {
     }
 
     // GET http://localhost:8080/videominer/videos/{id}/captions
-    @Operation(summary = "Obtener subtítulos de un vídeo")
     @GetMapping("/{id}/captions")
-    public List<Caption> getCaptionsByVideo(@PathVariable String id) {
-        // Verificar que el video existe
+    @Operation(summary = "Obtener subtítulos de un vídeo con paginación")
+    public Page<Caption> getCaptionsByVideo(
+            @PathVariable String id,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "id") String sortBy) {
+        
         repository.findById(id)
             .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Vídeo no encontrado"));
-        return captionRepository.findByVideoId(id);
+        
+        Pageable paging = PageRequest.of(page, size, Sort.by(sortBy));
+        return captionRepository.findByVideo_Id(id, paging);
     }
 }
