@@ -17,7 +17,7 @@ public class VideoMinerService {
 
     //POST:
     public Channel saveChannel(Channel channel) {
-        // Enviamos el objeto y recibimos el objeto creado (igual que tu createObject)
+        // Enviamos el objeto y recibimos el objeto creado 
         return restTemplate.postForObject(uri, channel, Channel.class);
     }
 }
