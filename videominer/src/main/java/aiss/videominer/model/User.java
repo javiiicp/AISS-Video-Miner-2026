@@ -1,5 +1,6 @@
 package aiss.videominer.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import jakarta.persistence.Entity;
@@ -29,6 +30,7 @@ public class User {
     @JsonProperty("picture_link")
     private String picture_link;
 
+    @JsonIgnore
     @OneToOne(mappedBy = "author") 
     private Video video;
 
