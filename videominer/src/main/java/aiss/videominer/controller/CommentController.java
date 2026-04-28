@@ -2,7 +2,6 @@ package aiss.videominer.controller;
 
 
 
-import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,11 +9,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 import aiss.videominer.model.Comment;
 import aiss.videominer.repository.CommentRepository;
@@ -29,10 +30,9 @@ public class CommentController {
     @Autowired
     CommentRepository commentRepository;
 
-     @Autowired
-
     // GET http://localhost:8080/videominer/comments
     @Operation(summary = "Listar todos los comentarios", description = "Devuelve una lista con todos los comentarios registrados en el sistema")
+
     @GetMapping
     public Page<Comment> findAll(
         @RequestParam(defaultValue = "0") int page,
@@ -47,13 +47,18 @@ public class CommentController {
     @GetMapping("/{id}")
     public Comment findOne(@PathVariable String id) {
         Optional<Comment> comment = commentRepository.findById(id);
-        return comment.orElse(null);
+        return comment.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Comentario no encontrado"));
     }
     // GET http://localhost:8080/videominer/comments/video/{videoId}
     @Operation(summary = "Obtener comentarios dado un vídeo", description = "Devuelve los comentarios asociados a un vídeo concreto")
     @GetMapping("/video/{videoId}")
-    public List<Comment> findByVideoId(@PathVariable String videoId) {
-    return commentRepository.findByVideoId(videoId);
-}
+    public Page<Comment> findByVideoId(
+            @PathVariable String videoId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "id") String sortBy) {
+        Pageable paging = PageRequest.of(page, size, Sort.by(sortBy));
+        return commentRepository.findByVideo_Id(videoId, paging);
+    }
 }
 

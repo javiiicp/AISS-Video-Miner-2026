@@ -1,11 +1,13 @@
 package aiss.videominer.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotEmpty;
 
 /**
  * @author Juan C. Alonso
@@ -19,6 +21,7 @@ public class User {
     private String id;
 
     @JsonProperty("name")
+    @NotEmpty(message = "El nombre del usuario no puede estar vacío")
     private String name;
 
     @JsonProperty("user_link")
@@ -27,6 +30,7 @@ public class User {
     @JsonProperty("picture_link")
     private String picture_link;
 
+    @JsonIgnore
     @OneToOne(mappedBy = "author") 
     private Video video;
 

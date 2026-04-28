@@ -24,7 +24,7 @@ public class PeerTubeController {
     @Autowired
     VideoMinerService videoMinerService;
 
-    // OPERACIÓN GET (Debug Mode / Prueba)
+    // OPERACIÓN GET 
     @GetMapping("/{instance}/{id}")
     public Channel getPreview(
             @PathVariable String instance,
@@ -36,7 +36,7 @@ public class PeerTubeController {
         return peerTubeService.getChannel(instance, id, maxVideos, maxComments);
     }
 
-    // OPERACIÓN POST (Minería Real)
+    // OPERACIÓN POST
     @PostMapping("/{instance}/{id}")
     @ResponseStatus(HttpStatus.CREATED)
     public void createMining(

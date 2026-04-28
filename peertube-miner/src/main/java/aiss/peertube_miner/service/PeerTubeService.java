@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import aiss.peertube_miner.model.Channel;
+import aiss.peertube_miner.model.CommentResponse;
 import aiss.peertube_miner.model.Video;
 import aiss.peertube_miner.model.VideoSearchResponse;
 
