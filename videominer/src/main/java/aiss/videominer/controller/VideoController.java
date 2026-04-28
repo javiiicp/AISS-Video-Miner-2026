@@ -1,6 +1,6 @@
 package aiss.videominer.controller;
 
-import java.util.function.Supplier;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -20,10 +20,11 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import aiss.videominer.model.Video;
 import aiss.videominer.repository.VideoRepository;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/videominer/videos") // Añadido /videos para mayor orden
@@ -62,16 +63,25 @@ public class VideoController {
     @Operation(summary = "Crear un nuevo vídeo", description = "Crea un vídeo manualmente en el sistema")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Video create(@RequestBody Video video) {
+    public Video create(@Valid @RequestBody Video video) {
         return repository.save(video);
     }
 
     // PUT http://localhost:8080/videominer/videos/{id}
     @Operation(summary = "Actualizar un vídeo", description = "Modifica los datos de un vídeo existente")
     @PutMapping("/{id}")
-    public Video update(@PathVariable String id, @RequestBody Video updatedVideo) {
-        updatedVideo.setId(id); // Aseguramos que se actualiza el ID correcto
-        return repository.save(updatedVideo);
+    public Video update(@PathVariable String id,@Valid @RequestBody Video updatedVideo) {
+       Optional<Video> videoData = repository.findById(id);
+
+       Video video = videoData.get();
+       video.setName(updatedVideo.getName());
+       video.setDescription(updatedVideo.getDescription());
+       video.setAuthor(updatedVideo.getAuthor());
+       video.setReleaseTime(updatedVideo.getReleaseTime());
+       video.setCaptions(updatedVideo.getCaptions());
+       video.setComments(updatedVideo.getComments());
+       
+       return repository.save(video);
     }
 
     // DELETE http://localhost:8080/videominer/videos/{id}
