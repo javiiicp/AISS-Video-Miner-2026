@@ -10,4 +10,8 @@ public class DailymotionMinerApplication {
 		SpringApplication.run(DailymotionMinerApplication.class, args);
 	}
 
+	@Bean
+	public RestTemplate restTemplate(RestTemplateBuilder builder) {
+    return builder.build();
+}
 }
