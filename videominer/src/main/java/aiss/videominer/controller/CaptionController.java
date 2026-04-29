@@ -1,8 +1,8 @@
 package aiss.videominer.controller;
 
 import java.util.List;
-import java.util.Optional;
 
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -29,11 +29,6 @@ public class CaptionController {
     @Autowired
     CaptionRepository captionRepository;
 
-    @Autowired
-    public CaptionController(CaptionRepository captionRepository){
-        this.captionRepository = captionRepository;
-    }
-
 
     // GET http://localhost:8080/videominer/captions
     @Operation(summary = "Listar subtítulos", description = "Devuelve una lista con todos los subtítulos registrados")
@@ -52,7 +47,6 @@ public class CaptionController {
         }
         return caption.get();
     }
-
     // GET http://localhost:8080/videominer/captions/video/{videoId}
     @Operation(summary = "Obtener subtítulos por vídeo", description = "Devuelve subtítulos asociados a un vídeo concreto")
     @GetMapping("/video/{videoId}")
