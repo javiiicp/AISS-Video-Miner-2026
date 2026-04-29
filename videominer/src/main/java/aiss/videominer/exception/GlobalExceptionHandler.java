@@ -1,4 +1,4 @@
-package aiss.Lab06.exception;
+package aiss.videominer.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
