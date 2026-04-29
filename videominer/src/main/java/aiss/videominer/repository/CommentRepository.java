@@ -9,6 +9,8 @@ import aiss.videominer.model.Comment;
 
 @Repository
 public interface CommentRepository extends JpaRepository<Comment, String> {
-
-    Page<Comment> findByVideo_Id(String videoId, Pageable pageable);
+    
+    Page<Comment> findByName(String name, Pageable pageable);
+    Page<Comment> findByVideoId(String videoId, Pageable pageable);
+    Page<Comment> findByNameContainingIgnoreCase(String name, Pageable paging);
 }
