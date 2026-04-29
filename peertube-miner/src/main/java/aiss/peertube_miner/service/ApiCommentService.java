@@ -3,7 +3,6 @@ package aiss.peertube_miner.service;
 import aiss.peertube_miner.model.external.ApiComment;
 import aiss.peertube_miner.model.external.DataComment;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import java.util.List;
 import java.util.ArrayList;
@@ -29,16 +28,5 @@ public class ApiCommentService {
         } else {
             return new ArrayList<>(); // Devolvemos lista vacía si no hay nada
         }
-    }
-
-    public Comment transform(Datum ptDatum) {
-        Comment commonComment = new Comment();
-    
-        // Mapeo de campos:
-        commonComment.setId("pt-" + ptDatum.getId()); // Añadimos prefijo para evitar colisiones
-        commonComment.setText(ptDatum.getText());
-        commonComment.setCreatedOn(ptDatum.getCreatedAt());
-    
-        return commonComment;
     }
 }
