@@ -13,7 +13,6 @@ public class Caption {
     @JsonProperty("language")
     private String language;
 
-
     public String getId() {
         return id;
     }
@@ -36,14 +35,5 @@ public class Caption {
 
     public void setLanguage(String language) {
         this.language = language;
-    }
-
-    @Override
-    public String toString() {
-        return "Caption{" +
-                "id='" + id + '\'' +
-                ", name='" + name + '\'' +
-                ", language='" + language + '\'' +
-                '}';
     }
 }

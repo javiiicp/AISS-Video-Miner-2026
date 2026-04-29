@@ -1,8 +1,9 @@
 package aiss.peertube_miner.model;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Channel {
 
@@ -20,10 +21,6 @@ public class Channel {
 
     @JsonProperty("videos")
     private List<Video> videos;
-
-    public Channel() {
-        this.videos = new ArrayList<>();
-    }
 
     public Channel() {
         this.videos = new ArrayList<>();
@@ -67,16 +64,5 @@ public class Channel {
 
     public void setVideos(List<Video> videos) {
         this.videos = videos;
-    }
-
-    @Override
-    public String toString() {
-        return "Channel{" +
-                "id='" + id + '\'' +
-                ", name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                ", createdTime='" + createdTime + '\'' +
-                ", videos=" + videos +
-                '}';
     }
 }

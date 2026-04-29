@@ -16,7 +16,8 @@ public class User {
     @JsonProperty("picture_link")
     private String picture_link;
 
-    // Getters y Setters
+    public User() {}
+
     public String getId() { 
         return id; 
         }
@@ -48,14 +49,4 @@ public class User {
     public void setPicture_link(String picture_link) { 
         this.picture_link = picture_link; 
         }
-    
-    @Override
-    public String toString() {
-        return "User{" +
-                "id='" + id + '\'' +
-                ", name='" + name + '\'' +
-                ", user_link='" + user_link + '\'' +
-                ", picture_link='" + picture_link + '\'' +
-                '}';
-    }
 }

@@ -1,8 +1,6 @@
 package aiss.peertube_miner.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 
 public class Comment {
 
@@ -10,11 +8,12 @@ public class Comment {
     private String id;
 
     @JsonProperty("text")
-    @Column(columnDefinition="TEXT")
     private String text;
 
     @JsonProperty("createdOn")
     private String createdOn;
+
+    public Comment() {}
 
     public String getId() {
         return id;
@@ -38,14 +37,5 @@ public class Comment {
 
     public void setCreatedOn(String createdOn) {
         this.createdOn = createdOn;
-    }
-
-    @Override
-    public String toString() {
-        return "Comment{" +
-                "id='" + id + '\'' +
-                ", text='" + text + '\'' +
-                ", createdOn='" + createdOn + '\'' +
-                '}';
     }
 }

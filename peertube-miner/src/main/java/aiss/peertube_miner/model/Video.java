@@ -1,7 +1,8 @@
 package aiss.peertube_miner.model;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Video {
 
@@ -25,6 +26,8 @@ public class Video {
 
     @JsonProperty("captions")
     private List<Caption> captions;
+
+    public Video() {}
 
     public String getId() {
         return id;
@@ -80,18 +83,5 @@ public class Video {
 
     public void setCaptions(List<Caption> captions) {
         this.captions = captions;
-    }
-
-    @Override
-    public String toString() {
-        return "Video{" +
-                "id='" + id + '\'' +
-                ", name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                ", releaseTime='" + releaseTime + '\'' +
-                ", author=" + author +
-                ", comments=" + comments +
-                ", captions=" + captions +
-                '}';
     }
 }
