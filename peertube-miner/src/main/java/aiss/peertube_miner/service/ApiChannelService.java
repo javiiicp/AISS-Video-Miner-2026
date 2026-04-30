@@ -29,14 +29,13 @@ public class ApiChannelService {
         String urlCanal = "https://peertube.cpy.re/api/v1/video-channels/" + channelId;
         ApiChannel resCanal = restTemplate.getForObject(urlCanal, ApiChannel.class);
         
-        if (resCanal == null || resCanal.getData().isEmpty()) return null;
+        if (resCanal == null) return null;
         
-        DataChannel ptChannel = resCanal.getData().get(0);
         Channel videominerChannel = new Channel();
-        videominerChannel.setId(ptChannel.getId().toString());
-        videominerChannel.setName(ptChannel.getDisplayName());
-        videominerChannel.setDescription(ptChannel.getDescription());
-        videominerChannel.setCreatedTime(ptChannel.getCreatedAt());
+        videominerChannel.setId(resCanal.getId().toString());
+        videominerChannel.setName(resCanal.getDisplayName());
+        videominerChannel.setDescription(resCanal.getDescription());
+        videominerChannel.setCreatedTime(resCanal.getCreatedAt());
 
         // --- PASO A: Obtener los Vídeos ---
         String urlVideos = urlCanal + "/videos?count=" + maxVideos;
