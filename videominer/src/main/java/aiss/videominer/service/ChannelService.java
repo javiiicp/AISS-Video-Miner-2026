@@ -2,10 +2,9 @@ package aiss.videominer.service;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
+import aiss.videominer.exception.ChannelNotFoundException;
 import aiss.videominer.model.Channel;
 import aiss.videominer.repository.ChannelRepository;
 
@@ -26,8 +25,7 @@ public class ChannelService {
     }
 
     public Channel findOne(String id) {
-        return repository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Canal no encontrado"));
+        return repository.findById(id).orElseThrow(ChannelNotFoundException::new);
     }
 
     public Channel create(Channel channel) {
@@ -44,10 +42,9 @@ public class ChannelService {
     }
 
     public void delete(String id) {
-        if (repository.existsById(id)) {
-            repository.deleteById(id);
-            return;
+        if (!repository.existsById(id)) {
+            throw new ChannelNotFoundException();
         }
-        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Canal no encontrado");
+        repository.deleteById(id);
     }
 }

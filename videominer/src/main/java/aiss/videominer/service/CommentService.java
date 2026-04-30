@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import aiss.videominer.exception.CommentNotFoundException;
 import aiss.videominer.model.Comment;
 import aiss.videominer.model.Video;
 import aiss.videominer.repository.CommentRepository;
@@ -31,7 +32,7 @@ public class CommentService {
 
     public Comment findOne(String id) {
         return commentRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Comentario no encontrado"));
+                .orElseThrow(CommentNotFoundException::new);
     }
 
     public Comment create(Comment comment) {
@@ -51,16 +52,15 @@ public class CommentService {
     }
 
     public void delete(String id) {
-        if (commentRepository.existsById(id)) {
-            commentRepository.deleteById(id);
-            return;
+        if (!commentRepository.existsById(id)) {
+            throw new CommentNotFoundException();
         }
-        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Comentario no encontrado");
+        commentRepository.deleteById(id);
     }
 
     public Page<Comment> findByVideo(String videoId, Pageable paging) {
         videoRepository.findById(videoId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Vídeo no encontrado"));
+            .orElseThrow(CommentNotFoundException::new);        
         return commentRepository.findByVideo_Id(videoId, paging);
     }
 
@@ -70,6 +70,6 @@ public class CommentService {
         }
 
         return videoRepository.findById(comment.getVideo().getId())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Vídeo no encontrado"));
+            .orElseThrow(CommentNotFoundException::new);    
     }
 }
