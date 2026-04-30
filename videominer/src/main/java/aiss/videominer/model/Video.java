@@ -38,7 +38,7 @@ public class Video {
     private String releaseTime;
 
     @JsonProperty("user")
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.PERSIST)
     private User author;
 
     @JsonProperty("comments")
