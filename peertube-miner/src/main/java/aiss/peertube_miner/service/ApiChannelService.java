@@ -13,7 +13,6 @@ import aiss.peertube_miner.model.Video;
 import aiss.peertube_miner.model.external.ApiChannel;
 import aiss.peertube_miner.model.external.ApiComment;
 import aiss.peertube_miner.model.external.ApiVideo;
-import aiss.peertube_miner.model.external.DataChannel;
 import aiss.peertube_miner.model.external.DataComment;
 import aiss.peertube_miner.model.external.DataVideo;
 
