@@ -3,7 +3,7 @@ package aiss.videominer.exception;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-@ResponseStatus(code = HttpStatus.NOT_FOUND, reason = "User didn't found")
+@ResponseStatus(code = HttpStatus.NOT_FOUND, reason = "Usuario no encontrado")
 public class UserNotFoundException extends RuntimeException{
     
 }

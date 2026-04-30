@@ -128,9 +128,9 @@ Formato de error (ejemplo):
 	"timestamp": "2026-04-30T12:34:56Z",
 	"status": 400,
 	"error": "Bad Request",
-	"message": "Validation error",
+	"message": "Error de validación",
 	"fieldErrors": {
-		"name": "Video name cannot be empty"
+		"name": "El nombre del vídeo no puede estar vacío"
 	}
 }
 ```

@@ -25,7 +25,7 @@ import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/videominer/channels")
-@Tag(name = "Channel Controller", description = "Operaciones para gestionar los canales")
+@Tag(name = "Controlador Canales", description = "Operaciones para gestionar los canales")
 public class ChannelController {
 
 	@Autowired

@@ -25,7 +25,7 @@ import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/videominer/comments")
-@Tag(name = "Comment Controller", description = "Operaciones para gestionar los comentarios")
+@Tag(name = "Controlador Comentarios", description = "Operaciones para gestionar los comentarios")
 public class CommentController {
 
     @Autowired

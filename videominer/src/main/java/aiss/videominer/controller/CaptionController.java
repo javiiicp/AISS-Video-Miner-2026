@@ -26,7 +26,7 @@ import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/videominer/captions")
-@Tag(name = "Caption Controller", description = "Operaciones para gestionar los subtítulos")
+@Tag(name = "Controlador Subtítulos", description = "Operaciones para gestionar los subtítulos")
 public class CaptionController {
 
     @Autowired

@@ -25,7 +25,7 @@ import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/videominer/users")
-@Tag(name = "User Controller", description = "Operaciones para gestionar los usuarios")
+@Tag(name = "Controlador Usuarios", description = "Operaciones para gestionar los usuarios")
 public class UserController {
 
     @Autowired

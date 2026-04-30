@@ -26,7 +26,7 @@ import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/videominer/videos") // Añadido /videos para mayor orden
-@Tag(name = "Video Controller", description = "Operaciones para gestionar los vídeos")
+@Tag(name = "Controlador Vídeos", description = "Operaciones para gestionar los vídeos")
 public class VideoController {
 
     @Autowired
