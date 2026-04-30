@@ -1,7 +1,5 @@
 package aiss.videominer.controller;
 
-
-
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,13 +33,20 @@ public class CommentController {
 
     @GetMapping
     public Page<Comment> findAll(
-        @RequestParam(defaultValue = "0") int page,
-        @RequestParam(defaultValue = "10") int size,
-        @RequestParam(defaultValue = "id") String sortBy) {
+            @RequestParam(required = false) String name,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "id") String sortBy) {
+
         Pageable paging = PageRequest.of(page, size, Sort.by(sortBy));
+
+        if (name != null) {
+            return commentRepository.findByNameContainingIgnoreCase(name, paging);
+        }
         return commentRepository.findAll(paging);
     }
 
+    
     // GET http://localhost:8080/videominer/comments/{id}
     @Operation(summary = "Obtener un comentario por ID", description = "Devuelve un comentario específico según su ID")
     @GetMapping("/{id}")
@@ -58,7 +63,7 @@ public class CommentController {
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "id") String sortBy) {
         Pageable paging = PageRequest.of(page, size, Sort.by(sortBy));
-        return commentRepository.findByVideo_Id(videoId, paging);
+        return commentRepository.findByVideoId(videoId, paging);
     }
 }
 
