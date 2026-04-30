@@ -1,6 +1,7 @@
 package aiss.videominer.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -29,6 +30,7 @@ public class Caption {
     @ManyToOne
     @JoinColumn(name = "videoId")
     @NotNull(message = "Caption must be associated with a video")
+    @JsonIgnoreProperties({"comments", "captions"})
     private Video video;
 
 

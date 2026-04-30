@@ -22,6 +22,7 @@ import aiss.videominer.model.User;
 import aiss.videominer.repository.UserRepository;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/videominer/users")
@@ -61,16 +62,23 @@ public class UserController {
     @Operation(summary = "Crear un nuevo usuario", description = "Crea un usuario manualmente en el sistema")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public User create(@RequestBody User user) {
+    public User create(@Valid @RequestBody User user) {
         return repository.save(user);
     }
 
     // PUT http://localhost:8080/videominer/users/{id}
     @Operation(summary = "Actualizar un usuario", description = "Modifica los datos de un usuario existente")
     @PutMapping("/{id}")
-    public User update(@PathVariable String id, @RequestBody User updatedUser) {
-        updatedUser.setId(id); // Aseguramos que se actualiza el ID correcto
-        return repository.save(updatedUser);
+    public User update(@PathVariable String id, @Valid @RequestBody User updatedUser) {
+        User user = repository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario no encontrado"));
+
+        user.setName(updatedUser.getName());
+        user.setUser_link(updatedUser.getUser_link());
+        user.setPicture_link(updatedUser.getPicture_link());
+        user.setVideos(updatedUser.getVideos());
+
+        return repository.save(user);
     }
 
     // DELETE http://localhost:8080/videominer/users/{id}
