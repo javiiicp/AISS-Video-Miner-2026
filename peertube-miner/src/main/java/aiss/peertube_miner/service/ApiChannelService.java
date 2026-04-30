@@ -25,7 +25,7 @@ public class ApiChannelService {
     public Channel getChannelFromPeerTube(String channelId, int maxVideos, int maxComments) {
 
         // --- PASO 0: Obtener el Canal (Lo que ya teníamos) ---
-        String urlCanal = "https://peertube.cpy.re/api/v1/video-channels/" + channelId;
+        String urlCanal = "https://peertube.tv/api/v1/video-channels/" + channelId;
         ApiChannel resCanal = restTemplate.getForObject(urlCanal, ApiChannel.class);
         
         if (resCanal == null) return null;
@@ -53,7 +53,7 @@ public class ApiChannelService {
                 v.setReleaseTime(ptVideo.getPublishedAt());
                 
                 // --- PASO B: Obtener los Comentarios para ESTE vídeo ---
-                String urlComments = "https://peertube.cpy.re/api/v1/videos/" + ptVideo.getId() + "/comment-threads?count=" + maxComments;
+                String urlComments = "https://peertube.tv/api/v1/videos/" + ptVideo.getId() + "/comment-threads?count=" + maxComments;
                 // ApiComment es el que pone bien el formato de comentarios
                 ApiComment resComments = restTemplate.getForObject(urlComments, ApiComment.class);
 
