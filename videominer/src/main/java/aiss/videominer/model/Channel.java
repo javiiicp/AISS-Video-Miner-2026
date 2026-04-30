@@ -20,7 +20,7 @@ public class Channel {
     private String id;
 
     @JsonProperty("name")
-    @NotEmpty(message = "Channel name cannot be empty")
+    @NotEmpty(message = "El nombre del canal no puede estar vacío")
     private String name;
 
     @JsonProperty("description")
@@ -28,13 +28,13 @@ public class Channel {
     private String description;
 
     @JsonProperty("createdTime")
-    @NotEmpty(message = "Channel creation time cannot be empty")
+    @NotEmpty(message = "La fecha de creación del canal no puede estar vacía")
     private String createdTime;
 
     @JsonProperty("videos")
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "channelId")
-    @NotNull(message = "Channel videos cannot be null")
+    @NotNull(message = "La lista de vídeos del canal no puede ser nula")
     private List<Video> videos;
 
     public Channel() {

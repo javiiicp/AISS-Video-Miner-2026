@@ -56,14 +56,6 @@ public class VideoService {
         return videoRepository.save(video);
     }
 
-    public void delete(String id) {
-        if (videoRepository.existsById(id)) {
-            videoRepository.deleteById(id);
-            return;
-        }
-        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Vídeo no encontrado");
-    }
-
     public Page<Caption> getCaptionsByVideo(String videoId, Pageable paging) {
         findOne(videoId);
         return captionRepository.findByVideo_Id(videoId, paging);

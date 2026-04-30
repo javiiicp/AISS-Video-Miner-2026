@@ -63,7 +63,7 @@ public class CaptionService {
 
     private Video resolveVideo(Caption caption) {
         if (caption.getVideo() == null || caption.getVideo().getId() == null) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Caption must reference an existing video");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "El subtítulo debe referenciar a un vídeo existente");
         }
         return videoRepository.findById(caption.getVideo().getId()).orElseThrow(VideoNotFoundException::new);
     }
