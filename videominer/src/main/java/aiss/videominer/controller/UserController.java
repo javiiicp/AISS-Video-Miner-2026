@@ -51,7 +51,7 @@ public class UserController {
         return service.findOne(id);
     }
 
-    // POST http://localhost:8080/videominer/users.orElseThrow(UserNotFoundException::new).orElseThrow(UserNotFoundException::new)
+    // POST http://localhost:8080/videominer/users
     @Operation(summary = "Crear un nuevo usuario", description = "Crea un usuario manualmente en el sistema")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
