@@ -16,10 +16,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.server.ResponseStatusException;
 
 import aiss.videominer.model.Channel;
-import aiss.videominer.repository.ChannelRepository;
+import aiss.videominer.service.ChannelService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -30,7 +29,7 @@ import jakarta.validation.Valid;
 public class ChannelController {
 
 	@Autowired
-	ChannelRepository repository;
+	ChannelService service;
 
 	// GET http://localhost:8080/videominer/channels
 	@Operation(summary = "Listar canales", description = "Lista canales con paginación, ordenación y filtro por nombre")
@@ -42,20 +41,14 @@ public class ChannelController {
 			@RequestParam(defaultValue = "id") String sortBy) {
 
 		Pageable paging = PageRequest.of(page, size, Sort.by(sortBy));
-
-		if (name != null) {
-			return repository.findByNameContainingIgnoreCase(name, paging);
-		}
-
-		return repository.findAll(paging);
+		return service.findAll(name, paging);
 	}
 
 	// GET http://localhost:8080/videominer/channels/{id}
 	@Operation(summary = "Obtener un canal por ID")
 	@GetMapping("/{id}")
 	public Channel findOne(@PathVariable String id) {
-		return repository.findById(id)
-				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Canal no encontrado"));
+		return service.findOne(id);
 	}
 
 	// POST http://localhost:8080/videominer/channels
@@ -63,22 +56,14 @@ public class ChannelController {
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	public Channel create(@Valid @RequestBody Channel channel) {
-		return repository.save(channel);
+		return service.create(channel);
 	}
 
 	// PUT http://localhost:8080/videominer/channels/{id}
 	@Operation(summary = "Actualizar un canal", description = "Modifica los datos de un canal existente")
 	@PutMapping("/{id}")
 	public Channel update(@PathVariable String id, @Valid @RequestBody Channel updatedChannel) {
-		Channel channel = repository.findById(id)
-				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Canal no encontrado"));
-
-		channel.setName(updatedChannel.getName());
-		channel.setDescription(updatedChannel.getDescription());
-		channel.setCreatedTime(updatedChannel.getCreatedTime());
-		channel.setVideos(updatedChannel.getVideos());
-
-		return repository.save(channel);
+		return service.update(id, updatedChannel);
 	}
 
 	// DELETE http://localhost:8080/videominer/channels/{id}
@@ -86,10 +71,6 @@ public class ChannelController {
 	@DeleteMapping("/{id}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void delete(@PathVariable String id) {
-		if (repository.existsById(id)) {
-			repository.deleteById(id);
-		} else {
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Canal no encontrado");
-		}
+		service.delete(id);
 	}
 }

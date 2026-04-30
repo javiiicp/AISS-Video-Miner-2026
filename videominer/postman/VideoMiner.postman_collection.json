@@ -1,0 +1,128 @@
+{
+  "info": {
+    "name": "VideoMiner API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": "Coleccion basica para validar endpoints principales de VideoMiner"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080"
+    }
+  ],
+  "item": [
+    {
+      "name": "Channels - Create",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/videominer/channels",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"id\": \"channel-postman-1\",\n  \"name\": \"Postman Channel\",\n  \"description\": \"Created from Postman\",\n  \"createdTime\": \"2026-04-30T10:00:00Z\",\n  \"videos\": []\n}"
+        }
+      }
+    },
+    {
+      "name": "Channels - List",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/videominer/channels?page=0&size=10"
+      }
+    },
+    {
+      "name": "Videos - Create",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/videominer/videos",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"id\": \"video-postman-1\",\n  \"name\": \"Postman Video\",\n  \"description\": \"Video created from Postman\",\n  \"releaseTime\": \"2026-04-30T11:00:00Z\",\n  \"comments\": [],\n  \"captions\": []\n}"
+        }
+      }
+    },
+    {
+      "name": "Videos - Get By Id",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/videominer/videos/video-postman-1"
+      }
+    },
+    {
+      "name": "Captions - Create",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/videominer/captions",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"id\": \"caption-postman-1\",\n  \"link\": \"https://example.com/sub.vtt\",\n  \"language\": \"es\",\n  \"video\": {\n    \"id\": \"video-postman-1\"\n  }\n}"
+        }
+      }
+    },
+    {
+      "name": "Captions - Get By Video",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/videominer/captions/video/video-postman-1?page=0&size=10"
+      }
+    },
+    {
+      "name": "Comments - Create",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/videominer/comments",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"id\": \"comment-postman-1\",\n  \"text\": \"Great video\",\n  \"createdOn\": \"2026-04-30T12:00:00Z\",\n  \"video\": {\n    \"id\": \"video-postman-1\"\n  }\n}"
+        }
+      }
+    },
+    {
+      "name": "Comments - Get By Video",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/videominer/comments/video/video-postman-1?page=0&size=10"
+      }
+    },
+    {
+      "name": "Validation - Invalid Video",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/videominer/videos",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"id\": \"invalid-video-postman\",\n  \"name\": \"\",\n  \"description\": \"Invalid payload\",\n  \"releaseTime\": \"\",\n  \"comments\": [],\n  \"captions\": []\n}"
+        }
+      }
+    }
+  ]
+}

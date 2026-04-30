@@ -16,12 +16,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.server.ResponseStatusException;
 
 import aiss.videominer.model.Caption;
 import aiss.videominer.model.Video;
-import aiss.videominer.repository.CaptionRepository;
-import aiss.videominer.repository.VideoRepository;
+import aiss.videominer.service.VideoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -32,9 +30,7 @@ import jakarta.validation.Valid;
 public class VideoController {
 
     @Autowired
-    VideoRepository repository;
-    @Autowired
-    CaptionRepository captionRepository;
+    VideoService service;
 
     // GET http://localhost:8080/videominer/videos
     @Operation(summary = "Listar vídeos", description = "Lista vídeos con paginación, ordenación y filtro por nombre")
@@ -46,19 +42,14 @@ public class VideoController {
             @RequestParam(defaultValue = "id") String sortBy) {
 
         Pageable paging = PageRequest.of(page, size, Sort.by(sortBy));
-
-        if (name != null) {
-            return repository.findByNameContainingIgnoreCase(name, paging);
-        }
-        return repository.findAll(paging);
+        return service.findAll(name, paging);
     }
 
     // GET http://localhost:8080/videominer/videos/{id}
     @Operation(summary = "Obtener un vídeo por ID")
     @GetMapping("/{id}")
     public Video findOne(@PathVariable String id) {
-        return repository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Vídeo no encontrado"));
+        return service.findOne(id);
     }
 
     // POST http://localhost:8080/videominer/videos
@@ -66,23 +57,14 @@ public class VideoController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Video create(@Valid @RequestBody Video video) {
-        return repository.save(video);
+        return service.create(video);
     }
 
     // PUT http://localhost:8080/videominer/videos/{id}
     @Operation(summary = "Actualizar un vídeo", description = "Modifica los datos de un vídeo existente")
     @PutMapping("/{id}")
     public Video update(@PathVariable String id,@Valid @RequestBody Video updatedVideo) {
-           Video video = repository.findById(id)
-               .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Vídeo no encontrado"));
-       video.setName(updatedVideo.getName());
-       video.setDescription(updatedVideo.getDescription());
-       video.setAuthor(updatedVideo.getAuthor());
-       video.setReleaseTime(updatedVideo.getReleaseTime());
-       video.setCaptions(updatedVideo.getCaptions());
-       video.setComments(updatedVideo.getComments());
-       
-       return repository.save(video);
+         return service.update(id, updatedVideo);
     }
 
     // DELETE http://localhost:8080/videominer/videos/{id}
@@ -90,11 +72,7 @@ public class VideoController {
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable String id) {
-        if (repository.existsById(id)) {
-            repository.deleteById(id);
-        } else {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Vídeo no encontrado");
-        }
+        service.delete(id);
     }
 
     // GET http://localhost:8080/videominer/videos/{id}/captions
@@ -105,11 +83,7 @@ public class VideoController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "id") String sortBy) {
-        
-        repository.findById(id)
-            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Vídeo no encontrado"));
-        
         Pageable paging = PageRequest.of(page, size, Sort.by(sortBy));
-        return captionRepository.findByVideo_Id(id, paging);
+        return service.getCaptionsByVideo(id, paging);
     }
 }

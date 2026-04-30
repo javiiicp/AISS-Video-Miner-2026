@@ -1,7 +1,5 @@
 package aiss.videominer.controller;
 
-import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -18,13 +16,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.server.ResponseStatusException;
 
-import aiss.videominer.exception.CaptionNotFoundException;
 import aiss.videominer.model.Caption;
-import aiss.videominer.model.Video;
-import aiss.videominer.repository.CaptionRepository;
-import aiss.videominer.repository.VideoRepository;
+import aiss.videominer.service.CaptionService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -36,10 +30,7 @@ import jakarta.validation.Valid;
 public class CaptionController {
 
     @Autowired
-    CaptionRepository captionRepository;
-
-    @Autowired
-    VideoRepository videoRepository;
+    CaptionService service;
 
     // GET http://localhost:8080/videominer/captions
     @Operation(summary = "Listar subtítulos", description = "Devuelve una lista paginada con todos los subtítulos registrados")
@@ -49,15 +40,14 @@ public class CaptionController {
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "id") String sortBy) {
         Pageable paging = PageRequest.of(page, size, Sort.by(sortBy));
-        return captionRepository.findAll(paging);
+        return service.findAll(paging);
     }
 
     // GET http://localhost:8080/videominer/captions/{id}
     @Operation(summary = "Obtener un subtítulo por ID", description = "Devuelve un subtítulo específico según su ID")
     @GetMapping("/{id}")
     public Caption findCaptionById(@PathVariable String id) {
-        Optional<Caption> caption = captionRepository.findById(id);
-        return caption.orElseThrow(CaptionNotFoundException::new);
+        return service.findOne(id);
     }
 
     // POST http://localhost:8080/videominer/captions
@@ -65,37 +55,14 @@ public class CaptionController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Caption create(@Valid @RequestBody Caption caption) {
-        if (caption.getVideo() == null || caption.getVideo().getId() == null) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Caption must reference an existing video");
-        }
-
-        Video video = videoRepository.findById(caption.getVideo().getId())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Vídeo no encontrado"));
-
-        caption.setVideo(video);
-        return captionRepository.save(caption);
+        return service.create(caption);
     }
 
     // PUT http://localhost:8080/videominer/captions/{id}
     @Operation(summary = "Actualizar un subtítulo", description = "Modifica un subtítulo existente")
     @PutMapping("/{id}")
     public Caption update(@PathVariable String id, @Valid @RequestBody Caption updatedCaption) {
-        Caption caption = captionRepository.findById(id)
-                .orElseThrow(CaptionNotFoundException::new);
-
-        caption.setLink(updatedCaption.getLink());
-        caption.setLanguage(updatedCaption.getLanguage());
-
-        if (updatedCaption.getVideo() == null || updatedCaption.getVideo().getId() == null) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Caption must reference an existing video");
-        }
-
-        Video video = videoRepository.findById(updatedCaption.getVideo().getId())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Vídeo no encontrado"));
-
-        caption.setVideo(video);
-        caption.setId(id);
-        return captionRepository.save(caption);
+        return service.update(id, updatedCaption);
     }
 
     // DELETE http://localhost:8080/videominer/captions/{id}
@@ -103,11 +70,7 @@ public class CaptionController {
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable String id) {
-        if (captionRepository.existsById(id)) {
-            captionRepository.deleteById(id);
-        } else {
-            throw new CaptionNotFoundException();
-        }
+        service.delete(id);
     }
 
     // GET http://localhost:8080/videominer/captions/video/{videoId}
@@ -119,8 +82,6 @@ public class CaptionController {
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "id") String sortBy) {
         Pageable paging = PageRequest.of(page, size, Sort.by(sortBy));
-        videoRepository.findById(videoId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Vídeo no encontrado"));
-        return captionRepository.findByVideo_Id(videoId, paging);
+        return service.findByVideo(videoId, paging);
     }
 }

@@ -16,10 +16,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.server.ResponseStatusException;
 
 import aiss.videominer.model.User;
-import aiss.videominer.repository.UserRepository;
+import aiss.videominer.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -30,7 +29,7 @@ import jakarta.validation.Valid;
 public class UserController {
 
     @Autowired
-    UserRepository repository;
+    UserService service;
 
     // GET http://localhost:8080/videominer/users
     @Operation(summary = "Listar todos los usuarios", description = "Devuelve una lista con todos los usuarios registrados en el sistema")
@@ -42,43 +41,29 @@ public class UserController {
         @RequestParam(defaultValue = "id") String sortBy) {
         
         Pageable paging = PageRequest.of(page, size, Sort.by(sortBy));
-        
-        if (name != null) {
-            return repository.findByNameContainingIgnoreCase(name, paging);
-        }
-        
-        return repository.findAll(paging);
+        return service.findAll(name, paging);
     }
 
     // GET http://localhost:8080/videominer/users/{id}
     @Operation(summary = "Obtener un usuario por ID", description = "Devuelve un usuario específico según su ID")
     @GetMapping("/{id}")
     public User findOne(@PathVariable String id) {
-        return repository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario no encontrado"));
+        return service.findOne(id);
     }
 
-    // POST http://localhost:8080/videominer/users
+    // POST http://localhost:8080/videominer/users.orElseThrow(UserNotFoundException::new).orElseThrow(UserNotFoundException::new)
     @Operation(summary = "Crear un nuevo usuario", description = "Crea un usuario manualmente en el sistema")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public User create(@Valid @RequestBody User user) {
-        return repository.save(user);
+        return service.create(user);
     }
 
     // PUT http://localhost:8080/videominer/users/{id}
     @Operation(summary = "Actualizar un usuario", description = "Modifica los datos de un usuario existente")
     @PutMapping("/{id}")
     public User update(@PathVariable String id, @Valid @RequestBody User updatedUser) {
-        User user = repository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario no encontrado"));
-
-        user.setName(updatedUser.getName());
-        user.setUser_link(updatedUser.getUser_link());
-        user.setPicture_link(updatedUser.getPicture_link());
-        user.setVideos(updatedUser.getVideos());
-
-        return repository.save(user);
+        return service.update(id, updatedUser);
     }
 
     // DELETE http://localhost:8080/videominer/users/{id}
@@ -86,10 +71,6 @@ public class UserController {
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable String id) {
-        if (repository.existsById(id)) {
-            repository.deleteById(id);
-        } else {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario no encontrado");
-        }
+        service.delete(id);
     }
 }
