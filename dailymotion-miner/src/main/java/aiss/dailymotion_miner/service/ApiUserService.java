@@ -9,9 +9,9 @@ import aiss.dailymotion_miner.model.external.DailymotionUser;
 
 public class ApiUserService {
         @Autowired
-    private RestTemplate restTemplate;
+    private static RestTemplate restTemplate;
 
-    public User getUser(String userId) {
+    public static User getUser(String userId) {
         
         String url = "https://api.dailymotion.com/user/" + userId 
                    + "?fields=id,username,url,avatar_120_url";
