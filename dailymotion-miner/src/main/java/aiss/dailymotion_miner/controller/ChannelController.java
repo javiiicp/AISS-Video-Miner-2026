@@ -14,8 +14,8 @@ import aiss.dailymotion_miner.service.ApiChannelService;
 import aiss.dailymotion_miner.service.ApiVideoService;
 
 @RestController
-@RequestMapping("/api/playlists")
-public class PlaylistController {
+@RequestMapping("/api/channels")
+public class ChannelController {
 
     @Autowired
     private ApiChannelService channelService;
@@ -23,9 +23,9 @@ public class PlaylistController {
     @Autowired
     private ApiVideoService videoService;
 
-    // GET http://localhost:8080/api/playlists/{id}
+    // GET http://localhost:8080/api/channels/{id}
     @GetMapping("/{id}")
-    public Channel getPlaylist(@PathVariable String id) {
+    public Channel getChannel(@PathVariable String id) {
         Channel channel = channelService.getChannel(id);
         
         if (channel != null) {

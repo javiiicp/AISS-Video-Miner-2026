@@ -3,8 +3,10 @@ package aiss.dailymotion_miner.mapper;
 import java.util.ArrayList;
 
 import aiss.dailymotion_miner.model.Channel;
+import aiss.dailymotion_miner.model.User;
 import aiss.dailymotion_miner.model.Video;
 import aiss.dailymotion_miner.model.external.DailymotionPlaylist;
+import aiss.dailymotion_miner.model.external.DailymotionUser;
 import aiss.dailymotion_miner.model.external.DailymotionVideo;
 
 public class DailymotionMapper {
@@ -15,10 +17,7 @@ public class DailymotionMapper {
         channel.setId(external.getId());
         channel.setName(external.getName());
         channel.setDescription(external.getDescription());
-        
-        if (external.getCreatedTime() != null) {
-            channel.setCreatedTime(external.getCreatedTime().toString());
-        }
+        channel.setCreatedTime(external.getCreatedTime() != null ? external.getCreatedTime().toString() : null);
         
         channel.setVideos(new ArrayList<>());
         
@@ -30,11 +29,26 @@ public class DailymotionMapper {
         
         video.setId(external.getId());
         video.setName(external.getTitle()); 
-        
+        video.setDescription(external.getDescription());
+        video.setReleaseTime(external.getCreatedTime() != null ? external.getCreatedTime().toString() : null);
+        video.setAuthor(external.getOwner());
+        video.setComments(external.getTags() != null ? new ArrayList<>() : null); 
+        video.setCaptions(external.getSubtitle());
         if (external.getCreatedTime() != null) {
             video.setReleaseTime(external.getCreatedTime().toString());
         }
         
         return video;
+    }
+    
+    public static User toUser(DailymotionUser external) {
+        User user = new User();
+        
+        user.setId(external.getId());
+        user.setName(external.getUsername());
+        user.setUser_link(external.getUrl());
+        user.setPicture_link(external.getAvatar120Url());
+        
+        return user;
     }
 }
