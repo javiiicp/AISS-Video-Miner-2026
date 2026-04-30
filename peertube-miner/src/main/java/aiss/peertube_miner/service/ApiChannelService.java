@@ -50,7 +50,7 @@ public class ApiChannelService {
                 // Convertimos el vídeo de PeerTube al de VideoMiner
                 Video v = new Video();
                 v.setId(String.valueOf(ptVideo.getId())); // 
-                v.setName(v.getName());
+                v.setName(ptVideo.getName());
                 v.setDescription(ptVideo.getTruncatedDescription());
                 v.setReleaseTime(ptVideo.getPublishedAt());
                 
