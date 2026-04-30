@@ -1,11 +1,13 @@
 package aiss.videominer.model;
 
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotEmpty;
 
@@ -31,8 +33,8 @@ public class User {
     private String picture_link;
 
     @JsonIgnore
-    @OneToOne(mappedBy = "author") 
-    private Video video;
+    @OneToMany(mappedBy = "author") 
+    private List<Video> videos;
 
     public String getId() {
         return id;
@@ -66,12 +68,12 @@ public class User {
         this.picture_link = picture_link;
     }
 
-    public Video getVideo() {
-        return video;
+    public List<Video> getVideos() {
+        return videos;
     }
 
-    public void setVideo(Video video) {
-        this.video = video;
+    public void setVideos(List<Video> videos) {
+        this.videos = videos;
     }
 
     @Override
@@ -81,7 +83,7 @@ public class User {
                 ", name='" + name + '\'' +
                 ", user_link='" + user_link + '\'' +
                 ", picture_link='" + picture_link + '\'' +
-                ", video=" + video +
+                ", videos=" + videos +
                 '}';
     }
 

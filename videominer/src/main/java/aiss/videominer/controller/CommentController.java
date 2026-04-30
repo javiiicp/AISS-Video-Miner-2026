@@ -33,15 +33,15 @@ public class CommentController {
 
     @GetMapping
     public Page<Comment> findAll(
-            @RequestParam(required = false) String name,
+            @RequestParam(required = false) String text,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "id") String sortBy) {
 
         Pageable paging = PageRequest.of(page, size, Sort.by(sortBy));
 
-        if (name != null) {
-            return commentRepository.findByNameContainingIgnoreCase(name, paging);
+        if (text != null) {
+            return commentRepository.findByTextContainingIgnoreCase(text, paging);
         }
         return commentRepository.findAll(paging);
     }
