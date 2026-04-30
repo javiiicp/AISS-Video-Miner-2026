@@ -10,14 +10,14 @@ import aiss.peertube_miner.model.Channel;
 import aiss.peertube_miner.service.ApiChannelService;
 
 @RestController
-@RequestMapping("/api/playlists")
+@RequestMapping("/api/channels")
 public class ChannelController {
 
     @Autowired
     private ApiChannelService channelService;
 
 
-    // GET http://localhost:8080/api/playlists/{id}
+    // GET http://localhost:8080/api/channels/{id}
     @GetMapping("/{id}")
     public Channel getChannel(@PathVariable String id, @PathVariable Integer maxVideo, @PathVariable Integer maxComment) {
         Channel channel = channelService.getChannelFromPeerTube(id, maxVideo, maxComment);
