@@ -53,4 +53,17 @@ public class GlobalExceptionHandler {
         body.put("message", message);
         return body;
     }
+
+    @ExceptionHandler({
+    UserNotFoundException.class, 
+    VideoNotFoundException.class, 
+    CaptionNotFoundException.class, 
+    ChannelNotFoundException.class, 
+    CommentNotFoundException.class
+    })
+
+    public ResponseEntity<Map<String, Object>> handleNotFoundExceptions(RuntimeException ex) {
+        Map<String, Object> body = createBaseBody(HttpStatus.NOT_FOUND, ex.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(body);
+    }
 }
