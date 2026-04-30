@@ -19,14 +19,12 @@ public class CommentService {
     private final CommentRepository commentRepository;
     private final VideoRepository videoRepository;
 
-    // Inyección por constructor para una mejor arquitectura
     public CommentService(CommentRepository commentRepository, VideoRepository videoRepository) {
         this.commentRepository = commentRepository;
         this.videoRepository = videoRepository;
     }
 
     public Page<Comment> findAll(String text, Pageable paging) {
-        // Filtro de búsqueda robusto para el texto del comentario
         if (text != null && !text.isBlank()) {
             return commentRepository.findByTextContainingIgnoreCase(text, paging);
         }
@@ -34,13 +32,11 @@ public class CommentService {
     }
 
     public Comment findOne(String id) {
-        // Uso de la excepción personalizada de comentario
         return commentRepository.findById(id)
                 .orElseThrow(CommentNotFoundException::new);
     }
 
     public Comment create(Comment comment) {
-        // Resolvemos el vídeo antes de guardar
         Video video = resolveVideo(comment);
         comment.setVideo(video);
         return commentRepository.save(comment);
@@ -50,8 +46,7 @@ public class CommentService {
         Comment comment = findOne(id);
         comment.setText(updatedComment.getText());
         comment.setCreatedOn(updatedComment.getCreatedOn());
-        
-        // Actualizamos la relación con el vídeo si es necesario
+
         Video video = resolveVideo(updatedComment);
         comment.setVideo(video);
         comment.setId(id);
@@ -59,7 +54,6 @@ public class CommentService {
     }
 
     public void delete(String id) {
-        // Verificación de existencia con excepción propia[cite: 101]
         if (!commentRepository.existsById(id)) {
             throw new CommentNotFoundException();
         }
@@ -72,10 +66,6 @@ public class CommentService {
         return commentRepository.findByVideo_Id(videoId, paging);
     }
 
-    /**
-     * Método privado para validar que el vídeo asociado existe.
-     * Lanza VideoNotFoundException si el ID del vídeo no es válido.
-     */
     private Video resolveVideo(Comment comment) {
         if (comment.getVideo() == null || comment.getVideo().getId() == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "El comentario debe estar asociado a un vídeo existente");

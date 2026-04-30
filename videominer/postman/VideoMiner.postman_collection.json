@@ -1,8 +1,8 @@
 {
   "info": {
-    "name": "VideoMiner API",
+    "name": "API VideoMiner",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-    "description": "Coleccion basica para validar endpoints principales de VideoMiner"
+    "description": "Colección básica para validar endpoints principales de VideoMiner"
   },
   "variable": [
     {
@@ -12,7 +12,7 @@
   ],
   "item": [
     {
-      "name": "Channels - Create",
+      "name": "Canales - Crear",
       "request": {
         "method": "POST",
         "header": [
@@ -29,14 +29,14 @@
       }
     },
     {
-      "name": "Channels - List",
+      "name": "Canales - Listar",
       "request": {
         "method": "GET",
         "url": "{{baseUrl}}/videominer/channels?page=0&size=10"
       }
     },
     {
-      "name": "Videos - Create",
+      "name": "Vídeos - Crear",
       "request": {
         "method": "POST",
         "header": [
@@ -53,14 +53,14 @@
       }
     },
     {
-      "name": "Videos - Get By Id",
+      "name": "Vídeos - Obtener por ID",
       "request": {
         "method": "GET",
         "url": "{{baseUrl}}/videominer/videos/video-postman-1"
       }
     },
     {
-      "name": "Captions - Create",
+      "name": "Subtítulos - Crear",
       "request": {
         "method": "POST",
         "header": [
@@ -77,14 +77,14 @@
       }
     },
     {
-      "name": "Captions - Get By Video",
+      "name": "Subtítulos - Obtener por vídeo",
       "request": {
         "method": "GET",
         "url": "{{baseUrl}}/videominer/captions/video/video-postman-1?page=0&size=10"
       }
     },
     {
-      "name": "Comments - Create",
+      "name": "Comentarios - Crear",
       "request": {
         "method": "POST",
         "header": [
@@ -101,14 +101,14 @@
       }
     },
     {
-      "name": "Comments - Get By Video",
+      "name": "Comentarios - Obtener por vídeo",
       "request": {
         "method": "GET",
         "url": "{{baseUrl}}/videominer/comments/video/video-postman-1?page=0&size=10"
       }
     },
     {
-      "name": "Validation - Invalid Video",
+      "name": "Validación - Vídeo inválido",
       "request": {
         "method": "POST",
         "header": [

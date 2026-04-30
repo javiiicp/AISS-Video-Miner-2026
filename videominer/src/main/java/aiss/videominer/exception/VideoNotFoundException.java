@@ -3,7 +3,7 @@ package aiss.videominer.exception;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-@ResponseStatus(code = HttpStatus.NOT_FOUND, reason = "Video didn't found")
+@ResponseStatus(code = HttpStatus.NOT_FOUND, reason = "Vídeo no encontrado")
 public class VideoNotFoundException extends RuntimeException{
     
 }
