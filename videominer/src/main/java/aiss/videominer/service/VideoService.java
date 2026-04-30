@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import aiss.videominer.exception.VideoNotFoundException;
 import aiss.videominer.model.Caption;
 import aiss.videominer.model.Video;
 import aiss.videominer.repository.CaptionRepository;
@@ -30,8 +31,14 @@ public class VideoService {
     }
 
     public Video findOne(String id) {
-        return videoRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Vídeo no encontrado"));
+        return videoRepository.findById(id).orElseThrow(VideoNotFoundException::new);
+    }
+
+    public void delete(String id) {
+        if (!videoRepository.existsById(id)) {
+            throw new VideoNotFoundException();
+        }
+        videoRepository.deleteById(id);
     }
 
     public Video create(Video video) {
@@ -47,14 +54,6 @@ public class VideoService {
         video.setCaptions(updatedVideo.getCaptions());
         video.setComments(updatedVideo.getComments());
         return videoRepository.save(video);
-    }
-
-    public void delete(String id) {
-        if (videoRepository.existsById(id)) {
-            videoRepository.deleteById(id);
-            return;
-        }
-        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Vídeo no encontrado");
     }
 
     public Page<Caption> getCaptionsByVideo(String videoId, Pageable paging) {

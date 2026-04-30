@@ -18,7 +18,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, Object>> handleValidationException(MethodArgumentNotValidException ex) {
-        Map<String, Object> body = createBaseBody(HttpStatus.BAD_REQUEST, "Validation error");
+        Map<String, Object> body = createBaseBody(HttpStatus.BAD_REQUEST, "Error de validación");
         Map<String, String> fieldErrors = new HashMap<>();
 
         for (FieldError error : ex.getBindingResult().getFieldErrors()) {
@@ -41,7 +41,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Map<String, Object>> handleUnexpectedException(Exception ex) {
-        Map<String, Object> body = createBaseBody(HttpStatus.INTERNAL_SERVER_ERROR, "Unexpected server error");
+        Map<String, Object> body = createBaseBody(HttpStatus.INTERNAL_SERVER_ERROR, "Error inesperado del servidor");
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(body);
     }
 

@@ -29,7 +29,7 @@ public class Caption {
 
     @ManyToOne
     @JoinColumn(name = "videoId")
-    @NotNull(message = "Caption must be associated with a video")
+    @NotNull(message = "El subtítulo debe estar asociado a un vídeo")
     @JsonIgnoreProperties({"comments", "captions"})
     private Video video;
 

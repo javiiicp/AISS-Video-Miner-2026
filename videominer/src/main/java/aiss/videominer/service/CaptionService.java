@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import aiss.videominer.exception.CaptionNotFoundException;
+import aiss.videominer.exception.VideoNotFoundException;
 import aiss.videominer.model.Caption;
 import aiss.videominer.model.Video;
 import aiss.videominer.repository.CaptionRepository;
@@ -56,17 +57,14 @@ public class CaptionService {
     }
 
     public Page<Caption> findByVideo(String videoId, Pageable paging) {
-        videoRepository.findById(videoId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Vídeo no encontrado"));
+        videoRepository.findById(videoId).orElseThrow(VideoNotFoundException::new);
         return captionRepository.findByVideo_Id(videoId, paging);
     }
 
     private Video resolveVideo(Caption caption) {
         if (caption.getVideo() == null || caption.getVideo().getId() == null) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Caption must reference an existing video");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "El subtítulo debe referenciar a un vídeo existente");
         }
-
-        return videoRepository.findById(caption.getVideo().getId())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Vídeo no encontrado"));
+        return videoRepository.findById(caption.getVideo().getId()).orElseThrow(VideoNotFoundException::new);
     }
 }

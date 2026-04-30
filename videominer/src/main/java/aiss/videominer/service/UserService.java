@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import aiss.videominer.exception.UserNotFoundException;
 import aiss.videominer.model.User;
 import aiss.videominer.repository.UserRepository;
 
@@ -26,8 +27,7 @@ public class UserService {
     }
 
     public User findOne(String id) {
-        return repository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario no encontrado"));
+        return repository.findById(id).orElseThrow(UserNotFoundException::new);
     }
 
     public User create(User user) {
@@ -44,10 +44,9 @@ public class UserService {
     }
 
     public void delete(String id) {
-        if (repository.existsById(id)) {
-            repository.deleteById(id);
-            return;
+        if (!repository.existsById(id)) {
+            throw new UserNotFoundException();
         }
-        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario no encontrado");
+        repository.deleteById(id);
     }
 }
