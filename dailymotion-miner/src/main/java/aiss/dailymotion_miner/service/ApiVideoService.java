@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import aiss.dailymotion_miner.mapper.DailymotionMapper;
+import aiss.dailymotion_miner.model.Caption;
 import aiss.dailymotion_miner.model.User;
 import aiss.dailymotion_miner.model.Video;
 import aiss.dailymotion_miner.model.external.DailymotionVideoSearch;
@@ -25,22 +26,40 @@ public class ApiVideoService {
         return getVideos(playlistId, 10);
     }
 
-    public List<Video> getVideos(String playlistId, int maxVideos) {
-        String url = "https://api.dailymotion.com/playlist/" + playlistId 
-                   + "/videos?fields=id,title,description,created_time,tags,owner";
+public List<Video> getVideos(String playlistId, int maxVideos) {
+    String url = "https://api.dailymotion.com/playlist/" + playlistId 
+               + "/videos?fields=id,title,description,created_time,tags,owner,subtitles";
 
-        DailymotionVideoSearch response = restTemplate.getForObject(url, DailymotionVideoSearch.class);
+    DailymotionVideoSearch response = restTemplate.getForObject(url, DailymotionVideoSearch.class);
 
-        if (response != null && response.getList() != null) {
-            return response.getList().stream()
-            .limit(maxVideos)
-            .map(externalVideo -> {
-                String ownerId = externalVideo.getOwner(); 
-                User user = userService.getUser(ownerId);
-                return DailymotionMapper.toVideo(externalVideo, user);
-            })
-            .toList();
-}
-        return new ArrayList<>();
+    if (response != null && response.getList() != null) {
+        return response.getList().stream()
+        .limit(maxVideos)
+        .map(externalVideo -> {
+            String ownerId = externalVideo.getOwner(); 
+            User user = userService.getUser(ownerId);
+            Video video = DailymotionMapper.toVideo(externalVideo, user);
+            // NUEVO: Extraer captions de los subtítulos
+            if (externalVideo.getSubtitles() != null) {
+                video.setCaptions(mapSubtitles(externalVideo.getSubtitles()));
+            }
+            return video;
+        })
+        .toList();
     }
+    return new ArrayList<>();
+}
+
+
+private List<Caption> mapSubtitles(List<Object> subtitles) {
+    List<Caption> captions = new ArrayList<>();
+    
+    if (subtitles != null) {
+        for (Object subtitle : subtitles) {
+            //TODO (Tengo que converitr el Dailymotion a caption)
+        }
+    }
+    
+    return captions;
+}
 }

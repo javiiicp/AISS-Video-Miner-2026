@@ -96,7 +96,7 @@ return owner;
 public void setOwner(String owner) {
 this.owner = owner;
 }
-
+/*/
 @JsonProperty("subtitle")
 public String getSubtitle() {
 return subtitle;
@@ -105,6 +105,20 @@ return subtitle;
 @JsonProperty("subtitle")
 public void setSubtitle(String subtitle) {
 this.subtitle = subtitle;
+}*/ 
+//Creo que esto ya no es necesario, pero aun nolo borro por si acaso
+
+@JsonProperty("subtitles")
+private List<Object> subtitles;
+
+@JsonProperty("subtitles")
+public List<Object> getSubtitles() {
+    return subtitles;
+}
+
+@JsonProperty("subtitles")
+public void setSubtitles(List<Object> subtitles) {
+    this.subtitles = subtitles;
 }
 
 @Override
