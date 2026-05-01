@@ -36,6 +36,7 @@ public class DailymotionMapper {
         video.setAuthor(user);
         video.setReleaseTime(external.getCreatedTime() != null ? external.getCreatedTime().toString() : null);
         video.setComments(external.getTags() != null ? new ArrayList<>() : null); 
+        video.setCaptions(new ArrayList<>());
         if (external.getCreatedTime() != null) {
             video.setReleaseTime(external.getCreatedTime().toString());
         }
