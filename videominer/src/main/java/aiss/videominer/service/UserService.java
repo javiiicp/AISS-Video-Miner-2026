@@ -32,6 +32,15 @@ public class UserService {
         return repository.save(user);
     }
 
+    public User findOrCreate(User user) {
+        if (user == null || user.getId() == null || user.getId().isBlank()) {
+            return user;
+        }
+
+        return repository.findById(user.getId())
+                .orElseGet(() -> repository.save(user));
+    }
+
     public User update(String id, User updatedUser) {
         User user = findOne(id);
         user.setName(updatedUser.getName());

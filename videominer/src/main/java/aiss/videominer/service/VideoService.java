@@ -3,8 +3,10 @@ package aiss.videominer.service;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
 import aiss.videominer.exception.VideoNotFoundException;
 import aiss.videominer.model.Caption;
+import aiss.videominer.model.User;
 import aiss.videominer.model.Video;
 import aiss.videominer.repository.CaptionRepository;
 import aiss.videominer.repository.VideoRepository;
@@ -14,10 +16,12 @@ public class VideoService {
 
     private final VideoRepository videoRepository;
     private final CaptionRepository captionRepository;
+    private final UserService userService;
 
-    public VideoService(VideoRepository videoRepository, CaptionRepository captionRepository) {
+    public VideoService(VideoRepository videoRepository, CaptionRepository captionRepository, UserService userService) {
         this.videoRepository = videoRepository;
         this.captionRepository = captionRepository;
+        this.userService = userService;
     }
 
     public Page<Video> findAll(String name, Pageable paging) {
@@ -39,6 +43,7 @@ public class VideoService {
     }
 
     public Video create(Video video) {
+        video.setAuthor(resolveAuthor(video.getAuthor()));
         return videoRepository.save(video);
     }
 
@@ -46,7 +51,7 @@ public class VideoService {
         Video video = findOne(id);
         video.setName(updatedVideo.getName());
         video.setDescription(updatedVideo.getDescription());
-        video.setAuthor(updatedVideo.getAuthor());
+        video.setAuthor(resolveAuthor(updatedVideo.getAuthor()));
         video.setReleaseTime(updatedVideo.getReleaseTime());
         video.setCaptions(updatedVideo.getCaptions());
         video.setComments(updatedVideo.getComments());
@@ -56,5 +61,9 @@ public class VideoService {
     public Page<Caption> getCaptionsByVideo(String videoId, Pageable paging) {
         findOne(videoId);
         return captionRepository.findByVideo_Id(videoId, paging);
+    }
+
+    private User resolveAuthor(User author) {
+        return userService.findOrCreate(author);
     }
 }
