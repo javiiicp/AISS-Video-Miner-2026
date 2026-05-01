@@ -2,20 +2,15 @@ package aiss.dailymotion_miner.mapper;
 
 import java.util.ArrayList;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
 import aiss.dailymotion_miner.model.Channel;
 import aiss.dailymotion_miner.model.User;
 import aiss.dailymotion_miner.model.Video;
 import aiss.dailymotion_miner.model.external.DailymotionPlaylist;
 import aiss.dailymotion_miner.model.external.DailymotionUser;
 import aiss.dailymotion_miner.model.external.DailymotionVideo;
-import aiss.dailymotion_miner.service.ApiUserService;
 
 public class DailymotionMapper {
 
-    @Autowired
-    private ApiUserService userService;
 
     public static Channel toChannel(DailymotionPlaylist external) {
         Channel channel = new Channel();
@@ -32,13 +27,13 @@ public class DailymotionMapper {
         return channel;
     }
 
-    public static Video toVideo(DailymotionVideo external) {
+    public static Video toVideo(DailymotionVideo external, User user) {
         Video video = new Video();
         
         video.setId(external.getId());
         video.setName(external.getTitle()); 
         video.setDescription(external.getDescription());
-        video.setAuthor(ApiUserService.getUser(external.getOwner()));
+        video.setAuthor(user);
         video.setReleaseTime(external.getCreatedTime() != null ? external.getCreatedTime().toString() : null);
         video.setComments(external.getTags() != null ? new ArrayList<>() : null); 
         if (external.getCreatedTime() != null) {

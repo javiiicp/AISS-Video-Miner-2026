@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import aiss.dailymotion_miner.mapper.DailymotionMapper;
+import aiss.dailymotion_miner.model.User;
 import aiss.dailymotion_miner.model.Video;
 import aiss.dailymotion_miner.model.external.DailymotionVideoSearch;
 
@@ -17,6 +18,9 @@ public class ApiVideoService {
     @Autowired
     private RestTemplate restTemplate;
 
+    @Autowired
+    private ApiUserService userService;
+
     public List<Video> getVideos(String playlistId) {
         String url = "https://api.dailymotion.com/playlist/" + playlistId 
                    + "/videos?fields=id,title,description,created_time,tags,owner";
@@ -25,9 +29,13 @@ public class ApiVideoService {
 
         if (response != null && response.getList() != null) {
             return response.getList().stream()
-                    .map(DailymotionMapper::toVideo)
-                    .toList();
-        }
+            .map(externalVideo -> {
+                String ownerId = externalVideo.getOwner(); 
+                User user = userService.getUser(ownerId);
+                return DailymotionMapper.toVideo(externalVideo, user);
+            })
+            .toList();
+}
         return new ArrayList<>();
     }
 }
