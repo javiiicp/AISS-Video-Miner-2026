@@ -3,6 +3,7 @@ package aiss.videominer.service;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import aiss.videominer.exception.ChannelNotFoundException;
 import aiss.videominer.model.Channel;
@@ -10,6 +11,7 @@ import aiss.videominer.model.Video;
 import aiss.videominer.repository.ChannelRepository;
 
 @Service
+@Transactional
 public class ChannelService {
 
     private final ChannelRepository repository;

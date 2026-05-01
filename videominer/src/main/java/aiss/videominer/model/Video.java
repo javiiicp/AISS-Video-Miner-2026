@@ -37,7 +37,7 @@ public class Video {
     @NotEmpty(message = "La fecha de publicación no puede estar vacía")
     private String releaseTime;
 
-    @JsonProperty("user")
+    @JsonProperty("author")
     @ManyToOne(cascade = CascadeType.PERSIST)
     private User author;
 

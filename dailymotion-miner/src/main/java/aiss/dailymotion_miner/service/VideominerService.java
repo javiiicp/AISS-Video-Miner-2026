@@ -15,7 +15,7 @@ public class VideominerService {
     private RestTemplate restTemplate;
 
     
-    @Value("${VIDEOMINER_BASE_URL:http://localhost:8082}")
+    @Value("${VIDEOMINER_BASE_URL:http://localhost:8080}")
     private String videominerBaseUrl;
 
     public Channel saveChannel(Channel channel) {

@@ -3,6 +3,7 @@ package aiss.videominer.service;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import aiss.videominer.exception.VideoNotFoundException;
 import aiss.videominer.model.Caption;
@@ -12,6 +13,7 @@ import aiss.videominer.repository.CaptionRepository;
 import aiss.videominer.repository.VideoRepository;
 
 @Service
+@Transactional
 public class VideoService {
 
     private final VideoRepository videoRepository;

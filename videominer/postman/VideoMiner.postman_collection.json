@@ -1,128 +1,236 @@
 {
   "info": {
-    "name": "API VideoMiner",
+    "name": "VideoMiner - Complete API Collection",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-    "description": "Colección básica para validar endpoints principales de VideoMiner"
+    "description": "Colección COMPLETA de VideoMiner con TODOS los endpoints CRUD para Canales, Vídeos, Subtítulos, Comentarios y Usuarios"
   },
   "variable": [
     {
       "key": "baseUrl",
-      "value": "http://localhost:8080"
+      "value": "http://localhost:8080",
+      "type": "string"
     }
   ],
   "item": [
     {
-      "name": "Canales - Crear",
-      "request": {
-        "method": "POST",
-        "header": [
-          {
-            "key": "Content-Type",
-            "value": "application/json"
+      "name": "CANALES (Channels) - CRUD Completo",
+      "item": [
+        {
+          "name": "POST - Crear Canal",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {"mode": "raw", "raw": "{\"id\": \"channel-demo-1\",\"name\": \"Canal Demostrativo\",\"description\": \"Canal de prueba desde Postman\",\"createdTime\": \"2026-04-30T10:00:00Z\",\"videos\": []}"},
+            "url": {
+              "raw": "{{baseUrl}}/videominer/channels",
+              "host": ["{{baseUrl}}"],
+              "path": ["videominer", "channels"]
+            }
           }
-        ],
-        "url": "{{baseUrl}}/videominer/channels",
-        "body": {
-          "mode": "raw",
-          "raw": "{\n  \"id\": \"channel-postman-1\",\n  \"name\": \"Postman Channel\",\n  \"description\": \"Created from Postman\",\n  \"createdTime\": \"2026-04-30T10:00:00Z\",\n  \"videos\": []\n}"
-        }
-      }
-    },
-    {
-      "name": "Canales - Listar",
-      "request": {
-        "method": "GET",
-        "url": "{{baseUrl}}/videominer/channels?page=0&size=10"
-      }
-    },
-    {
-      "name": "Vídeos - Crear",
-      "request": {
-        "method": "POST",
-        "header": [
-          {
-            "key": "Content-Type",
-            "value": "application/json"
+        },
+        {
+          "name": "GET - Listar Canales con paginación",
+          "request": {"method": "GET","url": {"raw": "{{baseUrl}}/videominer/channels?page=0&size=10&sortBy=id","host": ["{{baseUrl}}"],"path": ["videominer", "channels"],"query": [{"key": "page", "value": "0"},{"key": "size", "value": "10"},{"key": "sortBy", "value": "id"}]}}
+        },
+        {
+          "name": "GET - Buscar Canales por nombre",
+          "request": {"method": "GET","url": {"raw": "{{baseUrl}}/videominer/channels?name=demo&page=0&size=10","host": ["{{baseUrl}}"],"path": ["videominer", "channels"],"query": [{"key": "name", "value": "demo"},{"key": "page", "value": "0"},{"key": "size", "value": "10"}]}}
+        },
+        {
+          "name": "GET - Obtener Canal por ID",
+          "request": {"method": "GET","url": {"raw": "{{baseUrl}}/videominer/channels/channel-demo-1","host": ["{{baseUrl}}"],"path": ["videominer", "channels", "channel-demo-1"]}}
+        },
+        {
+          "name": "PUT - Actualizar Canal",
+          "request": {
+            "method": "PUT",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {"mode": "raw", "raw": "{\"id\": \"channel-demo-1\",\"name\": \"Canal Actualizado\",\"description\": \"Descripción actualizada\",\"createdTime\": \"2026-04-30T10:00:00Z\",\"videos\": []}"},
+            "url": {"raw": "{{baseUrl}}/videominer/channels/channel-demo-1","host": ["{{baseUrl}}"],"path": ["videominer", "channels", "channel-demo-1"]}
           }
-        ],
-        "url": "{{baseUrl}}/videominer/videos",
-        "body": {
-          "mode": "raw",
-          "raw": "{\n  \"id\": \"video-postman-1\",\n  \"name\": \"Postman Video\",\n  \"description\": \"Video created from Postman\",\n  \"releaseTime\": \"2026-04-30T11:00:00Z\",\n  \"comments\": [],\n  \"captions\": []\n}"
+        },
+        {
+          "name": "DELETE - Eliminar Canal",
+          "request": {"method": "DELETE","url": {"raw": "{{baseUrl}}/videominer/channels/channel-demo-1","host": ["{{baseUrl}}"],"path": ["videominer", "channels", "channel-demo-1"]}}
         }
-      }
+      ]
     },
     {
-      "name": "Vídeos - Obtener por ID",
-      "request": {
-        "method": "GET",
-        "url": "{{baseUrl}}/videominer/videos/video-postman-1"
-      }
-    },
-    {
-      "name": "Subtítulos - Crear",
-      "request": {
-        "method": "POST",
-        "header": [
-          {
-            "key": "Content-Type",
-            "value": "application/json"
+      "name": "VÍDEOS (Videos) - CRUD Completo",
+      "item": [
+        {
+          "name": "POST - Crear Vídeo",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {"mode": "raw", "raw": "{\"id\": \"video-demo-1\",\"name\": \"Vídeo de Demostración\",\"description\": \"Vídeo de ejemplo desde Postman\",\"releaseTime\": \"2026-04-30T11:00:00Z\",\"author\": {\"id\": \"user-author-1\",\"name\": \"Autor Demo\"},\"comments\": [],\"captions\": []}"},
+            "url": {"raw": "{{baseUrl}}/videominer/videos","host": ["{{baseUrl}}"],"path": ["videominer", "videos"]}
           }
-        ],
-        "url": "{{baseUrl}}/videominer/captions",
-        "body": {
-          "mode": "raw",
-          "raw": "{\n  \"id\": \"caption-postman-1\",\n  \"link\": \"https://example.com/sub.vtt\",\n  \"language\": \"es\",\n  \"video\": {\n    \"id\": \"video-postman-1\"\n  }\n}"
-        }
-      }
-    },
-    {
-      "name": "Subtítulos - Obtener por vídeo",
-      "request": {
-        "method": "GET",
-        "url": "{{baseUrl}}/videominer/captions/video/video-postman-1?page=0&size=10"
-      }
-    },
-    {
-      "name": "Comentarios - Crear",
-      "request": {
-        "method": "POST",
-        "header": [
-          {
-            "key": "Content-Type",
-            "value": "application/json"
+        },
+        {
+          "name": "GET - Listar Vídeos con paginación",
+          "request": {"method": "GET","url": {"raw": "{{baseUrl}}/videominer/videos?page=0&size=10&sortBy=id","host": ["{{baseUrl}}"],"path": ["videominer", "videos"],"query": [{"key": "page", "value": "0"},{"key": "size", "value": "10"},{"key": "sortBy", "value": "id"}]}}
+        },
+        {
+          "name": "GET - Buscar Vídeos por nombre",
+          "request": {"method": "GET","url": {"raw": "{{baseUrl}}/videominer/videos?name=demo&page=0&size=10","host": ["{{baseUrl}}"],"path": ["videominer", "videos"],"query": [{"key": "name", "value": "demo"},{"key": "page", "value": "0"},{"key": "size", "value": "10"}]}}
+        },
+        {
+          "name": "GET - Obtener Vídeo por ID",
+          "request": {"method": "GET","url": {"raw": "{{baseUrl}}/videominer/videos/video-demo-1","host": ["{{baseUrl}}"],"path": ["videominer", "videos", "video-demo-1"]}}
+        },
+        {
+          "name": "GET - Obtener Subtítulos de un Vídeo",
+          "request": {"method": "GET","url": {"raw": "{{baseUrl}}/videominer/videos/video-demo-1/captions?page=0&size=10","host": ["{{baseUrl}}"],"path": ["videominer", "videos", "video-demo-1", "captions"],"query": [{"key": "page", "value": "0"},{"key": "size", "value": "10"}]}}
+        },
+        {
+          "name": "PUT - Actualizar Vídeo",
+          "request": {
+            "method": "PUT",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {"mode": "raw", "raw": "{\"id\": \"video-demo-1\",\"name\": \"Vídeo Actualizado\",\"description\": \"Descripción actualizada\",\"releaseTime\": \"2026-04-30T11:00:00Z\",\"author\": {\"id\": \"user-author-1\"},\"comments\": [],\"captions\": []}"},
+            "url": {"raw": "{{baseUrl}}/videominer/videos/video-demo-1","host": ["{{baseUrl}}"],"path": ["videominer", "videos", "video-demo-1"]}
           }
-        ],
-        "url": "{{baseUrl}}/videominer/comments",
-        "body": {
-          "mode": "raw",
-          "raw": "{\n  \"id\": \"comment-postman-1\",\n  \"text\": \"Great video\",\n  \"createdOn\": \"2026-04-30T12:00:00Z\",\n  \"video\": {\n    \"id\": \"video-postman-1\"\n  }\n}"
+        },
+        {
+          "name": "DELETE - Eliminar Vídeo",
+          "request": {"method": "DELETE","url": {"raw": "{{baseUrl}}/videominer/videos/video-demo-1","host": ["{{baseUrl}}"],"path": ["videominer", "videos", "video-demo-1"]}}
         }
-      }
+      ]
     },
     {
-      "name": "Comentarios - Obtener por vídeo",
-      "request": {
-        "method": "GET",
-        "url": "{{baseUrl}}/videominer/comments/video/video-postman-1?page=0&size=10"
-      }
-    },
-    {
-      "name": "Validación - Vídeo inválido",
-      "request": {
-        "method": "POST",
-        "header": [
-          {
-            "key": "Content-Type",
-            "value": "application/json"
+      "name": "SUBTÍTULOS (Captions) - CRUD Completo",
+      "item": [
+        {
+          "name": "POST - Crear Subtítulo",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {"mode": "raw", "raw": "{\"id\": \"caption-es-1\",\"link\": \"https://example.com/subtitles/es.vtt\",\"language\": \"es\",\"video\": {\"id\": \"video-demo-1\"}}"},
+            "url": {"raw": "{{baseUrl}}/videominer/captions","host": ["{{baseUrl}}"],"path": ["videominer", "captions"]}
           }
-        ],
-        "url": "{{baseUrl}}/videominer/videos",
-        "body": {
-          "mode": "raw",
-          "raw": "{\n  \"id\": \"invalid-video-postman\",\n  \"name\": \"\",\n  \"description\": \"Invalid payload\",\n  \"releaseTime\": \"\",\n  \"comments\": [],\n  \"captions\": []\n}"
+        },
+        {
+          "name": "GET - Listar Subtítulos",
+          "request": {"method": "GET","url": {"raw": "{{baseUrl}}/videominer/captions?page=0&size=10","host": ["{{baseUrl}}"],"path": ["videominer", "captions"],"query": [{"key": "page", "value": "0"},{"key": "size", "value": "10"}]}}
+        },
+        {
+          "name": "GET - Obtener Subtítulo por ID",
+          "request": {"method": "GET","url": {"raw": "{{baseUrl}}/videominer/captions/caption-es-1","host": ["{{baseUrl}}"],"path": ["videominer", "captions", "caption-es-1"]}}
+        },
+        {
+          "name": "GET - Obtener Subtítulos de un Vídeo",
+          "request": {"method": "GET","url": {"raw": "{{baseUrl}}/videominer/captions/video/video-demo-1?page=0&size=10","host": ["{{baseUrl}}"],"path": ["videominer", "captions", "video", "video-demo-1"],"query": [{"key": "page", "value": "0"},{"key": "size", "value": "10"}]}}
+        },
+        {
+          "name": "PUT - Actualizar Subtítulo",
+          "request": {
+            "method": "PUT",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {"mode": "raw", "raw": "{\"id\": \"caption-es-1\",\"link\": \"https://example.com/subtitles/es-updated.vtt\",\"language\": \"es-MX\",\"video\": {\"id\": \"video-demo-1\"}}"},
+            "url": {"raw": "{{baseUrl}}/videominer/captions/caption-es-1","host": ["{{baseUrl}}"],"path": ["videominer", "captions", "caption-es-1"]}
+          }
+        },
+        {
+          "name": "DELETE - Eliminar Subtítulo",
+          "request": {"method": "DELETE","url": {"raw": "{{baseUrl}}/videominer/captions/caption-es-1","host": ["{{baseUrl}}"],"path": ["videominer", "captions", "caption-es-1"]}}
         }
-      }
+      ]
+    },
+    {
+      "name": "COMENTARIOS (Comments) - CRUD Completo",
+      "item": [
+        {
+          "name": "POST - Crear Comentario",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {"mode": "raw", "raw": "{\"id\": \"comment-1\",\"text\": \"¡Excelente vídeo! Muy informativo.\",\"createdOn\": \"2026-04-30T12:00:00Z\",\"video\": {\"id\": \"video-demo-1\"}}"},
+            "url": {"raw": "{{baseUrl}}/videominer/comments","host": ["{{baseUrl}}"],"path": ["videominer", "comments"]}
+          }
+        },
+        {
+          "name": "GET - Listar Comentarios",
+          "request": {"method": "GET","url": {"raw": "{{baseUrl}}/videominer/comments?page=0&size=10","host": ["{{baseUrl}}"],"path": ["videominer", "comments"],"query": [{"key": "page", "value": "0"},{"key": "size", "value": "10"}]}}
+        },
+        {
+          "name": "GET - Buscar Comentarios por texto",
+          "request": {"method": "GET","url": {"raw": "{{baseUrl}}/videominer/comments?text=excelente&page=0&size=10","host": ["{{baseUrl}}"],"path": ["videominer", "comments"],"query": [{"key": "text", "value": "excelente"},{"key": "page", "value": "0"},{"key": "size", "value": "10"}]}}
+        },
+        {
+          "name": "GET - Obtener Comentario por ID",
+          "request": {"method": "GET","url": {"raw": "{{baseUrl}}/videominer/comments/comment-1","host": ["{{baseUrl}}"],"path": ["videominer", "comments", "comment-1"]}}
+        },
+        {
+          "name": "GET - Obtener Comentarios de un Vídeo",
+          "request": {"method": "GET","url": {"raw": "{{baseUrl}}/videominer/comments/video/video-demo-1?page=0&size=10","host": ["{{baseUrl}}"],"path": ["videominer", "comments", "video", "video-demo-1"],"query": [{"key": "page", "value": "0"},{"key": "size", "value": "10"}]}}
+        },
+        {
+          "name": "PUT - Actualizar Comentario",
+          "request": {
+            "method": "PUT",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {"mode": "raw", "raw": "{\"id\": \"comment-1\",\"text\": \"¡Excelente vídeo! Muy informativo y actualizado.\",\"createdOn\": \"2026-04-30T12:30:00Z\",\"video\": {\"id\": \"video-demo-1\"}}"},
+            "url": {"raw": "{{baseUrl}}/videominer/comments/comment-1","host": ["{{baseUrl}}"],"path": ["videominer", "comments", "comment-1"]}
+          }
+        },
+        {
+          "name": "DELETE - Eliminar Comentario",
+          "request": {"method": "DELETE","url": {"raw": "{{baseUrl}}/videominer/comments/comment-1","host": ["{{baseUrl}}"],"path": ["videominer", "comments", "comment-1"]}}
+        }
+      ]
+    },
+    {
+      "name": "USUARIOS (Users) - CRUD Completo",
+      "item": [
+        {
+          "name": "POST - Crear Usuario",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {"mode": "raw", "raw": "{\"id\": \"user-demo-1\",\"name\": \"Carlos García\",\"user_link\": \"https://example.com/users/carlos\",\"picture_link\": \"https://example.com/images/carlos.jpg\"}"},
+            "url": {"raw": "{{baseUrl}}/videominer/users","host": ["{{baseUrl}}"],"path": ["videominer", "users"]}
+          }
+        },
+        {
+          "name": "GET - Listar Usuarios",
+          "request": {"method": "GET","url": {"raw": "{{baseUrl}}/videominer/users?page=0&size=10","host": ["{{baseUrl}}"],"path": ["videominer", "users"],"query": [{"key": "page", "value": "0"},{"key": "size", "value": "10"}]}}
+        },
+        {
+          "name": "GET - Buscar Usuarios por nombre",
+          "request": {"method": "GET","url": {"raw": "{{baseUrl}}/videominer/users?name=carlos&page=0&size=10","host": ["{{baseUrl}}"],"path": ["videominer", "users"],"query": [{"key": "name", "value": "carlos"},{"key": "page", "value": "0"},{"key": "size", "value": "10"}]}}
+        },
+        {
+          "name": "GET - Obtener Usuario por ID",
+          "request": {"method": "GET","url": {"raw": "{{baseUrl}}/videominer/users/user-demo-1","host": ["{{baseUrl}}"],"path": ["videominer", "users", "user-demo-1"]}}
+        },
+        {
+          "name": "PUT - Actualizar Usuario",
+          "request": {
+            "method": "PUT",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {"mode": "raw", "raw": "{\"id\": \"user-demo-1\",\"name\": \"Carlos García Actualizado\",\"user_link\": \"https://example.com/users/carlos-new\",\"picture_link\": \"https://example.com/images/carlos-new.jpg\"}"},
+            "url": {"raw": "{{baseUrl}}/videominer/users/user-demo-1","host": ["{{baseUrl}}"],"path": ["videominer", "users", "user-demo-1"]}
+          }
+        },
+        {
+          "name": "DELETE - Eliminar Usuario",
+          "request": {"method": "DELETE","url": {"raw": "{{baseUrl}}/videominer/users/user-demo-1","host": ["{{baseUrl}}"],"path": ["videominer", "users", "user-demo-1"]}}
+        }
+      ]
+    },
+    {
+      "name": "UTILIDADES",
+      "item": [
+        {
+          "name": "Swagger UI - Documentación Interactiva",
+          "request": {"method": "GET","url": {"raw": "{{baseUrl}}/swagger-ui/index.html","host": ["{{baseUrl}}"],"path": ["swagger-ui", "index.html"]}}
+        },
+        {
+          "name": "H2 Console - Admin de Base de Datos",
+          "request": {"method": "GET","url": {"raw": "{{baseUrl}}/h2-ui","host": ["{{baseUrl}}"],"path": ["h2-ui"]}}
+        }
+      ]
     }
   ]
 }

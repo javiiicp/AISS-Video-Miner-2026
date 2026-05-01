@@ -4,6 +4,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import aiss.videominer.exception.CommentNotFoundException;
@@ -14,6 +15,7 @@ import aiss.videominer.repository.CommentRepository;
 import aiss.videominer.repository.VideoRepository;
 
 @Service
+@Transactional
 public class CommentService {
 
     private final CommentRepository commentRepository;
