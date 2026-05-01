@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import aiss.dailymotion_miner.model.Channel;
@@ -30,13 +31,16 @@ public class ChannelController {
     @Autowired
     private VideominerService videominerService;
 
-    // GET http://localhost:8080/api/channels/{id}
+    // GET http://localhost:8080/api/channels/{id}?maxVideos=10&maxComments=2
     @GetMapping("/{id}")
-    public Channel getChannel(@PathVariable String id) {
+    public Channel getChannel(
+            @PathVariable String id,
+            @RequestParam(defaultValue = "10") Integer maxVideos,
+            @RequestParam(defaultValue = "2") Integer maxComments) {
         Channel channel = channelService.getChannel(id);
         
         if (channel != null) {
-            List<Video> videos = videoService.getVideos(id);
+            List<Video> videos = videoService.getVideos(id, maxVideos);
             
             channel.setVideos(videos);
         }
@@ -44,11 +48,14 @@ public class ChannelController {
         return channel;
     }
     
-    // POST http://localhost:8080/api/channels/{id}
+    // POST http://localhost:8080/api/channels/{id}?maxVideos=10&maxComments=2
     @PostMapping("/{id}")
-    public ResponseEntity<?> saveChannelToVideoMiner(@PathVariable String id) {
+    public ResponseEntity<?> saveChannelToVideoMiner(
+            @PathVariable String id,
+            @RequestParam(defaultValue = "10") Integer maxVideos,
+            @RequestParam(defaultValue = "2") Integer maxComments) {
         Channel channel = channelService.getChannel(id);
-        List<Video> videos = videoService.getVideos(id);
+        List<Video> videos = videoService.getVideos(id, maxVideos);
         channel.setVideos(videos);
 
         try {

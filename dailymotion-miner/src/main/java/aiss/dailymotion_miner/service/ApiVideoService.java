@@ -22,6 +22,10 @@ public class ApiVideoService {
     private ApiUserService userService;
 
     public List<Video> getVideos(String playlistId) {
+        return getVideos(playlistId, 10);
+    }
+
+    public List<Video> getVideos(String playlistId, int maxVideos) {
         String url = "https://api.dailymotion.com/playlist/" + playlistId 
                    + "/videos?fields=id,title,description,created_time,tags,owner";
 
@@ -29,6 +33,7 @@ public class ApiVideoService {
 
         if (response != null && response.getList() != null) {
             return response.getList().stream()
+            .limit(maxVideos)
             .map(externalVideo -> {
                 String ownerId = externalVideo.getOwner(); 
                 User user = userService.getUser(ownerId);
