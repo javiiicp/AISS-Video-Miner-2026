@@ -1,7 +1,9 @@
 package aiss.dailymotion_miner.mapper;
 
 import java.util.ArrayList;
+import java.util.Map;
 
+import aiss.dailymotion_miner.model.Caption;
 import aiss.dailymotion_miner.model.Channel;
 import aiss.dailymotion_miner.model.User;
 import aiss.dailymotion_miner.model.Video;
@@ -54,5 +56,15 @@ public class DailymotionMapper {
         user.setPicture_link(external.getAvatar120Url());
         
         return user;
+    }
+    
+    public static Caption toCaption(Map<String, Object> subtitleMap) {
+        Caption caption = new Caption();
+        
+        caption.setId((String) subtitleMap.getOrDefault("id", ""));
+        caption.setLanguage((String) subtitleMap.getOrDefault("language", ""));
+        caption.setLink((String) subtitleMap.getOrDefault("link", ""));
+        
+        return caption;
     }
 }
