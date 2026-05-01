@@ -7,12 +7,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import aiss.peertube_miner.model.Caption;
 import aiss.peertube_miner.model.Channel;
 import aiss.peertube_miner.model.Comment;
 import aiss.peertube_miner.model.Video;
+import aiss.peertube_miner.model.external.ApiCaption;
 import aiss.peertube_miner.model.external.ApiChannel;
 import aiss.peertube_miner.model.external.ApiComment;
 import aiss.peertube_miner.model.external.ApiVideo;
+import aiss.peertube_miner.model.external.DataCaption;
 import aiss.peertube_miner.model.external.DataComment;
 import aiss.peertube_miner.model.external.DataVideo;
 
@@ -68,6 +71,27 @@ public class ApiChannelService {
                         listaCommentsLimpia.add(c);
                     }
                     v.setComments(listaCommentsLimpia);
+                }
+
+                // --- PASO C: Obtener los CAPTIONS para ESTE vídeo ---
+                String urlCaptions = "https://peertube.tv/api/v1/videos/" + ptVideo.getId() + "/captions";
+                try {
+                    ApiCaption resCaptions = restTemplate.getForObject(urlCaptions, ApiCaption.class);
+                    
+                    if (resCaptions != null && resCaptions.getData() != null) {
+                        List<Caption> listaCaptionsLimpia = new ArrayList<>();
+                        
+                        for (DataCaption ptCaption : resCaptions.getData()) {
+                            Caption caption = new Caption();
+                            caption.setId(ptCaption.getId());
+                            caption.setLanguage(ptCaption.getLanguage());
+                            caption.setName(ptCaption.getLanguage());
+                            listaCaptionsLimpia.add(caption);
+                        }
+                        v.setCaptions(listaCaptionsLimpia);
+                    }
+                } catch (Exception e) {
+                    System.out.println("Error obteniendo captions: " + e.getMessage());
                 }
 
                 listaVideosLimpia.add(v);

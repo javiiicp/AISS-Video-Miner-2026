@@ -1,5 +1,7 @@
 package aiss.peertube_miner.model.external;
 
+import java.util.List;
+
 import javax.annotation.processing.Generated;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -76,6 +78,19 @@ return account;
 @JsonProperty("account")
 public void setAccount(ApiAccount account) {
 this.account = account;
+}
+
+@JsonProperty("captions")
+private List<Object> captions;
+
+@JsonProperty("captions")
+public List<Object> getCaptions() {
+    return captions;
+}
+
+@JsonProperty("captions")
+public void setCaptions(List<Object> captions) {
+    this.captions = captions;
 }
 
 @Override

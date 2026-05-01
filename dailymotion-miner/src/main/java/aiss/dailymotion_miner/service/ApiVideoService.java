@@ -2,6 +2,7 @@ package aiss.dailymotion_miner.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -39,7 +40,6 @@ public List<Video> getVideos(String playlistId, int maxVideos) {
             String ownerId = externalVideo.getOwner(); 
             User user = userService.getUser(ownerId);
             Video video = DailymotionMapper.toVideo(externalVideo, user);
-            // NUEVO: Extraer captions de los subtítulos
             if (externalVideo.getSubtitles() != null) {
                 video.setCaptions(mapSubtitles(externalVideo.getSubtitles()));
             }
@@ -56,7 +56,20 @@ private List<Caption> mapSubtitles(List<Object> subtitles) {
     
     if (subtitles != null) {
         for (Object subtitle : subtitles) {
-            //TODO (Tengo que converitr el Dailymotion a caption)
+            try {
+                if (subtitle instanceof Map) {
+                    Map<String, Object> subtitleMap = (Map<String, Object>) subtitle;
+                    
+                    Caption caption = new Caption();
+                    caption.setId((String) subtitleMap.getOrDefault("id", ""));
+                    caption.setLanguage((String) subtitleMap.getOrDefault("language", ""));
+                    caption.setLink((String) subtitleMap.getOrDefault("link", ""));
+                    
+                    captions.add(caption);
+                }
+            } catch (Exception e) {
+                System.out.println("Error mapeando subtitle: " + e.getMessage());
+            }
         }
     }
     
