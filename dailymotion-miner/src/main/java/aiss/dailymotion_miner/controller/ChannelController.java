@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import aiss.dailymotion_miner.model.Channel;
 import aiss.dailymotion_miner.model.Video;
 import aiss.dailymotion_miner.service.ApiChannelService;
+import aiss.dailymotion_miner.service.ApiCommentService;
 import aiss.dailymotion_miner.service.ApiVideoService;
 import aiss.dailymotion_miner.service.VideominerService;
 
@@ -29,6 +30,9 @@ public class ChannelController {
     private ApiVideoService videoService;
 
     @Autowired
+    private ApiCommentService commentService;
+
+    @Autowired
     private VideominerService videominerService;
 
     // GET http://localhost:8080/api/channels/{id}?maxVideos=10&maxComments=2
@@ -41,7 +45,10 @@ public class ChannelController {
         
         if (channel != null) {
             List<Video> videos = videoService.getVideos(id, maxVideos);
-            
+            for (Video video : videos) {
+                video.setComments(commentService.getCommentsAsTags(video.getId(), maxComments));
+                video.setCaptions(video.getCaptions());
+            }
             channel.setVideos(videos);
         }
         

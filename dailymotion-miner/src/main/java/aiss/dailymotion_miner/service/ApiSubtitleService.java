@@ -10,7 +10,6 @@ import org.springframework.web.client.RestTemplate;
 
 import aiss.dailymotion_miner.mapper.DailymotionMapper;
 import aiss.dailymotion_miner.model.Caption;
-import aiss.dailymotion_miner.model.Video;
 
 @Service
 public class ApiSubtitleService {

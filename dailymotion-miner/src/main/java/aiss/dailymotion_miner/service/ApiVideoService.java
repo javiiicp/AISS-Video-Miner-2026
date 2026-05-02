@@ -29,7 +29,7 @@ public class ApiVideoService {
 
 public List<Video> getVideos(String playlistId, int maxVideos) {
     String url = "https://api.dailymotion.com/playlist/" + playlistId 
-               + "/videos?fields=id,title,description,created_time,tags,owner,subtitles";
+               + "/videos?fields=id,title,description,created_time,owner,subtitles";
 
     DailymotionVideoSearch response = restTemplate.getForObject(url, DailymotionVideoSearch.class);
 
@@ -40,9 +40,6 @@ public List<Video> getVideos(String playlistId, int maxVideos) {
             String ownerId = externalVideo.getOwner(); 
             User user = userService.getUser(ownerId);
             Video video = DailymotionMapper.toVideo(externalVideo, user);
-            if (externalVideo.getSubtitles() != null) {
-                video.setCaptions(mapSubtitles(externalVideo.getSubtitles()));
-            }
             return video;
         })
         .toList();
