@@ -1,5 +1,6 @@
 package aiss.dailymotion_miner.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,6 +49,7 @@ public class ChannelController {
             for (Video video : videos) {
                 video.setComments(commentService.getCommentsAsTags(video.getId(), maxComments));
                 //video.setCaptions(video.getCaptions());
+                video.setCaptions(new ArrayList<>());
             }
             channel.setVideos(videos);
         }

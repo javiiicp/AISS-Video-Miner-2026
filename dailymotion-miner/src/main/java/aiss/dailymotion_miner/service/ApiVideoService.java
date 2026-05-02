@@ -29,7 +29,7 @@ public class ApiVideoService {
 
 public List<Video> getVideos(String playlistId, int maxVideos) {
     String url = "https://api.dailymotion.com/playlist/" + playlistId 
-               + "/videos?fields=id,title,description,created_time,owner,subtitles";
+               + "/videos?fields=id,title,description,created_time,owner";
 
     DailymotionVideoSearch response = restTemplate.getForObject(url, DailymotionVideoSearch.class);
 
