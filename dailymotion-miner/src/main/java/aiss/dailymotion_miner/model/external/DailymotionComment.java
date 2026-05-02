@@ -8,16 +8,29 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
+"id",
 "tags",
 "created_time"
 })
 @Generated("jsonschema2pojo")
 public class DailymotionComment {
 
+@JsonProperty("id")
+private String videoId;
 @JsonProperty("tags")
 private List<String> tags;
 @JsonProperty("created_time")
 private Integer createdTime;
+
+@JsonProperty("id")
+public String getId() {
+return videoId;
+}
+
+@JsonProperty("id")
+public void setId(String videoId) {
+this.videoId = videoId;
+}
 
 @JsonProperty("tags")
 public List<String> getTags() {
@@ -43,6 +56,10 @@ this.createdTime = createdTime;
 public String toString() {
 StringBuilder sb = new StringBuilder();
 sb.append(DailymotionComment.class.getName()).append('@').append(Integer.toHexString(System.identityHashCode(this))).append('[');
+sb.append("id");
+sb.append('=');
+sb.append(((this.videoId == null)?"<null>":this.videoId));
+sb.append(',');
 sb.append("tags");
 sb.append('=');
 sb.append(((this.tags == null)?"<null>":this.tags));

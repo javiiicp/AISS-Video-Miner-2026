@@ -1,5 +1,6 @@
 package aiss.dailymotion_miner.mapper;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -8,7 +9,6 @@ import aiss.dailymotion_miner.model.Channel;
 import aiss.dailymotion_miner.model.Comment;
 import aiss.dailymotion_miner.model.User;
 import aiss.dailymotion_miner.model.Video;
-import aiss.dailymotion_miner.model.external.DailymotionComment;
 import aiss.dailymotion_miner.model.external.DailymotionPlaylist;
 import aiss.dailymotion_miner.model.external.DailymotionUser;
 import aiss.dailymotion_miner.model.external.DailymotionVideo;
@@ -70,11 +70,15 @@ public class DailymotionMapper {
         return caption;
     }
 
-    public static Comment toComment(DailymotionComment external) {
+    public static Comment toComment(String tag, String videoId, Integer i, Integer createdOn) {
+
         Comment comment = new Comment();
-        comment.setId(external.getId());
-        comment.setText(external.getText());
-        comment.setCreatedOn(external.getCreatedTime() != null ? external.getCreatedTime().toString() : null);
+
+        comment.setId(videoId + "-" + i);
+        comment.setText(tag);
+        Instant instante = Instant.ofEpochSecond(createdOn);
+        comment.setCreatedOn(instante.toString());
+
         return comment;
     }
 }
