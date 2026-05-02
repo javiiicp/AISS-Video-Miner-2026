@@ -5,8 +5,10 @@ import java.util.Map;
 
 import aiss.dailymotion_miner.model.Caption;
 import aiss.dailymotion_miner.model.Channel;
+import aiss.dailymotion_miner.model.Comment;
 import aiss.dailymotion_miner.model.User;
 import aiss.dailymotion_miner.model.Video;
+import aiss.dailymotion_miner.model.external.DailymotionComment;
 import aiss.dailymotion_miner.model.external.DailymotionPlaylist;
 import aiss.dailymotion_miner.model.external.DailymotionUser;
 import aiss.dailymotion_miner.model.external.DailymotionVideo;
@@ -66,5 +68,13 @@ public class DailymotionMapper {
         caption.setLink((String) subtitleMap.getOrDefault("link", ""));
         
         return caption;
+    }
+
+    public static Comment toComment(DailymotionComment external) {
+        Comment comment = new Comment();
+        comment.setId(external.getId());
+        comment.setText(external.getText());
+        comment.setCreatedOn(external.getCreatedTime() != null ? external.getCreatedTime().toString() : null);
+        return comment;
     }
 }

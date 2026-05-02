@@ -54,8 +54,8 @@ public class Comment {
         return createdOn;
     }
 
-    public void setCreatedOn(String createdOn) {
-        this.createdOn = createdOn;
+    public void setCreatedOn(String videoDate) {
+        this.createdOn = videoDate;
     }
 
     public Video getVideo() {
