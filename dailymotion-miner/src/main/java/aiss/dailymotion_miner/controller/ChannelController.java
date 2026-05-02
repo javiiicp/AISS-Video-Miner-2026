@@ -47,7 +47,7 @@ public class ChannelController {
             List<Video> videos = videoService.getVideos(id, maxVideos);
             for (Video video : videos) {
                 video.setComments(commentService.getCommentsAsTags(video.getId(), maxComments));
-                video.setCaptions(video.getCaptions());
+                //video.setCaptions(video.getCaptions());
             }
             channel.setVideos(videos);
         }
