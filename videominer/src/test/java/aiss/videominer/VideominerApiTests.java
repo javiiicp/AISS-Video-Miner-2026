@@ -60,6 +60,13 @@ class VideominerApiTests {
         userRepository.deleteAll();
     }
 
+    private aiss.videominer.model.User createTestAuthor(String id, String name) {
+        aiss.videominer.model.User author = new aiss.videominer.model.User();
+        author.setId(id);
+        author.setName(name);
+        return userRepository.save(author);
+    }
+
     @Test
     void shouldReturn404WhenVideoDoesNotExist() throws Exception {
       cleanDatabase();
@@ -75,6 +82,7 @@ class VideominerApiTests {
         video.setName("Sample video");
         video.setDescription("Sample description");
         video.setReleaseTime("2026-04-30T10:00:00Z");
+        video.setAuthor(createTestAuthor("author-caption-1", "Caption Author"));
         video.setComments(new ArrayList<>());
         video.setCaptions(new ArrayList<>());
         videoRepository.save(video);
@@ -106,6 +114,7 @@ class VideominerApiTests {
         video.setName("Another video");
         video.setDescription("Another description");
         video.setReleaseTime("2026-04-30T10:00:00Z");
+        video.setAuthor(createTestAuthor("author-comment-1", "Comment Author"));
         video.setComments(new ArrayList<>());
         video.setCaptions(new ArrayList<>());
         videoRepository.save(video);
@@ -180,6 +189,7 @@ class VideominerApiTests {
                 "name": "Video CRUD",
                 "description": "Desc",
                 "releaseTime": "2026-04-30T12:00:00Z",
+                "author": { "id": "api-author-crud", "name": "API Author CRUD" },
                 "comments": [],
                 "captions": []
               }
@@ -195,6 +205,7 @@ class VideominerApiTests {
                 "name": "Video CRUD Updated",
                 "description": "Desc Updated",
                 "releaseTime": "2026-04-30T13:00:00Z",
+                "author": { "id": "api-author-crud-upd", "name": "API Author CRUD Updated" },
                 "comments": [],
                 "captions": []
               }
@@ -222,6 +233,7 @@ class VideominerApiTests {
                 "name": "",
                 "description": "Desc",
                 "releaseTime": "",
+                "author": { "id": "api-author-invalid", "name": "API Author Invalid" },
                 "comments": [],
                 "captions": []
               }
@@ -244,6 +256,7 @@ class VideominerApiTests {
                 "name": "Any",
                 "description": "Any",
                 "releaseTime": "2026-04-30T10:00:00Z",
+                "author": { "id": "api-author-missing", "name": "API Author Missing" },
                 "comments": [],
                 "captions": []
               }
@@ -252,6 +265,45 @@ class VideominerApiTests {
 
         mockMvc.perform(delete("/videominer/videos/missing"))
           .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @DisplayName("Validación: Vídeo sin autor debe fallar")
+    void shouldValidateVideoAuthorIsRequired() throws Exception {
+        cleanDatabase();
+
+        mockMvc.perform(post("/videominer/videos")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("""
+                  {
+                    "id": "video-no-author",
+                    "name": "Video sin autor",
+                    "description": "Desc",
+                    "releaseTime": "2026-04-30T12:00:00Z",
+                    "author": null,
+                    "comments": [],
+                    "captions": []
+                  }
+                  """))
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.fieldErrors.author").exists());
+    }
+
+    @Test
+    @DisplayName("Validación: ID vacío debe fallar")
+    void shouldValidateEmptyIdIsRejected() throws Exception {
+        cleanDatabase();
+
+        mockMvc.perform(post("/videominer/users")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("""
+                  {
+                    "id": "",
+                    "name": "Usuario inválido"
+                  }
+                  """))
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.fieldErrors.id").exists());
     }
 
     // ======== TESTS DE USUARIOS ========
@@ -371,6 +423,7 @@ class VideominerApiTests {
         video.setName("Video with Captions");
         video.setDescription("Test video");
         video.setReleaseTime("2026-04-30T10:00:00Z");
+        video.setAuthor(createTestAuthor("author-caption-2", "Caption Author 2"));
         video.setComments(new ArrayList<>());
         video.setCaptions(new ArrayList<>());
         videoRepository.save(video);
@@ -443,6 +496,7 @@ class VideominerApiTests {
         video.setName("Video with Comments");
         video.setDescription("Test video");
         video.setReleaseTime("2026-04-30T10:00:00Z");
+        video.setAuthor(createTestAuthor("author-comment-2", "Comment Author 2"));
         video.setComments(new ArrayList<>());
         video.setCaptions(new ArrayList<>());
         videoRepository.save(video);
@@ -513,6 +567,7 @@ class VideominerApiTests {
         video.setName("Video for Comment Search");
         video.setDescription("Test");
         video.setReleaseTime("2026-04-30T10:00:00Z");
+        video.setAuthor(createTestAuthor("author-search", "Search Author"));
         video.setComments(new ArrayList<>());
         video.setCaptions(new ArrayList<>());
         videoRepository.save(video);
@@ -606,6 +661,7 @@ class VideominerApiTests {
                       "name": "Java Tutorial for Beginners",
                       "description": "Learn Java",
                       "releaseTime": "2026-03-01T10:00:00Z",
+                      "author": { "id": "search-author-java", "name": "Search Author Java" },
                       "comments": [],
                       "captions": []
                     }
@@ -620,6 +676,7 @@ class VideominerApiTests {
                       "name": "Python Basics Course",
                       "description": "Learn Python",
                       "releaseTime": "2026-03-02T10:00:00Z",
+                      "author": { "id": "search-author-python", "name": "Search Author Python" },
                       "comments": [],
                       "captions": []
                     }
@@ -646,10 +703,11 @@ class VideominerApiTests {
                           "name": "Video Page %d",
                           "description": "Desc",
                           "releaseTime": "2026-03-0%dT10:00:00Z",
+                          "author": { "id": "page-author-%d", "name": "Page Author %d" },
                           "comments": [],
                           "captions": []
                         }
-                        """, i, i, (i % 9) + 1)))
+                        """, i, i, (i % 9) + 1, i, i)))
                 .andExpect(status().isCreated());
         }
 
@@ -672,6 +730,20 @@ class VideominerApiTests {
             .andExpect(jsonPath("$.totalPages").value(1));
     }
 
+      @Test
+      @DisplayName("Validación: Paginación fuera de rango debe fallar")
+      void shouldRejectInvalidPaginationParameters() throws Exception {
+        cleanDatabase();
+
+        mockMvc.perform(get("/videominer/videos?page=-1&size=10"))
+          .andExpect(status().isBadRequest())
+          .andExpect(jsonPath("$.fieldErrors").exists());
+
+        mockMvc.perform(get("/videominer/videos?page=0&size=0"))
+          .andExpect(status().isBadRequest())
+          .andExpect(jsonPath("$.fieldErrors").exists());
+      }
+
     @Test
     @DisplayName("Relaciones: Obtener captions de un vídeo")
     void shouldGetCaptionsByVideo() throws Exception {
@@ -681,6 +753,7 @@ class VideominerApiTests {
         video.setName("Video Multi Captions");
         video.setDescription("Test");
         video.setReleaseTime("2026-04-30T10:00:00Z");
+        video.setAuthor(createTestAuthor("author-multi-captions", "Multi Captions Author"));
         video.setComments(new ArrayList<>());
         video.setCaptions(new ArrayList<>());
         videoRepository.save(video);
@@ -716,6 +789,7 @@ class VideominerApiTests {
         video.setName("Video Multi Comments");
         video.setDescription("Test");
         video.setReleaseTime("2026-04-30T10:00:00Z");
+        video.setAuthor(createTestAuthor("author-multi-comments", "Multi Comments Author"));
         video.setComments(new ArrayList<>());
         video.setCaptions(new ArrayList<>());
         videoRepository.save(video);

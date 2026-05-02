@@ -1,12 +1,20 @@
 package aiss.videominer.model;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.persistence.*;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 
 /**
  * @author Juan C. Alonso
@@ -17,6 +25,7 @@ public class Channel {
 
     @Id
     @JsonProperty("id")
+    @NotEmpty(message = "El id del canal no puede estar vacío")
     private String id;
 
     @JsonProperty("name")
@@ -34,6 +43,7 @@ public class Channel {
     @JsonProperty("videos")
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "channelId")
+    @Valid
     @NotNull(message = "La lista de vídeos del canal no puede ser nula")
     private List<Video> videos;
 

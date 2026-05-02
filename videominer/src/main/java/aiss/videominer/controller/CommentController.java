@@ -6,6 +6,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,10 +23,13 @@ import aiss.videominer.service.CommentService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 
 @RestController
 @RequestMapping("/videominer/comments")
 @Tag(name = "Controlador Comentarios", description = "Operaciones para gestionar los comentarios")
+@Validated
 public class CommentController {
 
     @Autowired
@@ -36,8 +40,8 @@ public class CommentController {
     @GetMapping
     public Page<Comment> findAll(
             @RequestParam(required = false) String text,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "0") @Min(0) int page,
+            @RequestParam(defaultValue = "10") @Min(1) @Max(100) int size,
             @RequestParam(defaultValue = "id") String sortBy) {
 
         Pageable paging = PageRequest.of(page, size, Sort.by(sortBy));
@@ -79,8 +83,8 @@ public class CommentController {
     @GetMapping("/video/{videoId}")
     public Page<Comment> findByVideoId(
             @PathVariable String videoId,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "0") @Min(0) int page,
+            @RequestParam(defaultValue = "10") @Min(1) @Max(100) int size,
             @RequestParam(defaultValue = "id") String sortBy) {
         Pageable paging = PageRequest.of(page, size, Sort.by(sortBy));
         return service.findByVideo(videoId, paging);
