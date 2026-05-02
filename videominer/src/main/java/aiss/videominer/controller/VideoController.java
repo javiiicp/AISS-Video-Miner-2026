@@ -6,6 +6,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,10 +24,13 @@ import aiss.videominer.service.VideoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 
 @RestController
 @RequestMapping("/videominer/videos") // Añadido /videos para mayor orden
 @Tag(name = "Controlador Vídeos", description = "Operaciones para gestionar los vídeos")
+@Validated
 public class VideoController {
 
     @Autowired
@@ -37,8 +41,8 @@ public class VideoController {
     @GetMapping
     public Page<Video> findAll(
             @RequestParam(required = false) String name,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "0") @Min(0) int page,
+            @RequestParam(defaultValue = "10") @Min(1) @Max(100) int size,
             @RequestParam(defaultValue = "id") String sortBy) {
 
         Pageable paging = PageRequest.of(page, size, Sort.by(sortBy));
@@ -80,8 +84,8 @@ public class VideoController {
     @Operation(summary = "Obtener subtítulos de un vídeo con paginación")
     public Page<Caption> getCaptionsByVideo(
             @PathVariable String id,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "0") @Min(0) int page,
+            @RequestParam(defaultValue = "10") @Min(1) @Max(100) int size,
             @RequestParam(defaultValue = "id") String sortBy) {
         Pageable paging = PageRequest.of(page, size, Sort.by(sortBy));
         return service.getCaptionsByVideo(id, paging);

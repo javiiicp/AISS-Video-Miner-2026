@@ -6,6 +6,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,11 +23,14 @@ import aiss.videominer.service.CaptionService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 
 
 @RestController
 @RequestMapping("/videominer/captions")
 @Tag(name = "Controlador Subtítulos", description = "Operaciones para gestionar los subtítulos")
+@Validated
 public class CaptionController {
 
     @Autowired
@@ -36,8 +40,8 @@ public class CaptionController {
     @Operation(summary = "Listar subtítulos", description = "Devuelve una lista paginada con todos los subtítulos registrados")
     @GetMapping
     public Page<Caption> findAll(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "0") @Min(0) int page,
+            @RequestParam(defaultValue = "10") @Min(1) @Max(100) int size,
             @RequestParam(defaultValue = "id") String sortBy) {
         Pageable paging = PageRequest.of(page, size, Sort.by(sortBy));
         return service.findAll(paging);
@@ -78,8 +82,8 @@ public class CaptionController {
     @GetMapping("/video/{videoId}")
     public Page<Caption> findByVideoId(
             @PathVariable String videoId,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "0") @Min(0) int page,
+            @RequestParam(defaultValue = "10") @Min(1) @Max(100) int size,
             @RequestParam(defaultValue = "id") String sortBy) {
         Pageable paging = PageRequest.of(page, size, Sort.by(sortBy));
         return service.findByVideo(videoId, paging);

@@ -20,6 +20,7 @@ public class User {
 
     @Id
     @JsonProperty("id")
+    @NotEmpty(message = "El id del usuario no puede estar vacío")
     private String id;
 
     @JsonProperty("name")

@@ -2,8 +2,10 @@ package aiss.videominer.service;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import aiss.videominer.exception.UserNotFoundException;
 import aiss.videominer.model.User;
@@ -36,7 +38,7 @@ public class UserService {
 
     public User findOrCreate(User user) {
         if (user == null || user.getId() == null || user.getId().isBlank()) {
-            return user;
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "El usuario debe tener un id válido");
         }
 
         return repository.findById(user.getId())

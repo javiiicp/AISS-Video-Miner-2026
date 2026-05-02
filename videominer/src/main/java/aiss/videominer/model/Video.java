@@ -12,7 +12,9 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 
 /**
  * @author Juan C. Alonso
@@ -23,6 +25,7 @@ public class Video {
 
     @Id
     @JsonProperty("id")
+    @NotEmpty(message = "El id del vídeo no puede estar vacío")
     private String id;
 
     @JsonProperty("name")
@@ -39,6 +42,8 @@ public class Video {
 
     @JsonProperty("author")
     @ManyToOne(cascade = CascadeType.PERSIST)
+    @Valid
+    @NotNull(message = "El vídeo debe tener un autor")
     private User author;
 
     @JsonProperty("comments")
