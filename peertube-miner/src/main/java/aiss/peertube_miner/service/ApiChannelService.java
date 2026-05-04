@@ -69,8 +69,10 @@ public class ApiChannelService {
                 User u = new User();
                 u.setId(String.valueOf(ptVideo.getAccount().getId()));
                 u.setName(ptVideo.getAccount().getDisplayName());
+                u.setUser_link(ptVideo.getAccount().getUrl());
+                u.setPicture_link(ptVideo.getAccount().getAvatars().get(0).getFileUrl());
                 v.setAuthor(u);
-                             
+
                 // --- PASO B: Obtener los Comentarios para ESTE vídeo ---
                 String urlComments = "https://peertube.tv/api/v1/videos/" + ptVideo.getId() + "/comment-threads?count=" + maxComments;
                 // ApiComment es el que pone bien el formato de comentarios
