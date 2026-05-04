@@ -6,7 +6,7 @@
 
 ## Descripción General
 
-VideoMiner es un **microservicio Web API REST** desarrollado con **Spring Boot 3.2.1** que actúa como almacén centralizado de datos para el proyecto AISS Video Miner. Se encarga de:
+VideoMiner es un **microservicio Web API REST** desarrollado con **Spring Boot 3.5.13** que actúa como almacén centralizado de datos para el proyecto AISS Video Miner. Se encarga de:
 
 - **Integrar y almacenar** datos de canales, vídeos, subtítulos y comentarios
 - **Persistir datos** en base de datos H2 (en memoria)
@@ -20,8 +20,8 @@ VideoMiner es un **microservicio Web API REST** desarrollado con **Spring Boot 3
 
 | Componente | Versión | Descripción |
 |-----------|---------|------------|
-| **Java** | 17+ | Lenguaje de programación |
-| **Spring Boot** | 3.2.1 | Framework web |
+| **Java** | 21 | Lenguaje de programación |
+| **Spring Boot** | 3.5.13 | Framework web |
 | **Maven** | 3.6+ | Gestor de dependencias (wrapper incluido) |
 | **Base de Datos** | H2 | BD en memoria (desarrollo/testing) |
 | **ORM** | JPA/Hibernate | Mapeo objeto-relacional |
@@ -36,7 +36,7 @@ VideoMiner es un **microservicio Web API REST** desarrollado con **Spring Boot 3
 ### Requisitos Previos
 
 ```bash
-# Verificar Java 17+
+# Verificar Java 21+
 java -version
 
 # Verificar Maven 3.6+ (opcional, se incluye mvnw)
