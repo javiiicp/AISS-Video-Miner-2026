@@ -18,7 +18,7 @@ public class Video {
     @JsonProperty("releaseTime")
     private String releaseTime;
 
-    @JsonProperty("user")
+    @JsonProperty("author")
     private User author;
 
     @JsonProperty("comments")

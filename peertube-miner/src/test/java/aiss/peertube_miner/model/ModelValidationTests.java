@@ -183,7 +183,7 @@ class ModelValidationTests {
         // Arrange
         Caption caption = new Caption();
         caption.setId("caption_123");
-        caption.setName("Spanish");
+        caption.setLink("https://example.com/subtitles.vtt");
         caption.setLanguage("es");
 
         // Act
@@ -203,8 +203,8 @@ class ModelValidationTests {
         caption.setId("caption_new");
         assertEquals("caption_new", caption.getId());
 
-        caption.setName("English");
-        assertEquals("English", caption.getName());
+        caption.setLink("https://example.com/subtitles.vtt");
+        assertEquals("https://example.com/subtitles.vtt", caption.getLink());
 
         caption.setLanguage("en");
         assertEquals("en", caption.getLanguage());

@@ -58,7 +58,7 @@ public class PeertubeMapper {
         Caption caption = new Caption();
         caption.setId(external.getId());
         caption.setLanguage(external.getLanguage());
-        caption.setName(external.getLanguage());
+        caption.setLink("https://peertube.tv/api/v1/videos/captions/" + external.getId());
         return caption;
     }
 
