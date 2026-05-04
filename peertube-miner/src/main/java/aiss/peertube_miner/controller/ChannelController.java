@@ -1,6 +1,5 @@
 package aiss.peertube_miner.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +14,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import aiss.peertube_miner.model.Channel;
 import aiss.peertube_miner.model.Video;
-import aiss.peertube_miner.model.external.ApiCaption;
 import aiss.peertube_miner.service.ApiCaptionService;
 import aiss.peertube_miner.service.ApiChannelService;
 import aiss.peertube_miner.service.ApiCommentService;

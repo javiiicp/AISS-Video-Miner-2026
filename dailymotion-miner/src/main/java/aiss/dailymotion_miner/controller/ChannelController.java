@@ -79,5 +79,11 @@ public class ChannelController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error saving channel to videominer: " + e.getMessage());
         }
     }
+
+    // Test endpoint to verify the controller is loaded
+    @GetMapping("/test")
+    public String test() {
+        return "El controlador de Dailymotion funciona correctamente";
+    }
     
 }
