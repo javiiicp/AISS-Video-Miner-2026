@@ -17,6 +17,7 @@ import aiss.dailymotion_miner.model.Channel;
 import aiss.dailymotion_miner.model.Video;
 import aiss.dailymotion_miner.service.ApiChannelService;
 import aiss.dailymotion_miner.service.ApiCommentService;
+import aiss.dailymotion_miner.service.ApiUserService;
 import aiss.dailymotion_miner.service.ApiVideoService;
 import aiss.dailymotion_miner.service.VideominerService;
 
@@ -35,6 +36,9 @@ public class ChannelController {
 
     @Autowired
     private VideominerService videominerService;
+    
+    @Autowired
+    private ApiUserService userService;
 
     // GET http://localhost:8080/api/channels/{id}?maxVideos=10&maxComments=2
     @GetMapping("/{id}")
@@ -47,6 +51,7 @@ public class ChannelController {
         if (channel != null) {
             List<Video> videos = videoService.getVideos(id, maxVideos, maxComments);
             for (Video video : videos) {
+                video.setAuthor(userService.getUser(video.getAuthor().getId()));
                 video.setComments(commentService.getCommentsAsTags(video.getId(), maxComments));
                 //video.setCaptions(video.getCaptions());
                 video.setCaptions(new ArrayList<>());

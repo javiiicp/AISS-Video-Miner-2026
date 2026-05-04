@@ -28,15 +28,15 @@ public class DailymotionMapper {
         return channel;
     }
 
-    public static Video toVideo(DailymotionVideo external, User user) {
+    public static Video toVideo(DailymotionVideo external) {
         Video video = new Video();
         
         video.setId(external.getId());
         video.setName(external.getTitle()); 
         video.setDescription(external.getDescription());
-        video.setAuthor(user);
+        video.setAuthor(new User());
         video.setReleaseTime(external.getCreatedTime() != null ? external.getCreatedTime().toString() : null);
-        video.setComments(external.getTags() != null ? new ArrayList<>() : null); 
+        video.setComments(new ArrayList<>()); 
         video.setCaptions(new ArrayList<>());
         if (external.getCreatedTime() != null) {
             video.setReleaseTime(external.getCreatedTime().toString());

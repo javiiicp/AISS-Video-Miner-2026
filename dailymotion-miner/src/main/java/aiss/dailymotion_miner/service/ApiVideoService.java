@@ -18,9 +18,6 @@ public class ApiVideoService {
     @Autowired
     private RestTemplate restTemplate;
 
-    @Autowired
-    private ApiUserService userService;
-
     public List<Video> getVideos(String playlistId) {
         return getVideos(playlistId, 10, 2);
     }
@@ -41,9 +38,7 @@ public class ApiVideoService {
             }
             // Mapear cada DailymotionVideo a Video
             for (var externalVideo : response.getList()) {
-                String ownerId = externalVideo.getOwner(); 
-                User user = userService.getUser(ownerId);
-                Video video = DailymotionMapper.toVideo(externalVideo, user);
+                Video video = DailymotionMapper.toVideo(externalVideo);
                 videos.add(video);
             }
         }

@@ -1,8 +1,5 @@
 package aiss.peertube_miner.service;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -10,18 +7,9 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.server.ResponseStatusException;
 
-import aiss.peertube_miner.model.Caption;
+import aiss.peertube_miner.mapper.PeertubeMapper;
 import aiss.peertube_miner.model.Channel;
-import aiss.peertube_miner.model.Comment;
-import aiss.peertube_miner.model.User;
-import aiss.peertube_miner.model.Video;
-import aiss.peertube_miner.model.external.ApiCaption;
 import aiss.peertube_miner.model.external.ApiChannel;
-import aiss.peertube_miner.model.external.ApiComment;
-import aiss.peertube_miner.model.external.ApiVideo;
-import aiss.peertube_miner.model.external.DataCaption;
-import aiss.peertube_miner.model.external.DataComment;
-import aiss.peertube_miner.model.external.DataVideo;
 
 @Service
 public class ApiChannelService {
@@ -31,7 +19,6 @@ public class ApiChannelService {
 
     public Channel getChannelFromPeerTube(String channelId, int maxVideos, int maxComments) {
 
-        // --- PASO 0: Obtener el Canal (Lo que ya teníamos) ---
         String urlCanal = "https://peertube.tv/api/v1/video-channels/" + channelId;
         ApiChannel resCanal;
         try {
@@ -44,7 +31,10 @@ public class ApiChannelService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Canal no encontrado en PeerTube");
         }
         
-        Channel videominerChannel = new Channel();
+        return PeertubeMapper.toChannel(resCanal);
+    }  
+}
+        /*Channel videominerChannel = new Channel();
         videominerChannel.setId(resCanal.getId().toString());
         videominerChannel.setName(resCanal.getDisplayName());
         videominerChannel.setDescription(resCanal.getDescription());
@@ -119,3 +109,4 @@ public class ApiChannelService {
         return videominerChannel;
     }
 }
+    */
