@@ -37,7 +37,7 @@ public class Video {
     @NotEmpty(message = "Video release time cannot be empty")
     private String releaseTime;
 
-    @JsonProperty("user")
+    @JsonProperty("author")
     @OneToOne(cascade = CascadeType.ALL)
     private User author;
 

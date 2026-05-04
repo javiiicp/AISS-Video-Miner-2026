@@ -1,8 +1,11 @@
 package aiss.dailymotion_miner.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service; // Importante
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.server.ResponseStatusException;
 
 import aiss.dailymotion_miner.mapper.DailymotionMapper;
 import aiss.dailymotion_miner.model.User;
@@ -18,12 +21,17 @@ public class ApiUserService {
         String url = "https://api.dailymotion.com/user/" + userId 
                    + "?fields=id,username,url,avatar_120_url";
 
-        DailymotionUser externalUser = restTemplate.getForObject(url, DailymotionUser.class);
-
-        if (externalUser != null) {
-            return DailymotionMapper.toUser(externalUser);
+        DailymotionUser externalUser;
+        try {
+            externalUser = restTemplate.getForObject(url, DailymotionUser.class);
+        } catch (HttpClientErrorException.NotFound ex) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario no encontrado en Dailymotion", ex);
         }
 
-        return null;
+        if (externalUser == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario no encontrado en Dailymotion");
+        }
+
+        return DailymotionMapper.toUser(externalUser);
     }
 }
