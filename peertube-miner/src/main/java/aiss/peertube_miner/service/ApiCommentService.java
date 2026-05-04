@@ -1,3 +1,4 @@
+/*     
 package aiss.peertube_miner.service;
 
 import aiss.peertube_miner.model.external.ApiComment;
@@ -51,3 +52,4 @@ public class ApiCommentService {
         return comment;
     }
 }
+    */  
