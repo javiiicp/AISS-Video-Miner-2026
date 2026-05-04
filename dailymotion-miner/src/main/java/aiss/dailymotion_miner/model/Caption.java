@@ -1,6 +1,7 @@
 package aiss.dailymotion_miner.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -14,21 +15,26 @@ import jakarta.validation.constraints.NotNull;
  */
 @Entity
 @Table(name = "Caption")
+@Schema(name = "Caption", description = "Represents a caption or subtitle for a video")
 public class Caption {
 
     @Id
     @JsonProperty("id")
+    @Schema(description = "Unique identifier of the caption", example = "caption123")
     private String id;
 
     @JsonProperty("link")
+    @Schema(description = "URL link to the caption file", example = "https://example.com/captions/en.vtt")
     private String link;
 
     @JsonProperty("language")
+    @Schema(description = "Language code of the caption", example = "en", allowableValues = {"en", "es", "fr", "de"})
     private String language;
 
     @ManyToOne
     @JoinColumn(name = "videoId")
     @NotNull(message = "Caption must be associated with a video")
+    @Schema(description = "The video this caption belongs to")
     private Video video;
 
 

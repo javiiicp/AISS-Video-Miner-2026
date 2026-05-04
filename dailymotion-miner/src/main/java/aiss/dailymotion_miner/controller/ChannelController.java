@@ -22,9 +22,14 @@ import aiss.dailymotion_miner.service.ApiSubtitleService;
 import aiss.dailymotion_miner.service.ApiUserService;
 import aiss.dailymotion_miner.service.ApiVideoService;
 import aiss.dailymotion_miner.service.VideominerService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
 @RequestMapping("/api/channels")
+@Tag(name = "Channels (Dailymotion)", description = "Operaciones para obtener y sincronizar canales de Dailymotion")
 public class ChannelController {
 
     @Autowired
@@ -43,7 +48,12 @@ public class ChannelController {
     private ApiSubtitleService subtitleService;
     
 
-    // GET http://localhost:8080/api/channels/{id}?maxVideos=10&maxComments=2
+    // GET http://localhost:8082/api/channels/{id}?maxVideos=10&maxComments=2
+    @Operation(summary = "Obtener canal de Dailymotion", description = "Obtiene un canal de Dailymotion con sus vídeos y comentarios")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Canal obtenido exitosamente"),
+        @ApiResponse(responseCode = "404", description = "Canal no encontrado")
+    })
     @GetMapping("/{id}")
     public Channel getChannel(
             @PathVariable String id,
@@ -64,7 +74,12 @@ public class ChannelController {
         return channel;
     }
     
-    // POST http://localhost:8080/api/channels/{id}?maxVideos=10&maxComments=2
+    // POST http://localhost:8082/api/channels/{id}?maxVideos=10&maxComments=2
+    @Operation(summary = "Guardar canal en VideoMiner", description = "Obtiene un canal de Dailymotion y lo guarda en la base de datos central de VideoMiner")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "201", description = "Canal guardado exitosamente"),
+        @ApiResponse(responseCode = "500", description = "Error al guardar el canal")
+    })
     @PostMapping("/{id}")
     public ResponseEntity<?> saveChannelToVideoMiner(
             @PathVariable String id,
