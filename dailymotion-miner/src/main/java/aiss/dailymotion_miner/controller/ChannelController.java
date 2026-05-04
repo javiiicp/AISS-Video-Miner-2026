@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import aiss.dailymotion_miner.model.Channel;
+import aiss.dailymotion_miner.model.User;
 import aiss.dailymotion_miner.model.Video;
 import aiss.dailymotion_miner.service.ApiChannelService;
 import aiss.dailymotion_miner.service.ApiCommentService;
@@ -51,12 +52,16 @@ public class ChannelController {
         if (channel != null) {
             List<Video> videos = videoService.getVideos(id, maxVideos, maxComments);
             for (Video video : videos) {
-                video.setAuthor(userService.getUser(video.getAuthor().getId()));
-                video.setComments(commentService.getCommentsAsTags(video.getId(), maxComments));
+
+                //video.setAuthor(userService.getUser(video.getAuthor().getId()));
+                //video.setComments(commentService.getCommentsAsTags(video.getId(), maxComments));
                 //video.setCaptions(video.getCaptions());
+                video.setAuthor(new User());
+                video.setComments(new ArrayList<>());
                 video.setCaptions(new ArrayList<>());
             }
-            channel.setVideos(videos);
+            //channel.setVideos(videos);
+            channel.setVideos(new ArrayList<>());
         }
         
         return channel;
@@ -79,11 +84,4 @@ public class ChannelController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error saving channel to videominer: " + e.getMessage());
         }
     }
-
-    // Test endpoint to verify the controller is loaded
-    @GetMapping("/test")
-    public String test() {
-        return "El controlador de Dailymotion funciona correctamente";
-    }
-    
 }
