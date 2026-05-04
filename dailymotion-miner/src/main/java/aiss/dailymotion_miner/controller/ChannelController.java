@@ -1,13 +1,5 @@
 package aiss.dailymotion_miner.controller;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-package aiss.dailymotion_miner.controller;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -58,7 +50,6 @@ public class ChannelController {
             
             @Parameter(description = "Número máximo de páginas de resultados a consultar", example = "2")
             @RequestParam(defaultValue = "2") Integer maxPages) {
-        
         Channel channel = channelService.getChannelFromDailymotion(id, maxVideos, maxPages);
         if (channel == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Canal no encontrado en Dailymotion");
@@ -86,12 +77,11 @@ public class ChannelController {
             
             @Parameter(description = "Número máximo de páginas de resultados a consultar", example = "2")
             @RequestParam(defaultValue = "2") Integer maxPages) {
-        
         Channel channel = channelService.getChannelFromDailymotion(id, maxVideos, maxPages);
         if (channel == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Canal no encontrado en Dailymotion");
         }
-        
+
         Channel saved = videominerService.saveChannel(channel);
         return ResponseEntity.status(HttpStatus.CREATED).body(saved);
     }
