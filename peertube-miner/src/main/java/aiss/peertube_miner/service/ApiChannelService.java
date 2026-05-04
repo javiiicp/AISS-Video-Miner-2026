@@ -4,8 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.server.ResponseStatusException;
 
 import aiss.peertube_miner.model.Caption;
 import aiss.peertube_miner.model.Channel;
@@ -30,9 +33,16 @@ public class ApiChannelService {
 
         // --- PASO 0: Obtener el Canal (Lo que ya teníamos) ---
         String urlCanal = "https://peertube.tv/api/v1/video-channels/" + channelId;
-        ApiChannel resCanal = restTemplate.getForObject(urlCanal, ApiChannel.class);
-        
-        if (resCanal == null) return null;
+        ApiChannel resCanal;
+        try {
+            resCanal = restTemplate.getForObject(urlCanal, ApiChannel.class);
+        } catch (HttpClientErrorException.NotFound ex) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Canal no encontrado en PeerTube", ex);
+        }
+
+        if (resCanal == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Canal no encontrado en PeerTube");
+        }
         
         Channel videominerChannel = new Channel();
         videominerChannel.setId(resCanal.getId().toString());

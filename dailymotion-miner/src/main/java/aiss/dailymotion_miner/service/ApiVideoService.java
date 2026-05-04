@@ -22,26 +22,31 @@ public class ApiVideoService {
     private ApiUserService userService;
 
     public List<Video> getVideos(String playlistId) {
-        return getVideos(playlistId, 10);
+        return getVideos(playlistId, 10, 2);
     }
 
-public List<Video> getVideos(String playlistId, int maxVideos) {
-    String url = "https://api.dailymotion.com/playlist/" + playlistId 
-               + "/videos?fields=id,title,description,created_time,owner";
+    public List<Video> getVideos(String playlistId, int maxVideos, int maxPages) {
+        List<Video> videos = new ArrayList<>();
 
-    DailymotionVideoSearch response = restTemplate.getForObject(url, DailymotionVideoSearch.class);
+        for (int page = 1; page <= maxPages; page++) {
+            String url = "https://api.dailymotion.com/playlist/" + playlistId 
+                       + "/videos?page=" + page + "&limit=" + maxVideos
+                       + "&fields=id,title,description,created_time,owner";
 
-    if (response != null && response.getList() != null) {
-        return response.getList().stream()
-        .limit(maxVideos)
-        .map(externalVideo -> {
-            String ownerId = externalVideo.getOwner(); 
-            User user = userService.getUser(ownerId);
-            Video video = DailymotionMapper.toVideo(externalVideo, user);
-            return video;
-        })
-        .toList();
+            DailymotionVideoSearch response = restTemplate.getForObject(url, DailymotionVideoSearch.class);
+
+            if (response == null || response.getList() == null || response.getList().isEmpty()) {
+                break;
+            }
+
+            for (var externalVideo : response.getList()) {
+                String ownerId = externalVideo.getOwner(); 
+                User user = userService.getUser(ownerId);
+                Video video = DailymotionMapper.toVideo(externalVideo, user);
+                videos.add(video);
+            }
+        }
+
+        return videos;
     }
-    return new ArrayList<>();
-}
 }
