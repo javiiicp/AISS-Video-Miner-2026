@@ -7,7 +7,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import aiss.videominer.exception.VideoNotFoundException;
 import aiss.videominer.model.Caption;
-import aiss.videominer.model.User;
 import aiss.videominer.model.Video;
 import aiss.videominer.repository.CaptionRepository;
 import aiss.videominer.repository.VideoRepository;
