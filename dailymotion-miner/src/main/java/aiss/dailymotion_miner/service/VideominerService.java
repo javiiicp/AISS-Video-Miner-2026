@@ -14,7 +14,6 @@ public class VideominerService {
     @Autowired
     private RestTemplate restTemplate;
 
-    
     @Value("${VIDEOMINER_BASE_URL:http://localhost:8080}")
     private String videominerBaseUrl;
 

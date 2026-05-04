@@ -15,14 +15,9 @@ public class VideoMinerService {
 
     @Value("${VIDEOMINER_BASE_URL:http://localhost:8080}")
     private String videominerBaseUrl;
-
-    private String channelUrl() { return videominerBaseUrl + "/videominer/channels"; }
-
-    /**
-     * Envía un canal ya mapeado al servicio central VideoMiner para guardarlo.
-     */
+    
     public void saveChannel(Channel channel) {
-        // Usamos postForObject para enviar el objeto por la red
-        restTemplate.postForObject(channelUrl(), channel, Channel.class);
+        String url = videominerBaseUrl + "/videominer/channels";
+        restTemplate.postForObject(url, channel, Channel.class);
     }
 }
