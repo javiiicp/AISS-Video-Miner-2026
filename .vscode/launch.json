@@ -5,6 +5,27 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "type": "java",
+            "name": "DailymotionMinerApplication",
+            "request": "launch",
+            "mainClass": "aiss.dailymotion_miner.DailymotionMinerApplication",
+            "projectName": "dailymotion-miner"
+        },
+        {
+            "type": "java",
+            "name": "PeertubeMinerApplication",
+            "request": "launch",
+            "mainClass": "aiss.peertube_miner.PeertubeMinerApplication",
+            "projectName": "peertube-miner"
+        },
+        {
+            "type": "java",
+            "name": "VideominerApplication",
+            "request": "launch",
+            "mainClass": "aiss.videominer.VideominerApplication",
+            "projectName": "videominer"
+        },
+        {
             "type": "jdk",
             "request": "launch",
             "name": "Launch Java App"
