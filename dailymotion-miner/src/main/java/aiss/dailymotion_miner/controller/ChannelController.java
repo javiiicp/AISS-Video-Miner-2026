@@ -36,18 +36,18 @@ public class ChannelController {
     @Autowired
     private VideominerService videominerService;
 
-    // GET http://localhost:8080/api/channels/{id}?maxVideos=10&maxPages=2
+    // GET http://localhost:8080/api/channels/{id}?maxVideos=10&maxComments=2
     @GetMapping("/{id}")
     public Channel getChannel(
             @PathVariable String id,
             @RequestParam(defaultValue = "10") Integer maxVideos,
-            @RequestParam(defaultValue = "2") Integer maxPages) {
+            @RequestParam(defaultValue = "2") Integer maxComments) {
         Channel channel = channelService.getChannel(id);
         
         if (channel != null) {
-            List<Video> videos = videoService.getVideos(id, maxVideos, maxPages);
+            List<Video> videos = videoService.getVideos(id, maxVideos, maxComments);
             for (Video video : videos) {
-                video.setComments(commentService.getCommentsAsTags(video.getId(), 2));
+                video.setComments(commentService.getCommentsAsTags(video.getId(), maxComments));
                 //video.setCaptions(video.getCaptions());
                 video.setCaptions(new ArrayList<>());
             }
@@ -57,14 +57,14 @@ public class ChannelController {
         return channel;
     }
     
-    // POST http://localhost:8080/api/channels/{id}?maxVideos=10&maxPages=2
+    // POST http://localhost:8080/api/channels/{id}?maxVideos=10&maxComments=2
     @PostMapping("/{id}")
     public ResponseEntity<?> saveChannelToVideoMiner(
             @PathVariable String id,
             @RequestParam(defaultValue = "10") Integer maxVideos,
-            @RequestParam(defaultValue = "2") Integer maxPages) {
+            @RequestParam(defaultValue = "2") Integer maxComments) {
         Channel channel = channelService.getChannel(id);
-        List<Video> videos = videoService.getVideos(id, maxVideos, maxPages);
+        List<Video> videos = videoService.getVideos(id, maxVideos, maxComments);
         channel.setVideos(videos);
 
         try {

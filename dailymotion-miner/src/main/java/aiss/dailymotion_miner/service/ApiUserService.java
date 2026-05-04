@@ -18,20 +18,22 @@ public class ApiUserService {
     private RestTemplate restTemplate; 
 
     public User getUser(String userId) {
+        //Consulta
+        //GET https://api.dailymotion.com/user/{userId}?fields=id,username,url,avatar_120_url
         String url = "https://api.dailymotion.com/user/" + userId 
                    + "?fields=id,username,url,avatar_120_url";
-
+        //Validar si el usuario existe, si no existe lanzar una excepción con código 404
         DailymotionUser externalUser;
         try {
             externalUser = restTemplate.getForObject(url, DailymotionUser.class);
         } catch (HttpClientErrorException.NotFound ex) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario no encontrado en Dailymotion", ex);
         }
-
+        //Validar si la respuesta es nula, si es nula lanzar una excepción con código 404
         if (externalUser == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario no encontrado en Dailymotion");
         }
-
+        // Mapeo de DailymotionUser a User
         return DailymotionMapper.toUser(externalUser);
     }
 }

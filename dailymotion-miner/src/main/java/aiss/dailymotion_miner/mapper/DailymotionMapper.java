@@ -19,13 +19,10 @@ public class DailymotionMapper {
     public static Channel toChannel(DailymotionPlaylist external) {
         Channel channel = new Channel();
         
-        
-        
         channel.setId(external.getId());
         channel.setName(external.getName());
         channel.setDescription(external.getDescription());
         channel.setCreatedTime(external.getCreatedTime() != null ? external.getCreatedTime().toString() : null);
-        
         channel.setVideos(new ArrayList<>());
         
         return channel;
@@ -71,7 +68,6 @@ public class DailymotionMapper {
     }
 
     public static Comment toComment(String tag, String videoId, Integer i, Integer createdOn) {
-
         Comment comment = new Comment();
 
         comment.setId(videoId + "-" + i);

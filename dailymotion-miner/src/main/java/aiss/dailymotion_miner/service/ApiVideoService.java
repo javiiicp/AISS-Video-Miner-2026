@@ -29,16 +29,17 @@ public class ApiVideoService {
         List<Video> videos = new ArrayList<>();
 
         for (int page = 1; page <= maxPages; page++) {
+            //Consulta
+            //GET https://api.dailymotion.com/playlist/{playlistId}/videos?page={page}&limit={maxVideos}&fields=id,title,description,created_time,owner
             String url = "https://api.dailymotion.com/playlist/" + playlistId 
                        + "/videos?page=" + page + "&limit=" + maxVideos
                        + "&fields=id,title,description,created_time,owner";
-
             DailymotionVideoSearch response = restTemplate.getForObject(url, DailymotionVideoSearch.class);
-
+            //Validar
             if (response == null || response.getList() == null || response.getList().isEmpty()) {
                 break;
             }
-
+            // Mapear cada DailymotionVideo a Video
             for (var externalVideo : response.getList()) {
                 String ownerId = externalVideo.getOwner(); 
                 User user = userService.getUser(ownerId);
