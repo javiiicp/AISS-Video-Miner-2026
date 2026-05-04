@@ -7,15 +7,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import aiss.peertube_miner.model.Caption;
 import aiss.peertube_miner.model.Channel;
 import aiss.peertube_miner.model.Comment;
 import aiss.peertube_miner.model.Video;
-import aiss.peertube_miner.model.external.ApiCaption;
 import aiss.peertube_miner.model.external.ApiChannel;
 import aiss.peertube_miner.model.external.ApiComment;
 import aiss.peertube_miner.model.external.ApiVideo;
-import aiss.peertube_miner.model.external.DataCaption;
 import aiss.peertube_miner.model.external.DataComment;
 import aiss.peertube_miner.model.external.DataVideo;
 
@@ -73,7 +70,7 @@ public class ApiChannelService {
                     v.setComments(listaCommentsLimpia);
                 }
 
-                // --- PASO C: Obtener los CAPTIONS para ESTE vídeo ---
+                /* --- PASO C: Obtener los CAPTIONS para ESTE vídeo ---
                 String urlCaptions = "https://peertube.tv/api/v1/videos/" + ptVideo.getId() + "/captions";
                 try {
                     ApiCaption resCaptions = restTemplate.getForObject(urlCaptions, ApiCaption.class);
@@ -92,7 +89,7 @@ public class ApiChannelService {
                     }
                 } catch (Exception e) {
                     System.out.println("Error obteniendo captions: " + e.getMessage());
-                }
+                }  */
 
                 listaVideosLimpia.add(v);
             }
