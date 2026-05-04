@@ -18,7 +18,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 
 @RestController
@@ -42,11 +41,11 @@ public class ChannelController {
     @GetMapping("/{id}")
     public Channel getChannel(
             @PathVariable String id, 
-            @RequestParam(defaultValue = "10") @Min(1) @Max(100) Integer maxVideos,
-            @RequestParam(defaultValue = "2") @Min(1) @Max(100) Integer maxComments,
+            @RequestParam(defaultValue = "10") @Min(1) Integer maxVideos,
+            @RequestParam(defaultValue = "2") @Min(1) Integer maxComments,
             @RequestParam(required = false) String name,
             @RequestParam(defaultValue = "0") @Min(0) Integer page,
-            @RequestParam(defaultValue = "10") @Min(1) @Max(100) Integer size,
+            @RequestParam(defaultValue = "10") @Min(1) Integer size,
             @RequestParam(defaultValue = "id") String sortBy,
             @RequestParam(defaultValue = "asc") String sortDir) {
         return channelService.getChannelFromPeerTube(id, maxVideos, maxComments, name, page, size, sortBy, sortDir);
@@ -61,11 +60,11 @@ public class ChannelController {
     @PostMapping("/{id}")
     @ResponseStatus(HttpStatus.CREATED)
     public Channel postChannel(@PathVariable String id,
-            @RequestParam(defaultValue = "10") @Min(1) @Max(100) Integer maxVideos,
-            @RequestParam(defaultValue = "2") @Min(1) @Max(100) Integer maxComments,
+            @RequestParam(defaultValue = "10") @Min(1) Integer maxVideos,
+            @RequestParam(defaultValue = "2") @Min(1) Integer maxComments,
             @RequestParam(required = false) String name,
             @RequestParam(defaultValue = "0") @Min(0) Integer page,
-            @RequestParam(defaultValue = "10") @Min(1) @Max(100) Integer size,
+            @RequestParam(defaultValue = "10") @Min(1) Integer size,
             @RequestParam(defaultValue = "id") String sortBy,
             @RequestParam(defaultValue = "asc") String sortDir) {
         Channel channel = channelService.getChannelFromPeerTube(id, maxVideos, maxComments, name, page, size, sortBy, sortDir);
