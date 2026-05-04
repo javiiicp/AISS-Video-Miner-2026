@@ -60,8 +60,7 @@ public class ChannelController {
                 video.setComments(new ArrayList<>());
                 video.setCaptions(new ArrayList<>());
             }
-            //channel.setVideos(videos);
-            channel.setVideos(new ArrayList<>());
+            channel.setVideos(videos);
         }
         
         return channel;
