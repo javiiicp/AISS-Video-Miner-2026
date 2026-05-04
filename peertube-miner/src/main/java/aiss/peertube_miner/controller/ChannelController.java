@@ -67,12 +67,19 @@ public class ChannelController {
         
         // A. Extraemos y transformamos los datos
         Channel channel = channelService.getChannelFromPeerTube(id, maxVideos, maxComments);
-        
+        if (channel != null) {
+            List<Video> videos = videoUserService.getVideoUser(id, maxVideos);
+            for (Video video : videos) {
+                video.setComments(commentService.getComments(video.getId(), maxComments));
+                video.setCaptions(captionService.getCaption(video.getId()));
+            }
+            channel.setVideos(videos);
+        }
         // B. Si todo ha ido bien, lo enviamos a VideoMiner
         if (channel != null) {
             videoMinerService.saveChannel(channel);
         }
-        
+
         return channel; // Devolvemos el canal para confirmar qué se ha guardado
     }
 

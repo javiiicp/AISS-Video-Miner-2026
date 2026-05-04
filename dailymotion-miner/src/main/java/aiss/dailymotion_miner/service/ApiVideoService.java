@@ -9,6 +9,7 @@ import org.springframework.web.client.RestTemplate;
 
 import aiss.dailymotion_miner.mapper.DailymotionMapper;
 import aiss.dailymotion_miner.model.Video;
+import aiss.dailymotion_miner.model.User;
 import aiss.dailymotion_miner.model.external.DailymotionVideoSearch;
 
 @Service
@@ -16,6 +17,9 @@ public class ApiVideoService {
 
     @Autowired
     private RestTemplate restTemplate;
+    
+    @Autowired
+    private ApiUserService userService;
 
     public List<Video> getVideos(String playlistId) {
         return getVideos(playlistId, 10, 2);
@@ -37,7 +41,8 @@ public class ApiVideoService {
             }
             // Mapear cada DailymotionVideo a Video
             for (var externalVideo : response.getList()) {
-                Video video = DailymotionMapper.toVideo(externalVideo);
+                User user = userService.getUser(externalVideo.getOwner());
+                Video video = DailymotionMapper.toVideo(externalVideo, user);
                 videos.add(video);
             }
         }

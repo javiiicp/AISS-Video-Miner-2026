@@ -38,8 +38,7 @@ public class ChannelController {
     @Autowired
     private VideominerService videominerService;
     
-    @Autowired
-    private ApiUserService userService;
+    
 
     // GET http://localhost:8080/api/channels/{id}?maxVideos=10&maxComments=2
     @GetMapping("/{id}")
@@ -52,13 +51,9 @@ public class ChannelController {
         if (channel != null) {
             List<Video> videos = videoService.getVideos(id, maxVideos, maxComments);
             for (Video video : videos) {
-
-                //video.setAuthor(userService.getUser(video.getAuthor().getId()));
-                //video.setComments(commentService.getCommentsAsTags(video.getId(), maxComments));
-                //video.setCaptions(video.getCaptions());
-                video.setAuthor(new User());
-                video.setComments(new ArrayList<>());
-                video.setCaptions(new ArrayList<>());
+                video.setComments(commentService.getCommentsAsTags(video.getId(), maxComments));
+                video.setCaptions(video.getCaptions());
+               
             }
             channel.setVideos(videos);
         }
@@ -73,8 +68,17 @@ public class ChannelController {
             @RequestParam(defaultValue = "10") Integer maxVideos,
             @RequestParam(defaultValue = "2") Integer maxComments) {
         Channel channel = channelService.getChannel(id);
-        List<Video> videos = videoService.getVideos(id, maxVideos, maxComments);
-        channel.setVideos(videos);
+        if (channel != null) {
+            List<Video> videos = videoService.getVideos(id, maxVideos, maxComments);
+            for (Video video : videos) {
+                video.setComments(commentService.getCommentsAsTags(video.getId(), maxComments));
+                video.setCaptions(video.getCaptions());
+               
+            }
+            channel.setVideos(videos);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Channel not found in Dailymotion");
+        }
 
         try {
             Channel saved = videominerService.saveChannel(channel);

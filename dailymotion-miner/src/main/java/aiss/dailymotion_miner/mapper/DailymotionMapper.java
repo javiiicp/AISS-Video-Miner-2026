@@ -4,6 +4,8 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Map;
 
+import org.apache.catalina.UserDatabase;
+
 import aiss.dailymotion_miner.model.Caption;
 import aiss.dailymotion_miner.model.Channel;
 import aiss.dailymotion_miner.model.Comment;
@@ -28,13 +30,13 @@ public class DailymotionMapper {
         return channel;
     }
 
-    public static Video toVideo(DailymotionVideo external) {
+    public static Video toVideo(DailymotionVideo external, User user) {
         Video video = new Video();
         
         video.setId(external.getId());
         video.setName(external.getTitle()); 
         video.setDescription(external.getDescription());
-        video.setAuthor(new User());
+        video.setAuthor(user);
         video.setReleaseTime(external.getCreatedTime() != null ? external.getCreatedTime().toString() : null);
         video.setComments(new ArrayList<>()); 
         video.setCaptions(new ArrayList<>());
