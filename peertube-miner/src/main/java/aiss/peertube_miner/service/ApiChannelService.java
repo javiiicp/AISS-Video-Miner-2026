@@ -10,6 +10,7 @@ import org.springframework.web.client.RestTemplate;
 import aiss.peertube_miner.model.Caption;
 import aiss.peertube_miner.model.Channel;
 import aiss.peertube_miner.model.Comment;
+import aiss.peertube_miner.model.User;
 import aiss.peertube_miner.model.Video;
 import aiss.peertube_miner.model.external.ApiCaption;
 import aiss.peertube_miner.model.external.ApiChannel;
@@ -54,7 +55,12 @@ public class ApiChannelService {
                 v.setName(ptVideo.getName());
                 v.setDescription(ptVideo.getTruncatedDescription());
                 v.setReleaseTime(ptVideo.getPublishedAt());
-                
+
+                User u = new User();
+                u.setId(String.valueOf(ptVideo.getAccount().getId()));
+                u.setName(ptVideo.getAccount().getDisplayName());
+                v.setAuthor(u);
+                             
                 // --- PASO B: Obtener los Comentarios para ESTE vídeo ---
                 String urlComments = "https://peertube.tv/api/v1/videos/" + ptVideo.getId() + "/comment-threads?count=" + maxComments;
                 // ApiComment es el que pone bien el formato de comentarios
