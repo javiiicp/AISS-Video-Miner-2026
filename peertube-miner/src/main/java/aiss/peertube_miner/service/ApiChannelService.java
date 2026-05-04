@@ -92,7 +92,7 @@ public class ApiChannelService {
                     }
                 } catch (Exception e) {
                     System.out.println("Error obteniendo captions: " + e.getMessage());
-                }
+                }  
 
                 listaVideosLimpia.add(v);
             }
