@@ -70,7 +70,7 @@ public class ApiChannelService {
                     v.setComments(listaCommentsLimpia);
                 }
 
-                /* --- PASO C: Obtener los CAPTIONS para ESTE vídeo ---
+                // --- PASO C: Obtener los CAPTIONS para ESTE vídeo ---
                 String urlCaptions = "https://peertube.tv/api/v1/videos/" + ptVideo.getId() + "/captions";
                 try {
                     ApiCaption resCaptions = restTemplate.getForObject(urlCaptions, ApiCaption.class);
@@ -89,7 +89,7 @@ public class ApiChannelService {
                     }
                 } catch (Exception e) {
                     System.out.println("Error obteniendo captions: " + e.getMessage());
-                }  */
+                }  
 
                 listaVideosLimpia.add(v);
             }
