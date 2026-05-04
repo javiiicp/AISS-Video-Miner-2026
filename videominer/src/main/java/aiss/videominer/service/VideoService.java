@@ -34,38 +34,42 @@ public class VideoService {
     }
 
     public Video findOne(String id) {
-        return videoRepository.findById(id).orElseThrow(VideoNotFoundException::new);
-    }
-
-    public void delete(String id) {
-        if (!videoRepository.existsById(id)) {
-            throw new VideoNotFoundException();
-        }
-        videoRepository.deleteById(id);
+        return videoRepository.findById(id)
+                .orElseThrow(() -> new VideoNotFoundException("No se encontró el vídeo con id: " + id));
     }
 
     public Video create(Video video) {
-        video.setAuthor(resolveAuthor(video.getAuthor()));
+        linkChildren(video);
+        video.setAuthor(userService.findOrCreate(video.getAuthor()));
         return videoRepository.save(video);
     }
 
     public Video update(String id, Video updatedVideo) {
-        Video video = findOne(id);
-        video.setName(updatedVideo.getName());
-        video.setDescription(updatedVideo.getDescription());
-        video.setAuthor(resolveAuthor(updatedVideo.getAuthor()));
-        video.setReleaseTime(updatedVideo.getReleaseTime());
-        video.setCaptions(updatedVideo.getCaptions());
-        video.setComments(updatedVideo.getComments());
-        return videoRepository.save(video);
+        findOne(id); // 404 check
+        updatedVideo.setId(id);
+        linkChildren(updatedVideo);
+        updatedVideo.setAuthor(userService.findOrCreate(updatedVideo.getAuthor()));
+        return videoRepository.save(updatedVideo);
+    }
+
+    private void linkChildren(Video video) {
+        if (video.getComments() != null) {
+            video.getComments().forEach(c -> c.setVideo(video));
+        }
+        if (video.getCaptions() != null) {
+            video.getCaptions().forEach(c -> c.setVideo(video));
+        }
+    }
+
+    public void delete(String id) {
+        if (!videoRepository.existsById(id)) {
+            throw new VideoNotFoundException("No se encontró el vídeo con id: " + id);
+        }
+        videoRepository.deleteById(id);
     }
 
     public Page<Caption> getCaptionsByVideo(String videoId, Pageable paging) {
         findOne(videoId);
         return captionRepository.findByVideo_Id(videoId, paging);
-    }
-
-    private User resolveAuthor(User author) {
-        return userService.findOrCreate(author);
     }
 }

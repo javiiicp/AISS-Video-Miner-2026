@@ -45,13 +45,6 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(status).body(body);
     }
 
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<Map<String, Object>> handleUnexpectedException(Exception ex) {
-        logger.error("Unexpected server error", ex);
-        Map<String, Object> body = createBaseBody(HttpStatus.INTERNAL_SERVER_ERROR, "Error inesperado del servidor");
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(body);
-    }
-
     @ExceptionHandler(ConstraintViolationException.class)
     public ResponseEntity<Map<String, Object>> handleConstraintViolationException(ConstraintViolationException ex) {
         Map<String, Object> body = createBaseBody(HttpStatus.BAD_REQUEST, "Error de validación");
@@ -66,6 +59,27 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body(body);
     }
 
+    @ExceptionHandler({
+        UserNotFoundException.class, 
+        VideoNotFoundException.class, 
+        CaptionNotFoundException.class, 
+        ChannelNotFoundException.class, 
+        CommentNotFoundException.class
+    })
+    public ResponseEntity<Map<String, Object>> handleNotFoundExceptions(RuntimeException ex) {
+        // Mejora: Si el mensaje es null, usamos la razón por defecto del estado HTTP
+        String message = ex.getMessage() != null ? ex.getMessage() : HttpStatus.NOT_FOUND.getReasonPhrase();
+        Map<String, Object> body = createBaseBody(HttpStatus.NOT_FOUND, message);
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(body);
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<Map<String, Object>> handleUnexpectedException(Exception ex) {
+        logger.error("Unexpected server error", ex);
+        Map<String, Object> body = createBaseBody(HttpStatus.INTERNAL_SERVER_ERROR, "Error inesperado del servidor");
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(body);
+    }
+
     private Map<String, Object> createBaseBody(HttpStatus status, String message) {
         Map<String, Object> body = new HashMap<>();
         body.put("timestamp", Instant.now().toString());
@@ -73,18 +87,5 @@ public class GlobalExceptionHandler {
         body.put("error", status.getReasonPhrase());
         body.put("message", message);
         return body;
-    }
-
-    @ExceptionHandler({
-    UserNotFoundException.class, 
-    VideoNotFoundException.class, 
-    CaptionNotFoundException.class, 
-    ChannelNotFoundException.class, 
-    CommentNotFoundException.class
-    })
-
-    public ResponseEntity<Map<String, Object>> handleNotFoundExceptions(RuntimeException ex) {
-        Map<String, Object> body = createBaseBody(HttpStatus.NOT_FOUND, ex.getMessage());
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(body);
     }
 }

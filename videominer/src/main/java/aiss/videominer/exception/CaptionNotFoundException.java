@@ -5,5 +5,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(code = HttpStatus.NOT_FOUND, reason = "Subtítulo no encontrado")
 public class CaptionNotFoundException extends RuntimeException{
-    
+    public CaptionNotFoundException(String message) {
+        super(message);
+    }
 }

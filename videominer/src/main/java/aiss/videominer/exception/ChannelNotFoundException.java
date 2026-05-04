@@ -5,5 +5,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(code = HttpStatus.NOT_FOUND, reason = "Canal no encontrado")
 public class ChannelNotFoundException extends RuntimeException{
-    
+        public ChannelNotFoundException(String message) {
+        super(message);
+    }
 }

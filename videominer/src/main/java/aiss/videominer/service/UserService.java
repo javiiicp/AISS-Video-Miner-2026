@@ -29,7 +29,8 @@ public class UserService {
     }
 
     public User findOne(String id) {
-        return repository.findById(id).orElseThrow(UserNotFoundException::new);
+        return repository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException("No se encontró el usuario con id: " + id));
     }
 
     public User create(User user) {
@@ -56,7 +57,7 @@ public class UserService {
 
     public void delete(String id) {
         if (!repository.existsById(id)) {
-            throw new UserNotFoundException();
+            throw new UserNotFoundException("No se encontró el usuario con id: " + id);
         }
         repository.deleteById(id);
     }

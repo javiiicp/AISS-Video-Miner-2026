@@ -5,5 +5,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(code = HttpStatus.NOT_FOUND, reason = "Vídeo no encontrado")
 public class VideoNotFoundException extends RuntimeException{
+    public VideoNotFoundException(String message) {
+        super(message);
+    }
     
 }

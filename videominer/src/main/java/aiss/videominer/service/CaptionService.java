@@ -31,7 +31,8 @@ public class CaptionService {
     }
 
     public Caption findOne(String id) {
-        return captionRepository.findById(id).orElseThrow(CaptionNotFoundException::new);
+        return captionRepository.findById(id)
+                .orElseThrow(() -> new CaptionNotFoundException("No se encontró el subtítulo con id: " + id));
     }
 
     public Caption create(Caption caption) {
@@ -55,11 +56,12 @@ public class CaptionService {
             captionRepository.deleteById(id);
             return;
         }
-        throw new CaptionNotFoundException();
+        throw new CaptionNotFoundException("No se encontró el subtítulo con id: " + id);
     }
 
     public Page<Caption> findByVideo(String videoId, Pageable paging) {
-        videoRepository.findById(videoId).orElseThrow(VideoNotFoundException::new);
+        videoRepository.findById(videoId)
+                .orElseThrow(() -> new VideoNotFoundException("No se encontró el vídeo con id: " + videoId));
         return captionRepository.findByVideo_Id(videoId, paging);
     }
 
@@ -67,6 +69,7 @@ public class CaptionService {
         if (caption.getVideo() == null || caption.getVideo().getId() == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "El subtítulo debe referenciar a un vídeo existente");
         }
-        return videoRepository.findById(caption.getVideo().getId()).orElseThrow(VideoNotFoundException::new);
+        return videoRepository.findById(caption.getVideo().getId())
+                .orElseThrow(() -> new VideoNotFoundException("No se encontró el vídeo referenciado con id: " + caption.getVideo().getId()));
     }
 }

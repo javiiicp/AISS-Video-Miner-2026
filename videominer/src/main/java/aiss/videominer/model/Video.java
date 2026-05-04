@@ -8,7 +8,6 @@ import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
@@ -16,9 +15,6 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 
-/**
- * @author Juan C. Alonso
- */
 @Entity
 @Table(name = "Video")
 public class Video {
@@ -41,87 +37,77 @@ public class Video {
     private String releaseTime;
 
     @JsonProperty("author")
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne
     @Valid
     @NotNull(message = "El vídeo debe tener un autor")
     private User author;
 
     @JsonProperty("comments")
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "videoId")
+    @OneToMany(mappedBy = "video", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments;
 
     @JsonProperty("captions")
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "videoId")
+    @OneToMany(mappedBy = "video", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Caption> captions;
 
-    public String getId() {
-        return id;
-    }
+    public String getId() { 
+        return id; 
+        }
 
-    public void setId(String id) {
-        this.id = id;
-    }
+    public void setId(String id) { 
+        this.id = id; 
+        }
 
-    public String getName() {
-        return name;
-    }
+    public String getName() { 
+        return name; 
+        }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+    public void setName(String name) { 
+        this.name = name; 
+        }
 
-    public String getDescription() {
-        return description;
-    }
+    public String getDescription() { 
+        return description; 
+        }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
+    public void setDescription(String description) { 
+        this.description = description; 
+        }
 
-    public String getReleaseTime() {
-        return releaseTime;
-    }
+    public String getReleaseTime() { 
+        return releaseTime; 
+        }
 
-    public void setReleaseTime(String releaseTime) {
-        this.releaseTime = releaseTime;
-    }
+    public void setReleaseTime(String releaseTime) { 
+        this.releaseTime = releaseTime; 
+        }
 
-    public User getAuthor() {
-        return author;
-    }
+    public User getAuthor() { 
+        return author; 
+        }
 
-    public void setAuthor(User author) {
-        this.author = author;
-    }
-    
-    public List<Comment> getComments() {
-        return comments;
-    }
+    public void setAuthor(User author) { 
+        this.author = author; 
+        }
 
-    public void setComments(List<Comment> comments) {
-        this.comments = comments;
-    }
+    public List<Comment> getComments() { 
+        return comments; 
+        }
 
-    public List<Caption> getCaptions() {
-        return captions;
-    }
+    public void setComments(List<Comment> comments) { 
+        this.comments = comments; 
+        }
 
-    public void setCaptions(List<Caption> captions) {
-        this.captions = captions;
-    }
+    public List<Caption> getCaptions() { 
+        return captions; 
+        }
+
+    public void setCaptions(List<Caption> captions) { 
+        this.captions = captions; 
+        }
 
     @Override
     public String toString() {
-        return "Video{" +
-                "id='" + id + '\'' +
-                ", name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                ", releaseTime='" + releaseTime + '\'' +
-                ", author=" + author +
-                ", comments=" + comments +
-                ", captions=" + captions +
-                '}';
+        return "Video{" + "id='" + id + '\'' + ", name='" + name + '\'' + ", author=" + author + '}';
     }
 }

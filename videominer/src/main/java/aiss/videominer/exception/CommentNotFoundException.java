@@ -5,5 +5,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(code = HttpStatus.NOT_FOUND, reason = "Comentario no encontrado")
 public class CommentNotFoundException extends RuntimeException{
+    public CommentNotFoundException(String message) {
+        super(message);
+    }
     
 }

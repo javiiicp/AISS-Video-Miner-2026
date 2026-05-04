@@ -35,7 +35,7 @@ public class CommentService {
 
     public Comment findOne(String id) {
         return commentRepository.findById(id)
-                .orElseThrow(CommentNotFoundException::new);
+                .orElseThrow(() -> new CommentNotFoundException("No se encontró el comentario con id: " + id));
     }
 
     public Comment create(Comment comment) {
@@ -57,14 +57,14 @@ public class CommentService {
 
     public void delete(String id) {
         if (!commentRepository.existsById(id)) {
-            throw new CommentNotFoundException();
+            throw new CommentNotFoundException("No se encontró el comentario con id: " + id);
         }
         commentRepository.deleteById(id);
     }
 
     public Page<Comment> findByVideo(String videoId, Pageable paging) {
         videoRepository.findById(videoId)
-            .orElseThrow(VideoNotFoundException::new);        
+            .orElseThrow(() -> new VideoNotFoundException("No se encontró el vídeo con id: " + videoId));        
         return commentRepository.findByVideo_Id(videoId, paging);
     }
 
@@ -74,6 +74,6 @@ public class CommentService {
         }
 
         return videoRepository.findById(comment.getVideo().getId())
-            .orElseThrow(VideoNotFoundException::new);    
+            .orElseThrow(() -> new VideoNotFoundException("No se encontró el vídeo referenciado con id: " + comment.getVideo().getId()));    
     }
 }
