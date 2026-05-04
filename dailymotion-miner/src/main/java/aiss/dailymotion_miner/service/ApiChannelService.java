@@ -18,21 +18,22 @@ public class ApiChannelService {
     private RestTemplate restTemplate;
 
     public Channel getChannel(String playlistId) {
-        
+        //Consulta
+        //GET https://api.dailymotion.com/playlist/{playlistId}?fields=id,name,description,created_time
         String url = "https://api.dailymotion.com/playlist/" + playlistId 
                    + "?fields=id,name,description,created_time";
-
+        //Validar si la playlist existe, si no existe lanzar una excepción con código 404
         DailymotionPlaylist externalPlaylist;
         try {
             externalPlaylist = restTemplate.getForObject(url, DailymotionPlaylist.class);
         } catch (HttpClientErrorException.NotFound ex) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Playlist no encontrada en Dailymotion", ex);
         }
-
+        //Validar si la respuesta es nula, si es nula lanzar una excepción con código 404
         if (externalPlaylist == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Playlist no encontrada en Dailymotion");
         }
-
+        // Mapeo de DailymotionPlaylist a Channel
         return DailymotionMapper.toChannel(externalPlaylist);
     }
 }
