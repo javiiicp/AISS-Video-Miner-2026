@@ -15,7 +15,7 @@ public class ApiVideoUserService {
 
     public User getAuthor(String ownerId) {
         try {
-            String urlUser = "https://api.dailymotion.com/user/" + ownerId;
+            String urlUser = "https://api.dailymotion.com/user/" + ownerId + "?fields=id,username,url,avatar_120_url";
             DailymotionUser extUser = restTemplate.getForObject(urlUser, DailymotionUser.class);
             if (extUser != null) {
                 return DailymotionMapper.toUser(extUser);

@@ -22,7 +22,7 @@ public class ApiChannelService {
     private ApiSubtitleService subtitleService;
 
     public Channel getChannelFromDailymotion(String playlistId, int maxVideos, int maxPages) {
-        String urlPlaylist = "https://api.dailymotion.com/playlist/" + playlistId;
+        String urlPlaylist = "https://api.dailymotion.com/playlist/" + playlistId + "?fields=id,name,description,created_time";
         DailymotionPlaylist extPlaylist;
 
         try {
@@ -36,7 +36,7 @@ public class ApiChannelService {
         Channel channel = DailymotionMapper.toChannel(extPlaylist);
 
         // Obtener vídeos de la playlist
-        String urlVideos = "https://api.dailymotion.com/playlist/" + playlistId + "/videos?limit=" + maxVideos;
+        String urlVideos = "https://api.dailymotion.com/playlist/" + playlistId + "/videos?limit=" + maxVideos + "&fields=id,title,description,created_time,owner,tags";
         DailymotionVideoSearch videoSearch = restTemplate.getForObject(urlVideos, DailymotionVideoSearch.class);
 
         if (videoSearch != null && videoSearch.getList() != null) {
