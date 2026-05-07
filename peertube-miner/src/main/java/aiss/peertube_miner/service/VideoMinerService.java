@@ -11,11 +11,15 @@ import aiss.peertube_miner.model.Channel;
 public class VideoMinerService {
 
     @Autowired
-    RestTemplate restTemplate;
+    private RestTemplate restTemplate;
 
     @Value("${VIDEOMINER_BASE_URL:http://localhost:8080}")
     private String videominerBaseUrl;
     
+    /**
+     * Envía el canal transformado a VideoMiner.
+     * VideoMiner generará automáticamente los UUIDs para el canal y sus vídeos.
+     */
     public void saveChannel(Channel channel) {
         String url = videominerBaseUrl + "/videominer/channels";
         restTemplate.postForObject(url, channel, Channel.class);
