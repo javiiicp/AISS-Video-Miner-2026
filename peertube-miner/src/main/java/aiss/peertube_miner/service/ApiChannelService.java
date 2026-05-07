@@ -1,6 +1,5 @@
 package aiss.peertube_miner.service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,19 +14,22 @@ import aiss.peertube_miner.model.Caption;
 import aiss.peertube_miner.model.Channel;
 import aiss.peertube_miner.model.Comment;
 import aiss.peertube_miner.model.Video;
-import aiss.peertube_miner.model.external.ApiCaption;
 import aiss.peertube_miner.model.external.ApiChannel;
-import aiss.peertube_miner.model.external.ApiComment;
-import aiss.peertube_miner.model.external.ApiVideo;
-import aiss.peertube_miner.model.external.DataCaption;
-import aiss.peertube_miner.model.external.DataComment;
-import aiss.peertube_miner.model.external.DataVideo;
 
 @Service
 public class ApiChannelService {
 
     @Autowired
     private RestTemplate restTemplate;
+
+    @Autowired
+    private ApiCommentService commentService;
+
+    @Autowired
+    private ApiVideoUserService videoUserService;
+
+    @Autowired
+    private ApiCaptionService captionService;
 
     public Channel getChannelFromPeerTube(String channelId, int maxVideos, int maxComments, String name, int page, int size,
             String sortBy, String sortDir) {
@@ -48,8 +50,20 @@ public class ApiChannelService {
 
         Channel videominerChannel = PeertubeMapper.toChannel(resCanal);
 
-        String urlVideos = urlCanal + "/videos?count=" + maxVideos;
-        ApiVideo resVideos = restTemplate.getForObject(urlVideos, ApiVideo.class);
+        List<Video> videominerVideos = videoUserService.getVideoUser(channelId, maxVideos);
+
+        for (Video video : videominerVideos) {
+            List<Comment> comments = commentService.getComments(video.getId(), maxComments);
+            video.setComments(comments);
+
+            List<Caption> captions = captionService.getCaption(video.getId());
+            video.setCaptions(captions);
+        }
+        videominerChannel.setVideos(videominerVideos);
+        return videominerChannel;
+    }
+        /*String urlVideos = urlCanal + "/videos?count=" + maxVideos;
+        ApiVideo resVideos = restTemplate.getForObject(urlVideos, ApiVideo.class)
 
         List<Video> listaVideosLimpia = new ArrayList<>();
         if (resVideos != null && resVideos.getData() != null) {
@@ -94,7 +108,7 @@ public class ApiChannelService {
         videominerChannel.setVideos(listaVideosLimpia);
         return videominerChannel;
     }
-
+*/
 
     private String safeString(String value) {
         return value == null ? "" : value;
