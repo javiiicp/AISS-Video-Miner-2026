@@ -35,12 +35,13 @@ public class ChannelService {
     }
 
     public Channel create(Channel channel) {
+        // Los IDs se generan automáticamente gracias a @GeneratedValue en el modelo
         normalizeChannelData(channel);
         return repository.save(channel);
     }
 
     public Channel update(String id, Channel updatedChannel) {
-        findOne(id); // Verifica que existe o lanza 404
+        findOne(id); 
         updatedChannel.setId(id);
         normalizeChannelData(updatedChannel);
         return repository.save(updatedChannel);
@@ -58,8 +59,10 @@ public class ChannelService {
 
         for (Video video : channel.getVideos()) {
             if (video.getAuthor() != null) {
+                // Si el autor ya existe por nombre/link, lo recuperamos; si no, se crea uno nuevo con UUID
                 video.setAuthor(userService.findOrCreate(video.getAuthor()));
             }
+            // Aseguramos la relación bidireccional para que JPA guarde las FK correctamente
             if (video.getComments() != null) {
                 video.getComments().forEach(comment -> comment.setVideo(video));
             }
