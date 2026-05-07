@@ -2,6 +2,7 @@ package aiss.videominer.model;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import jakarta.persistence.CascadeType;
@@ -37,6 +38,7 @@ public class Video {
     private String releaseTime;
 
     @JsonProperty("author")
+    @JsonAlias("user")
     @ManyToOne
     @Valid
     @NotNull(message = "El vídeo debe tener un autor")

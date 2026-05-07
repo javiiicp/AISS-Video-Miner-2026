@@ -1,5 +1,7 @@
 package aiss.videominer.service;
 
+import java.util.UUID;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -38,8 +40,13 @@ public class UserService {
     }
 
     public User findOrCreate(User user) {
-        if (user == null || user.getId() == null || user.getId().isBlank()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "El usuario debe tener un id válido");
+        if (user == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "El usuario no puede ser nulo");
+        }
+
+        // Generar ID automáticamente si es null o está vacío
+        if (user.getId() == null || user.getId().isBlank()) {
+            user.setId(UUID.randomUUID().toString());
         }
 
         return repository.findById(user.getId())

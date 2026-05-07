@@ -1,6 +1,7 @@
 package aiss.videominer.model;
 
 import java.util.List;
+import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -8,6 +9,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotEmpty;
 
@@ -20,7 +22,6 @@ public class User {
 
     @Id
     @JsonProperty("id")
-    @NotEmpty(message = "El id del usuario no puede estar vacío")
     private String id;
 
     @JsonProperty("name")
@@ -36,6 +37,13 @@ public class User {
     @JsonIgnore
     @OneToMany(mappedBy = "author") 
     private List<Video> videos;
+
+    @PrePersist
+    public void generateIdIfNull() {
+        if (this.id == null || this.id.isEmpty()) {
+            this.id = UUID.randomUUID().toString();
+        }
+    }
 
     public String getId() {
         return id;
