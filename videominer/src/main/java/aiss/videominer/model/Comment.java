@@ -1,5 +1,6 @@
 package aiss.videominer.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -35,8 +36,10 @@ public class Comment {
     @JoinColumn(name = "videoId") // Columna de unión en la BD
     @NotNull(message = "El comentario debe estar asociado a un vídeo")
     @JsonIgnoreProperties({"comments", "captions"})
+    @JsonIgnore
     private Video video;
 
+   
 
     public String getId() {
         return id;
@@ -61,6 +64,7 @@ public class Comment {
     public void setCreatedOn(String createdOn) {
         this.createdOn = createdOn;
     }
+    
 
     public Video getVideo() {
     return video;

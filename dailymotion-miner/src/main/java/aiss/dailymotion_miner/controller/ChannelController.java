@@ -48,8 +48,7 @@ public class ChannelController {
             @Parameter(description = "Máximo de páginas de la API a consultar")
             @RequestParam(defaultValue = "2") @Min(1) Integer maxPages) {
         
-        // Cambio clave: El servicio ahora debería lanzar ChannelNotFoundException internamente
-        Channel channel = channelService.getChannelFromDailymotion(id, maxVideos, maxPages);
+        Channel channel = channelService.getChannelFromDailymotion(id, maxVideos, maxPages); //Con los cambios que hemos hecho, debería de lanzarse la excepción sin problema
         
         if (channel == null) {
             throw new ChannelNotFoundException(); //

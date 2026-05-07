@@ -24,7 +24,7 @@ public class DailymotionMapper {
         channel.setName(external.getName());
         channel.setDescription(external.getDescription());
         
-        // Conversión de Unix Timestamp (Long) a ISO String
+        // Conversión de la fecha de creación al formato que necesitamos
         if (external.getCreatedTime() != null) {
             channel.setCreatedTime(Instant.ofEpochSecond(external.getCreatedTime()).toString()); 
         }
@@ -42,7 +42,7 @@ public class DailymotionMapper {
         video.setName(external.getTitle());
         video.setDescription(external.getDescription());
         
-        // Conversión de Unix Timestamp (Integer) a ISO String
+        // Conversión de la fecha de creación al formato que necesitamos
         if (external.getCreatedTime() != null) {
             video.setReleaseTime(Instant.ofEpochSecond(external.getCreatedTime().longValue()).toString());
         }
