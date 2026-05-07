@@ -1,9 +1,7 @@
 package aiss.peertube_miner.service;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
-import java.util.Locale;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -93,36 +91,10 @@ public class ApiChannelService {
             }
         }
 
-        videominerChannel.setVideos(applyVideoFilters(listaVideosLimpia, name, page, size, sortBy, sortDir));
+        videominerChannel.setVideos(listaVideosLimpia);
         return videominerChannel;
     }
 
-    private List<Video> applyVideoFilters(List<Video> videos, String name, int page, int size, String sortBy, String sortDir) {
-        List<Video> filtered = new ArrayList<>(videos);
-
-        if (name != null && !name.isBlank()) {
-            String nameFilter = name.toLowerCase(Locale.ROOT);
-            filtered.removeIf(video -> video.getName() == null || !video.getName().toLowerCase(Locale.ROOT).contains(nameFilter));
-        }
-
-        Comparator<Video> comparator;
-        if ("name".equalsIgnoreCase(sortBy)) {
-            comparator = Comparator.comparing(video -> safeString(video.getName()), String.CASE_INSENSITIVE_ORDER);
-        } else if ("releaseTime".equalsIgnoreCase(sortBy)) {
-            comparator = Comparator.comparing(video -> safeString(video.getReleaseTime()));
-        } else {
-            comparator = Comparator.comparing(video -> safeString(video.getId()));
-        }
-
-        filtered.sort(comparator);
-        if ("desc".equalsIgnoreCase(sortDir)) {
-            filtered.sort(comparator.reversed());
-        }
-
-        int fromIndex = Math.min(page * size, filtered.size());
-        int toIndex = Math.min(fromIndex + size, filtered.size());
-        return new ArrayList<>(filtered.subList(fromIndex, toIndex));
-    }
 
     private String safeString(String value) {
         return value == null ? "" : value;
