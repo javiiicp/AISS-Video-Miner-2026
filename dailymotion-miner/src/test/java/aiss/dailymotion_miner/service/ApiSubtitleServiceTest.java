@@ -120,6 +120,7 @@ class ApiSubtitleServiceTest {
 
         assertNotNull(result, "La lista no debe ser null incluso con error");
         assertEquals(0, result.size(), "Debería estar vacía en caso de error");
+    
     }
 
 }
