@@ -25,7 +25,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/videominer/comments")
-@Tag(name = "4. Gestión de Comentarios y Tags", description = "Controlador para la administración de la interacción social y etiquetas de los vídeos. " +
+@Tag(name = "4. Comment Controller", description = "Controlador para la administración de la interacción social y etiquetas de los vídeos. " +
         "Importante: En la integración con Dailymotion, este recurso se utiliza para gestionar los 'tags' del vídeo.")
 @Validated
 public class CommentController {

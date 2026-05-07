@@ -25,7 +25,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/videominer/captions")
-@Tag(name = "3. Gestión de Subtítulos", description = "Controlador encargado de administrar las transcripciones y traducciones (Captions). " +
+@Tag(name = "1. Caption Controller", description = "Controlador encargado de administrar las transcripciones y traducciones (Captions). " +
         "Nota: En la integración con Dailymotion, este recurso equivale a los 'Subtitles' del vídeo.")
 @Validated
 public class CaptionController {
@@ -39,8 +39,8 @@ public class CaptionController {
     @Operation(
         summary = "Listar y Paginar todos los Subtítulos",
         description = """
-                      ### Guía de navegación:
-                      Este endpoint permite explorar el catálogo global de subtítulos. Es ideal para auditorías de contenido o gestión masiva.
+                      ### Guía de uso:
+                      Este endpoint permite explorar el catálogo global de subtítulos. Ideal para obtener una visión general de los idiomas disponibles en el sistema.
                       1. **Paginación**: Usa `page` (empezando en 0) y `size` (máximo 100) para segmentar la respuesta.
                       2. **Ordenación**: El parámetro `sortBy` permite organizar los resultados por campos como `language` o `id`.
                       

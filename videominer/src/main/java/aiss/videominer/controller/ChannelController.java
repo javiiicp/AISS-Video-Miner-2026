@@ -25,7 +25,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/videominer/channels")
-@Tag(name = "1. Gestión de Canales", description = "Controlador principal para la administración de canales multimedia. " +
+@Tag(name = "3. Channel Controller", description = "Controlador principal para la administración de canales multimedia. " +
         "Este servicio permite centralizar la información recolectada de PeerTube y Dailymotion.")
 @Validated
 public class ChannelController {

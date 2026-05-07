@@ -25,7 +25,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/videominer/users")
-@Tag(name = "5. Gestión de Usuarios y Autores", description = "Controlador para la administración de perfiles de creadores de contenido. " +
+@Tag(name = "5. User Controller", description = "Controlador para la administración de perfiles de creadores de contenido. " +
         "Este recurso unifica el concepto de 'Account' de PeerTube y 'Owner' de Dailymotion.")
 @Validated
 public class UserController {

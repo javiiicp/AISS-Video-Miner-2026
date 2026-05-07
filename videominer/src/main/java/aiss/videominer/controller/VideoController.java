@@ -26,7 +26,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/videominer/videos")
-@Tag(name = "2. Gestión de Vídeos", description = "Controlador encargado de administrar los metadatos de los vídeos. " +
+@Tag(name = "2. Video Controller", description = "Controlador encargado de administrar los metadatos de los vídeos. " +
         "Permite gestionar la relación entre los autores (User), sus hilos de comentarios y sus subtítulos.")
 @Validated
 public class VideoController {
