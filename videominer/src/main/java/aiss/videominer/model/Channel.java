@@ -2,6 +2,7 @@ package aiss.videominer.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -11,6 +12,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
@@ -22,7 +24,6 @@ public class Channel {
 
     @Id
     @JsonProperty("id")
-    @NotEmpty(message = "El id del canal no puede estar vacío")
     private String id;
 
     @JsonProperty("name")
@@ -46,6 +47,13 @@ public class Channel {
 
     public Channel() { this.videos = new ArrayList<>(); }
 
+
+    @PrePersist
+    public void generateIdIfNull() {
+        if (this.id == null || this.id.isEmpty()) {
+            this.id = UUID.randomUUID().toString();
+        }
+    }
     public String getId() { 
         return id; 
         }
