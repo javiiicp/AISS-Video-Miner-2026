@@ -2,8 +2,10 @@ package aiss.videominer.service;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import aiss.videominer.exception.UserNotFoundException;
 import aiss.videominer.model.User;
@@ -35,20 +37,13 @@ public class UserService {
         return repository.save(user);
     }
 
-    /**
-     * Busca un usuario por ID o lo crea si no existe.
-     */
     public User findOrCreate(User user) {
-        if (user == null) return null;
-        
-        // Si ya tiene un ID (UUID), intentamos buscarlo
-        if (user.getId() != null && !user.getId().isBlank()) {
-            return repository.findById(user.getId())
-                    .orElseGet(() -> repository.save(user));
+        if (user == null || user.getId() == null || user.getId().isBlank()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "El usuario debe tener un id válido");
         }
 
-        // Si no tiene ID, lo creamos directamente (JPA generará el UUID)
-        return repository.save(user);
+        return repository.findById(user.getId())
+                .orElseGet(() -> repository.save(user));
     }
 
     public User update(String id, User updatedUser) {
@@ -56,6 +51,7 @@ public class UserService {
         user.setName(updatedUser.getName());
         user.setUser_link(updatedUser.getUser_link());
         user.setPicture_link(updatedUser.getPicture_link());
+        user.setVideos(updatedUser.getVideos());
         return repository.save(user);
     }
 

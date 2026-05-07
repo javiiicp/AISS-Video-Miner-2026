@@ -1,10 +1,8 @@
 package aiss.videominer.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
@@ -18,28 +16,23 @@ import jakarta.validation.constraints.NotNull;
  */
 @Entity
 @Table(name = "Caption")
-@Schema(description = "Subtítulos de un vídeo")
 public class Caption {
 
     @Id
     @JsonProperty("id")
     @NotEmpty(message = "El id del subtítulo no puede estar vacío")
-    @Schema(description = "ID del subtítulo (generado automáticamente)", accessMode = Schema.AccessMode.READ_ONLY)
     private String id;
 
     @JsonProperty("link")
-    @Schema(description = "Enlace al archivo de subtítulos", example = "https://example.com/subs.vtt")
     private String link;
 
     @JsonProperty("language")
-    @Schema(description = "Idioma de los subtítulos", example = "es")
     private String language;
 
     @ManyToOne
     @JoinColumn(name = "videoId")
     @NotNull(message = "El subtítulo debe estar asociado a un vídeo")
-    @JsonBackReference
-    @Schema(description = "Vídeo asociado")
+    @JsonIgnoreProperties({"comments", "captions"})
     private Video video;
 
 

@@ -15,22 +15,20 @@ import aiss.peertube_miner.model.external.DataComment;
 public class ApiCommentService {
 
     @Autowired
-    private RestTemplate restTemplate;
+    RestTemplate restTemplate;
 
     public List<Comment> getComments(String videoId, Integer maxComments) {
         List<Comment> comments = new ArrayList<>();
         String urlComments = "https://peertube.tv/api/v1/videos/" + videoId + "/comment-threads?count=" + maxComments;
                 
-        try {
-            ApiComment resComments = restTemplate.getForObject(urlComments, ApiComment.class);
-            if (resComments != null && resComments.getData() != null) {
-                for (DataComment ptComment : resComments.getData()) {
-                    comments.add(PeertubeMapper.toComment(ptComment));
+        ApiComment resComments = restTemplate.getForObject(urlComments, ApiComment.class);
+
+        if (resComments != null && resComments.getData() != null) {
+                    
+            for (DataComment ptComment : resComments.getData()) {
+                Comment comment = PeertubeMapper.toComment(ptComment);
+                comments.add(comment);
                 }
-            }
-        } catch (Exception e) {
-            // Loguear error real en producción
-            System.err.println("Error al obtener comentarios para videoId " + videoId + ": " + e.getMessage());
         }
         return comments;
     }

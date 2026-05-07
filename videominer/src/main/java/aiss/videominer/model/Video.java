@@ -2,10 +2,8 @@ package aiss.videominer.model;
 
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -19,47 +17,37 @@ import jakarta.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "Video")
-@Schema(description = "Detalles del vídeo almacenado")
 public class Video {
 
     @Id
     @JsonProperty("id")
     @NotEmpty(message = "El id del vídeo no puede estar vacío")
-    @Schema(description = "ID del vídeo (generado automáticamente)", accessMode = Schema.AccessMode.READ_ONLY)
     private String id;
 
     @JsonProperty("name")
     @NotEmpty(message = "El nombre del vídeo no puede estar vacío")
-    @Schema(description = "Título del vídeo", example = "Tutorial de Spring Boot")
     private String name;
 
     @JsonProperty("description")
     @Column(columnDefinition="TEXT")
-    @Schema(description = "Sinopsis del vídeo")
     private String description;
 
     @JsonProperty("releaseTime")
     @NotEmpty(message = "La fecha de publicación no puede estar vacía")
-    @Schema(description = "Fecha en la que se publicó el vídeo", example = "2023-10-27T10:00:00Z")
     private String releaseTime;
 
-    @JsonProperty("user")
+    @JsonProperty("author")
     @ManyToOne
     @Valid
     @NotNull(message = "El vídeo debe tener un autor")
-    @Schema(description = "Autor del vídeo")
     private User author;
 
     @JsonProperty("comments")
     @OneToMany(mappedBy = "video", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference
-    @Schema(description = "Comentarios recibidos", accessMode = Schema.AccessMode.READ_ONLY)
     private List<Comment> comments;
 
     @JsonProperty("captions")
     @OneToMany(mappedBy = "video", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference
-    @Schema(description = "Subtítulos disponibles", accessMode = Schema.AccessMode.READ_ONLY)
     private List<Caption> captions;
 
     public String getId() { 

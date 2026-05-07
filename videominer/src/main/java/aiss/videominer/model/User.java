@@ -5,7 +5,6 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
@@ -17,26 +16,21 @@ import jakarta.validation.constraints.NotEmpty;
  */
 @Entity
 @Table(name = "VMUser")
-@Schema(description = "Información del autor o usuario del vídeo")
 public class User {
 
     @Id
     @JsonProperty("id")
     @NotEmpty(message = "El id del usuario no puede estar vacío")
-    @Schema(description = "ID único del usuario (generado automáticamente)", accessMode = Schema.AccessMode.READ_ONLY)
     private String id;
 
     @JsonProperty("name")
     @NotEmpty(message = "El nombre del usuario no puede estar vacío")
-    @Schema(description = "Nombre del autor", example = "Juan Pérez")
     private String name;
 
     @JsonProperty("user_link")
-    @Schema(description = "Enlace al perfil del usuario", example = "https://peertube.tv/c/ejemplo")
     private String user_link;
 
     @JsonProperty("picture_link")
-    @Schema(description = "Enlace a la imagen de perfil", example = "https://peertube.tv/static/avatar.png")
     private String picture_link;
 
     @JsonIgnore

@@ -18,22 +18,19 @@ import aiss.peertube_miner.model.external.DataVideo;
 public class ApiVideoUserService {
 
     @Autowired
-    private RestTemplate restTemplate;
+    RestTemplate restTemplate;
 
-    /**
-     * Extrae los vídeos de un canal usando su handle.
-     */
-    public List<Video> getVideoUser(String handle, Integer maxVideos) {
+    public List<Video> getVideoUser(String channelId, Integer maxVideos) {
         List<Video> videos = new ArrayList<>();
-        // Endpoint oficial de PeerTube para vídeos por canal (handle)
-        String urlVideos = "https://peertube.tv/api/v1/video-channels/" + handle + "/videos?count=" + maxVideos;
-        
+        String urlCanal = "https://peertube.tv/api/v1/video-channels/" + channelId;
+        String urlVideos = urlCanal + "/videos?count=" + maxVideos;
+        // ApiVideo es el que se encarga de formatear los vídeos de PeerTube a la estructura de VideoMiner
         ApiVideo resVideos = restTemplate.getForObject(urlVideos, ApiVideo.class);
 
         if (resVideos != null && resVideos.getData() != null) {
+
             for (DataVideo ptVideo : resVideos.getData()) {
                 Video video = PeertubeMapper.toVideo(ptVideo);
-                // Asignamos el autor extrayéndolo de los metadatos de la cuenta
                 User user = PeertubeMapper.toUser(ptVideo.getAccount());
                 video.setAuthor(user);
                 videos.add(video);
@@ -41,4 +38,28 @@ public class ApiVideoUserService {
         }
         return videos;
     }
+    /*
+    public User transformToUser(ApiAccount apiAccount) {
+        User user = new User();
+
+        // 1. Mapear el ID (PeerTube da un Integer, tú necesitas un String)
+        if (apiAccount.getId() != null) {
+            user.setId(apiAccount.getId().toString());
+        }
+
+        // 2. Mapear el Nombre (En PeerTube el nombre real es displayName)
+        user.setName(apiAccount.getDisplayName());
+
+        // 3. Mapear el Link (En PeerTube es url)
+        user.setUser_link(apiAccount.getUrl());
+
+        // 4. Mapear la Imagen (Buscamos en la lista de avatars)
+        if (apiAccount.getAvatars() != null && !apiAccount.getAvatars().isEmpty()) {
+            // Cogemos la URL del primer avatar disponible
+            String imageUrl = apiAccount.getAvatars().get(0).getFileUrl();
+            user.setPicture_link(imageUrl);
+        }
+
+        return user;
+    }*/
 }

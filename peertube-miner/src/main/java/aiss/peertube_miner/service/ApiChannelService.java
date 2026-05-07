@@ -31,24 +31,10 @@ public class ApiChannelService {
     @Autowired
     private RestTemplate restTemplate;
 
-    @Autowired
-    private ApiCommentService commentService;
-
-    @Autowired
-    private ApiVideoUserService videoUserService;
-
-    @Autowired
-    private ApiCaptionService captionService;
-
-    /**
-     * Obtiene un canal de PeerTube por su handle y procesa sus vídeos con filtros y paginación.
-     * @param handle El nombre corto del canal (slug).
-     */
-    public Channel getChannelFromPeerTube(String handle, int maxVideos, int maxComments, String name, int page, int size,
+    public Channel getChannelFromPeerTube(String channelId, int maxVideos, int maxComments, String name, int page, int size,
             String sortBy, String sortDir) {
 
-        // 1. Identificación por nombre (handle) según documentación real de PeerTube
-        String urlCanal = "https://peertube.tv/api/v1/video-channels/" + handle;
+        String urlCanal = "https://peertube.tv/api/v1/video-channels/" + channelId;
         ApiChannel resCanal;
         try {
             resCanal = restTemplate.getForObject(urlCanal, ApiChannel.class);
@@ -62,60 +48,79 @@ public class ApiChannelService {
             throw new ChannelNotFoundException();
         }
 
-        // Transformamos metadatos básicos del canal
         Channel videominerChannel = PeertubeMapper.toChannel(resCanal);
 
-        // 2. Extracción de vídeos (usando el handle para la búsqueda)
-        // Obtenemos los vídeos brutos delegando en el servicio de usuario/vídeos
-        List<Video> listaVideosBruta = videoUserService.getVideoUser(handle, maxVideos);
+        String urlVideos = urlCanal + "/videos?count=" + maxVideos;
+        ApiVideo resVideos = restTemplate.getForObject(urlVideos, ApiVideo.class);
 
-        // 3. Procesamiento profundo de cada vídeo (comentarios y subtítulos)
-        for (Video video : listaVideosBruta) {
-            video.setComments(commentService.getComments(video.getId(), maxComments));
-            video.setCaptions(captionService.getCaption(video.getId()));
+        List<Video> listaVideosLimpia = new ArrayList<>();
+        if (resVideos != null && resVideos.getData() != null) {
+            for (DataVideo ptVideo : resVideos.getData()) {
+                Video video = PeertubeMapper.toVideo(ptVideo);
+                if (ptVideo.getAccount() != null) {
+                    video.setAuthor(PeertubeMapper.toUser(ptVideo.getAccount()));
+                }
+
+                List<Comment> comments = new ArrayList<>();
+                try {
+                    String urlComments = "https://peertube.tv/api/v1/videos/" + ptVideo.getId() + "/comment-threads?count=" + maxComments;
+                    ApiComment resComments = restTemplate.getForObject(urlComments, ApiComment.class);
+                    if (resComments != null && resComments.getData() != null) {
+                        for (DataComment ptComment : resComments.getData()) {
+                            comments.add(PeertubeMapper.toComment(ptComment));
+                        }
+                    }
+                } catch (RestClientException ex) {
+                    comments = new ArrayList<>();
+                }
+                video.setComments(comments);
+
+                List<Caption> captions = new ArrayList<>();
+                try {
+                    String urlCaptions = "https://peertube.tv/api/v1/videos/" + ptVideo.getId() + "/captions";
+                    ApiCaption resCaptions = restTemplate.getForObject(urlCaptions, ApiCaption.class);
+                    if (resCaptions != null && resCaptions.getData() != null) {
+                        for (DataCaption ptCaption : resCaptions.getData()) {
+                            captions.add(PeertubeMapper.toCaption(ptCaption));
+                        }
+                    }
+                } catch (RestClientException ex) {
+                    captions = new ArrayList<>();
+                }
+                video.setCaptions(captions);
+
+                listaVideosLimpia.add(video);
+            }
         }
 
-        // 4. Aplicación de Paginación, Filtrado y Ordenación en memoria
-        // Como pedimos un solo canal, estos parámetros operan sobre su lista de vídeos
-        List<Video> videosProcesados = applyVideoFilters(listaVideosBruta, name, page, size, sortBy, sortDir);
-        
-        videominerChannel.setVideos(videosProcesados);
+        videominerChannel.setVideos(applyVideoFilters(listaVideosLimpia, name, page, size, sortBy, sortDir));
         return videominerChannel;
     }
 
-    /**
-     * Lógica de filtrado y paginación sobre la colección de vídeos del canal.
-     */
     private List<Video> applyVideoFilters(List<Video> videos, String name, int page, int size, String sortBy, String sortDir) {
         List<Video> filtered = new ArrayList<>(videos);
 
-        // Filtrado por nombre (búsqueda parcial)
         if (name != null && !name.isBlank()) {
             String nameFilter = name.toLowerCase(Locale.ROOT);
-            filtered.removeIf(v -> v.getName() == null || !v.getName().toLowerCase(Locale.ROOT).contains(nameFilter));
+            filtered.removeIf(video -> video.getName() == null || !video.getName().toLowerCase(Locale.ROOT).contains(nameFilter));
         }
 
-        // Configuración del comparador para ordenación
         Comparator<Video> comparator;
         if ("name".equalsIgnoreCase(sortBy)) {
-            comparator = Comparator.comparing(v -> safeString(v.getName()), String.CASE_INSENSITIVE_ORDER);
+            comparator = Comparator.comparing(video -> safeString(video.getName()), String.CASE_INSENSITIVE_ORDER);
         } else if ("releaseTime".equalsIgnoreCase(sortBy)) {
-            comparator = Comparator.comparing(v -> safeString(v.getReleaseTime()));
+            comparator = Comparator.comparing(video -> safeString(video.getReleaseTime()));
         } else {
-            comparator = Comparator.comparing(v -> safeString(v.getId()));
+            comparator = Comparator.comparing(video -> safeString(video.getId()));
         }
 
-        // Dirección del orden
+        filtered.sort(comparator);
         if ("desc".equalsIgnoreCase(sortDir)) {
             filtered.sort(comparator.reversed());
-        } else {
-            filtered.sort(comparator);
         }
 
-        // Paginación manual
         int fromIndex = Math.min(page * size, filtered.size());
         int toIndex = Math.min(fromIndex + size, filtered.size());
-        
         return new ArrayList<>(filtered.subList(fromIndex, toIndex));
     }
 

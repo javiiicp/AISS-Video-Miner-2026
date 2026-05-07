@@ -39,10 +39,8 @@ public class CommentService {
     }
 
     public Comment create(Comment comment) {
-        // Buscamos el vídeo al que pertenece el comentario
         Video video = resolveVideo(comment);
         comment.setVideo(video);
-        // El ID se genera automáticamente vía UUID al guardar
         return commentRepository.save(comment);
     }
 
@@ -53,7 +51,7 @@ public class CommentService {
 
         Video video = resolveVideo(updatedComment);
         comment.setVideo(video);
-        comment.setId(id); // Mantenemos el ID original
+        comment.setId(id);
         return commentRepository.save(comment);
     }
 
@@ -65,18 +63,17 @@ public class CommentService {
     }
 
     public Page<Comment> findByVideo(String videoId, Pageable paging) {
-        if (!videoRepository.existsById(videoId)) {
-            throw new VideoNotFoundException("No se encontró el vídeo con id: " + videoId);
-        }        
+        videoRepository.findById(videoId)
+            .orElseThrow(() -> new VideoNotFoundException("No se encontró el vídeo con id: " + videoId));        
         return commentRepository.findByVideo_Id(videoId, paging);
     }
 
     private Video resolveVideo(Comment comment) {
         if (comment.getVideo() == null || comment.getVideo().getId() == null) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "El comentario debe incluir el ID de un vídeo existente");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "El comentario debe estar asociado a un vídeo existente");
         }
 
         return videoRepository.findById(comment.getVideo().getId())
-            .orElseThrow(() -> new VideoNotFoundException("El vídeo referenciado no existe: " + comment.getVideo().getId()));    
+            .orElseThrow(() -> new VideoNotFoundException("No se encontró el vídeo referenciado con id: " + comment.getVideo().getId()));    
     }
 }

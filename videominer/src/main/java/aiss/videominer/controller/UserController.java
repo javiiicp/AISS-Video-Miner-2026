@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.RestController;
 import aiss.videominer.model.User;
 import aiss.videominer.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
@@ -29,17 +28,18 @@ import jakarta.validation.constraints.Min;
 
 @RestController
 @RequestMapping("/videominer/users")
-@Tag(name = "Usuarios", description = "Operaciones para gestionar los autores de contenido")
+@Tag(name = "Controlador Usuarios", description = "Operaciones para gestionar los usuarios")
 @Validated
 public class UserController {
 
     @Autowired
     UserService service;
 
-    @Operation(summary = "Listar todos los usuarios", description = "Devuelve una lista paginada de autores")
+    // GET http://localhost:8080/videominer/users
+    @Operation(summary = "Listar todos los usuarios", description = "Devuelve una lista con todos los usuarios registrados en el sistema")
     @GetMapping
     public Page<User> findAll(
-        @Parameter(description = "Filtrar por nombre de autor") @RequestParam(required = false) String name,
+        @RequestParam(required = false) String name,
         @RequestParam(defaultValue = "0") @Min(0) int page,
         @RequestParam(defaultValue = "10") @Min(1) @Max(100) int size,
         @RequestParam(defaultValue = "id") String sortBy) {
@@ -48,26 +48,30 @@ public class UserController {
         return service.findAll(name, paging);
     }
 
-    @Operation(summary = "Obtener un usuario por ID")
+    // GET http://localhost:8080/videominer/users/{id}
+    @Operation(summary = "Obtener un usuario por ID", description = "Devuelve un usuario específico según su ID")
     @GetMapping("/{id}")
     public User findOne(@PathVariable String id) {
         return service.findOne(id);
     }
 
-    @Operation(summary = "Crear un nuevo usuario")
+    // POST http://localhost:8080/videominer/users
+    @Operation(summary = "Crear un nuevo usuario", description = "Crea un usuario manualmente en el sistema")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public User create(@Valid @RequestBody User user) {
         return service.create(user);
     }
 
-    @Operation(summary = "Actualizar un usuario")
+    // PUT http://localhost:8080/videominer/users/{id}
+    @Operation(summary = "Actualizar un usuario", description = "Modifica los datos de un usuario existente")
     @PutMapping("/{id}")
     public User update(@PathVariable String id, @Valid @RequestBody User updatedUser) {
         return service.update(id, updatedUser);
     }
 
-    @Operation(summary = "Eliminar un usuario")
+    // DELETE http://localhost:8080/videominer/users/{id}
+    @Operation(summary = "Eliminar un usuario", description = "Borra permanentemente un usuario por su ID")
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable String id) {

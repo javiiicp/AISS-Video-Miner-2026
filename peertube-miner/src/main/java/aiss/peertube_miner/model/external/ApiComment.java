@@ -5,31 +5,60 @@ import javax.annotation.processing.Generated;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import io.swagger.v3.oas.annotations.media.Schema;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
     "total",
     "data"
 })
+
 @Generated("jsonschema2pojo")
-@Schema(description = "Contenedor de hilos de comentarios de un vídeo")
 public class ApiComment {
 
     @JsonProperty("total")
-    @Schema(description = "Número total de comentarios")
     private Integer total;
 
     @JsonProperty("data")
-    @Schema(description = "Lista de comentarios extraídos")
     private List<DataComment> data;
 
     @JsonProperty("total")
-    public Integer getTotal() { return total; }
+    public Integer getTotal() {
+        return total;
+    }
+
     @JsonProperty("total")
-    public void setTotal(Integer total) { this.total = total; }
-    @JsonProperty("data")
-    public List<DataComment> getData() { return data; }
-    @JsonProperty("data")
-    public void setData(List<DataComment> data) { this.data = data; }
+    public void setTotal(Integer total) {
+        this.total = total;
+    }
+
+@JsonProperty("data")
+public List<DataComment> getData() {
+return data;
+}
+
+@JsonProperty("data")
+public void setData(List<DataComment> data) {
+this.data = data;
+}
+
+@Override
+public String toString() {
+StringBuilder sb = new StringBuilder();
+sb.append(ApiComment.class.getName()).append('@').append(Integer.toHexString(System.identityHashCode(this))).append('[');
+sb.append("total");
+sb.append('=');
+sb.append(((this.total == null)?"<null>":this.total));
+sb.append(',');
+sb.append("data");
+sb.append('=');
+sb.append(((this.data == null)?"<null>":this.data));
+sb.append(',');
+if (sb.charAt((sb.length()- 1)) == ',') {
+sb.setCharAt((sb.length()- 1), ']');
+} else {
+sb.append(']');
+}
+return sb.toString();
+}
+
 }

@@ -11,28 +11,28 @@ import aiss.peertube_miner.mapper.PeertubeMapper;
 import aiss.peertube_miner.model.Caption;
 import aiss.peertube_miner.model.external.ApiCaption;
 import aiss.peertube_miner.model.external.DataCaption;
-
 @Service
 public class ApiCaptionService {
 
     @Autowired
-    private RestTemplate restTemplate;
+    RestTemplate restTemplate;
 
     public List<Caption> getCaption(String videoId) {
         List<Caption> captions = new ArrayList<>();       
         String urlCaptions = "https://peertube.tv/api/v1/videos/" + videoId + "/captions";
-        
-        try {
-            ApiCaption resCaptions = restTemplate.getForObject(urlCaptions, ApiCaption.class);
-            if (resCaptions != null && resCaptions.getData() != null) {
-                for (DataCaption ptCaption : resCaptions.getData()) {
-                    captions.add(PeertubeMapper.toCaption(ptCaption));
-                }
-            }
-        } catch (Exception e) {
-            // Loguear error real en producción
-            System.err.println("Error al obtener captions para videoId " + videoId + ": " + e.getMessage());
-        }  
+                try {
+                    ApiCaption resCaptions = restTemplate.getForObject(urlCaptions, ApiCaption.class);
+                    
+                    if (resCaptions != null && resCaptions.getData() != null) {
+                        
+                        for (DataCaption ptCaption : resCaptions.getData()) {
+                            Caption caption = PeertubeMapper.toCaption(ptCaption);
+                            captions.add(caption);
+                        }
+                    }
+                } catch (Exception e) {
+                    System.out.println("Error obteniendo captions: " + e.getMessage());
+                }  
         return captions;
     }
 }

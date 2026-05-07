@@ -1,38 +1,30 @@
 package aiss.peertube_miner.model;
 
 import java.util.List;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import io.swagger.v3.oas.annotations.media.Schema;
 
-@Schema(description = "Detalles de un vídeo de PeerTube")
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class Video {
 
     @JsonProperty("id")
-    @Schema(description = "UUID o ID identificador del vídeo", example = "uuid-1234-5678")
     private String id;
 
     @JsonProperty("name")
-    @Schema(description = "Título del vídeo", example = "Tutorial de Microservicios")
     private String name;
 
     @JsonProperty("description")
-    @Schema(description = "Sinopsis o descripción del contenido")
     private String description;
 
     @JsonProperty("releaseTime")
-    @Schema(description = "Fecha de publicación del vídeo", example = "2024-05-21T12:00:00Z")
     private String releaseTime;
 
-    @JsonProperty("user")
-    @Schema(description = "Información del autor del vídeo")
+    @JsonProperty("author")
     private User author;
 
     @JsonProperty("comments")
-    @Schema(description = "Hilos de comentarios asociados al vídeo")
     private List<Comment> comments;
 
     @JsonProperty("captions")
-    @Schema(description = "Subtítulos disponibles para el vídeo")
     private List<Caption> captions;
 
     public Video() {}

@@ -38,15 +38,13 @@ public class VideoService {
     }
 
     public Video create(Video video) {
-        // Vinculamos los objetos hijos al vídeo actual antes de guardar
         linkChildren(video);
-        // Gestionamos el autor (evitar duplicados)
         video.setAuthor(userService.findOrCreate(video.getAuthor()));
         return videoRepository.save(video);
     }
 
     public Video update(String id, Video updatedVideo) {
-        findOne(id); 
+        findOne(id); // 404 check
         updatedVideo.setId(id);
         linkChildren(updatedVideo);
         updatedVideo.setAuthor(userService.findOrCreate(updatedVideo.getAuthor()));

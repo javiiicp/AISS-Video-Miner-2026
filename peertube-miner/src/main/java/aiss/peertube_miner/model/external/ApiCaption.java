@@ -3,13 +3,13 @@ package aiss.peertube_miner.model.external;
 import java.util.List;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.swagger.v3.oas.annotations.media.Schema;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@Schema(description = "Contenedor de subtítulos de un vídeo")
 public class ApiCaption {
+
     @JsonProperty("total")
     private Integer total;
+    
     @JsonProperty("data")
     private List<DataCaption> data;
 
