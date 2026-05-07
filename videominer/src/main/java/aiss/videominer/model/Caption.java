@@ -1,5 +1,6 @@
 package aiss.videominer.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -33,8 +34,8 @@ public class Caption {
     @JoinColumn(name = "videoId")
     @NotNull(message = "El subtítulo debe estar asociado a un vídeo")
     @JsonIgnoreProperties({"comments", "captions"})
+    @JsonIgnore
     private Video video;
-
 
     public String getId() {
         return id;
@@ -60,8 +61,13 @@ public class Caption {
         this.language = language;
     }
 
+    @JsonProperty("videoId")
+    public String getVideoId() {
+        return video != null ? video.getId() : null;
+    }
+
     public Video getVideo() {
-        return video;
+    return video;
     }
 
     public void setVideo(Video video) {
