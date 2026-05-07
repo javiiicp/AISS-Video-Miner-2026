@@ -3,6 +3,7 @@ package aiss.videominer.model;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonAlias;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import jakarta.persistence.CascadeType;
@@ -46,10 +47,12 @@ public class Video {
 
     @JsonProperty("comments")
     @OneToMany(mappedBy = "video", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference    
     private List<Comment> comments;
 
     @JsonProperty("captions")
     @OneToMany(mappedBy = "video", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
     private List<Caption> captions;
 
     public String getId() { 
