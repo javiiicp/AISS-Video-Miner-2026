@@ -38,6 +38,7 @@ public class CaptionService {
     public Caption create(Caption caption) {
         Video video = resolveVideo(caption);
         caption.setVideo(video);
+        // Generación de ID automática activada
         return captionRepository.save(caption);
     }
 
@@ -45,6 +46,7 @@ public class CaptionService {
         Caption caption = findOne(id);
         caption.setLink(updatedCaption.getLink());
         caption.setLanguage(updatedCaption.getLanguage());
+        
         Video video = resolveVideo(updatedCaption);
         caption.setVideo(video);
         caption.setId(id);
@@ -52,24 +54,24 @@ public class CaptionService {
     }
 
     public void delete(String id) {
-        if (captionRepository.existsById(id)) {
-            captionRepository.deleteById(id);
-            return;
+        if (!captionRepository.existsById(id)) {
+            throw new CaptionNotFoundException("No se encontró el subtítulo con id: " + id);
         }
-        throw new CaptionNotFoundException("No se encontró el subtítulo con id: " + id);
+        captionRepository.deleteById(id);
     }
 
     public Page<Caption> findByVideo(String videoId, Pageable paging) {
-        videoRepository.findById(videoId)
-                .orElseThrow(() -> new VideoNotFoundException("No se encontró el vídeo con id: " + videoId));
+        if (!videoRepository.existsById(videoId)) {
+            throw new VideoNotFoundException("No se encontró el vídeo con id: " + videoId);
+        }
         return captionRepository.findByVideo_Id(videoId, paging);
     }
 
     private Video resolveVideo(Caption caption) {
         if (caption.getVideo() == null || caption.getVideo().getId() == null) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "El subtítulo debe referenciar a un vídeo existente");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "El subtítulo debe incluir el ID de un vídeo existente");
         }
         return videoRepository.findById(caption.getVideo().getId())
-                .orElseThrow(() -> new VideoNotFoundException("No se encontró el vídeo referenciado con id: " + caption.getVideo().getId()));
+                .orElseThrow(() -> new VideoNotFoundException("El vídeo referenciado no existe: " + caption.getVideo().getId()));
     }
 }
