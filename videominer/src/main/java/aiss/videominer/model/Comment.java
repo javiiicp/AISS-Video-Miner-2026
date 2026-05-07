@@ -65,14 +65,19 @@ public class Comment {
         this.createdOn = createdOn;
     }
     
+    public void setVideo(Video video) {
+    this.video = video;
+}
+
+    @JsonProperty("videoId")
+    public String getVideoId() {
+        return video != null ? video.getId() : null;
+}
 
     public Video getVideo() {
     return video;
-    }
+}
 
-    public void setVideo(Video video) {
-        this.video = video;
-    }
 
     @Override
     public String toString() {
