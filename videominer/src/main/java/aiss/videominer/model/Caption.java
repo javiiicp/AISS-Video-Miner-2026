@@ -1,5 +1,6 @@
 package aiss.videominer.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -37,7 +38,7 @@ public class Caption {
     @ManyToOne
     @JoinColumn(name = "videoId")
     @NotNull(message = "El subtítulo debe estar asociado a un vídeo")
-    @JsonIgnoreProperties({"comments", "captions"})
+    @JsonBackReference
     @Schema(description = "Vídeo asociado")
     private Video video;
 
