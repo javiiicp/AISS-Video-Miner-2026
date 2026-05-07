@@ -71,7 +71,7 @@ public class DailymotionMapper {
         Caption caption = new Caption();
         caption.setId(external.getId());
         caption.setLanguage(external.getLanguage());
-        caption.setLink(external.getLink());
+        caption.setLink(external.getUrl());
         return caption;
     }
 
