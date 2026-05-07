@@ -1,9 +1,12 @@
 package aiss.dailymotion_miner.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
+
 import aiss.dailymotion_miner.exception.ChannelNotFoundException;
 import aiss.dailymotion_miner.mapper.DailymotionMapper;
 import aiss.dailymotion_miner.model.*;
@@ -15,11 +18,7 @@ public class ApiChannelService {
     @Autowired
     private RestTemplate restTemplate;
     @Autowired
-    private ApiVideoUserService userService;
-    @Autowired
-    private ApiCommentService commentService;
-    @Autowired
-    private ApiSubtitleService subtitleService;
+    private ApiVideoUserService videoUserService;
 
     public Channel getChannelFromDailymotion(String playlistId, int maxVideos, int maxPages) {
         String urlPlaylist = "https://api.dailymotion.com/playlist/" + playlistId + "?fields=id,name,description,created_time";
@@ -35,7 +34,10 @@ public class ApiChannelService {
 
         Channel channel = DailymotionMapper.toChannel(extPlaylist);
 
-        // Obtener vídeos de la playlist
+        List<Video> videos = videoUserService.getVideoUser(playlistId, maxVideos);
+        channel.setVideos(videos);
+
+        /*// Obtener vídeos de la playlist
         String urlVideos = "https://api.dailymotion.com/playlist/" + playlistId + "/videos?limit=" + maxVideos + "&fields=id,title,description,created_time,owner,tags";
         DailymotionVideoSearch videoSearch = restTemplate.getForObject(urlVideos, DailymotionVideoSearch.class);
 
@@ -50,7 +52,8 @@ public class ApiChannelService {
 
                 channel.getVideos().add(video);
             }
-        }
+        }*/
         return channel;
-    }
+    
+}
 }
