@@ -37,7 +37,6 @@ public class UserService {
 
     /**
      * Busca un usuario por ID o lo crea si no existe.
-     * Ideal para mineros que envían datos de autores externos.
      */
     public User findOrCreate(User user) {
         if (user == null) return null;
