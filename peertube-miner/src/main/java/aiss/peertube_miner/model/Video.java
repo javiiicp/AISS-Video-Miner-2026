@@ -23,7 +23,7 @@ public class Video {
     @Schema(description = "Fecha de publicación del vídeo", example = "2024-05-21T12:00:00Z")
     private String releaseTime;
 
-    @JsonProperty("author")
+    @JsonProperty("user")
     @Schema(description = "Información del autor del vídeo")
     private User author;
 

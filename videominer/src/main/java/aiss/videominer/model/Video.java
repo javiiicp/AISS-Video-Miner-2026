@@ -43,7 +43,7 @@ public class Video {
     @Schema(description = "Fecha en la que se publicó el vídeo", example = "2023-10-27T10:00:00Z")
     private String releaseTime;
 
-    @JsonProperty("author")
+    @JsonProperty("user")
     @ManyToOne
     @Valid
     @NotNull(message = "El vídeo debe tener un autor")
