@@ -5,12 +5,11 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 
 /**
@@ -22,8 +21,8 @@ import jakarta.validation.constraints.NotNull;
 public class Caption {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
     @JsonProperty("id")
+    @NotEmpty(message = "El id del subtítulo no puede estar vacío")
     @Schema(description = "ID del subtítulo (generado automáticamente)", accessMode = Schema.AccessMode.READ_ONLY)
     private String id;
 
@@ -41,6 +40,7 @@ public class Caption {
     @JsonIgnoreProperties({"comments", "captions"})
     @Schema(description = "Vídeo asociado")
     private Video video;
+
 
     public String getId() {
         return id;
@@ -76,6 +76,10 @@ public class Caption {
 
     @Override
     public String toString() {
-        return "Caption{" + "id='" + id + '\'' + ", language='" + language + '\'' + '}';
+        return "Caption{" +
+                "id='" + id + '\'' +
+                ", link='" + link + '\'' +
+                ", language='" + language + '\'' +
+                '}';
     }
 }

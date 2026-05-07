@@ -8,8 +8,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
@@ -24,8 +22,8 @@ import jakarta.validation.constraints.NotNull;
 public class Video {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
     @JsonProperty("id")
+    @NotEmpty(message = "El id del vídeo no puede estar vacío")
     @Schema(description = "ID del vídeo (generado automáticamente)", accessMode = Schema.AccessMode.READ_ONLY)
     private String id;
 
@@ -45,7 +43,7 @@ public class Video {
     private String releaseTime;
 
     @JsonProperty("author")
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @Valid
     @NotNull(message = "El vídeo debe tener un autor")
     @Schema(description = "Autor del vídeo")
@@ -63,62 +61,62 @@ public class Video {
 
     public String getId() { 
         return id; 
-    }
+        }
 
     public void setId(String id) { 
         this.id = id; 
-    }
+        }
 
     public String getName() { 
         return name; 
-    }
+        }
 
     public void setName(String name) { 
         this.name = name; 
-    }
+        }
 
     public String getDescription() { 
         return description; 
-    }
+        }
 
     public void setDescription(String description) { 
         this.description = description; 
-    }
+        }
 
     public String getReleaseTime() { 
         return releaseTime; 
-    }
+        }
 
     public void setReleaseTime(String releaseTime) { 
         this.releaseTime = releaseTime; 
-    }
+        }
 
     public User getAuthor() { 
         return author; 
-    }
+        }
 
     public void setAuthor(User author) { 
         this.author = author; 
-    }
+        }
 
     public List<Comment> getComments() { 
         return comments; 
-    }
+        }
 
     public void setComments(List<Comment> comments) { 
         this.comments = comments; 
-    }
+        }
 
     public List<Caption> getCaptions() { 
         return captions; 
-    }
+        }
 
     public void setCaptions(List<Caption> captions) { 
         this.captions = captions; 
-    }
+        }
 
     @Override
     public String toString() {
-        return "Video{" + "id='" + id + '\'' + ", name='" + name + '\'' + '}';
+        return "Video{" + "id='" + id + '\'' + ", name='" + name + '\'' + ", author=" + author + '}';
     }
 }

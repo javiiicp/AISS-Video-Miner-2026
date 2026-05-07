@@ -7,8 +7,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
@@ -23,8 +21,8 @@ import jakarta.validation.constraints.NotEmpty;
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
     @JsonProperty("id")
+    @NotEmpty(message = "El id del usuario no puede estar vacío")
     @Schema(description = "ID único del usuario (generado automáticamente)", accessMode = Schema.AccessMode.READ_ONLY)
     private String id;
 
@@ -92,6 +90,8 @@ public class User {
                 ", name='" + name + '\'' +
                 ", user_link='" + user_link + '\'' +
                 ", picture_link='" + picture_link + '\'' +
+                ", videos=" + videos +
                 '}';
     }
+
 }

@@ -6,12 +6,11 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 
 /**
@@ -23,9 +22,9 @@ import jakarta.validation.constraints.NotNull;
 public class Comment {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
     @JsonProperty("id")
     @Schema(description = "ID del comentario (generado automáticamente)", accessMode = Schema.AccessMode.READ_ONLY)
+    @NotEmpty(message = "El id del comentario no puede estar vacío")
     private String id;
 
     @JsonProperty("text")
@@ -37,12 +36,13 @@ public class Comment {
     @Schema(description = "Fecha de creación del comentario", example = "2023-10-27T11:00:00Z")
     private String createdOn;
 
-    @ManyToOne()
-    @JoinColumn(name = "videoId")
+    @ManyToOne() // Un comentario pertenece a un vídeo
+    @JoinColumn(name = "videoId") // Columna de unión en la BD
     @NotNull(message = "El comentario debe estar asociado a un vídeo")
     @JsonIgnoreProperties({"comments", "captions"})
     @Schema(description = "Vídeo al que pertenece el comentario")
     private Video video;
+
 
     public String getId() {
         return id;
@@ -69,7 +69,7 @@ public class Comment {
     }
 
     public Video getVideo() {
-        return video;
+    return video;
     }
 
     public void setVideo(Video video) {
@@ -78,6 +78,10 @@ public class Comment {
 
     @Override
     public String toString() {
-        return "Comment{" + "id='" + id + '\'' + ", text='" + text + '\'' + '}';
+        return "Comment{" +
+                "id='" + id + '\'' +
+                ", text='" + text + '\'' +
+                ", createdOn='" + createdOn + '\'' +
+                '}';
     }
 }
