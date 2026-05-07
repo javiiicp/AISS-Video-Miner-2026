@@ -15,48 +15,37 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.server.ResponseStatusException;
 
-import jakarta.validation.ConstraintViolationException;
-
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
     private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<Map<String, Object>> handleValidationException(MethodArgumentNotValidException ex) {
-        Map<String, Object> body = createBaseBody(HttpStatus.BAD_REQUEST, "Error de validación");
+    public ResponseEntity<ApiError> handleValidationException(MethodArgumentNotValidException ex) {
+        ApiError apiError = new ApiError(
+            Instant.now().toString(),
+            HttpStatus.BAD_REQUEST.value(),
+            HttpStatus.BAD_REQUEST.getReasonPhrase(),
+            "Error de validación en los campos del JSON"
+        );
+        
         Map<String, String> fieldErrors = new HashMap<>();
-
         for (FieldError error : ex.getBindingResult().getFieldErrors()) {
             fieldErrors.put(error.getField(), error.getDefaultMessage());
         }
-
-        body.put("fieldErrors", fieldErrors);
-        return ResponseEntity.badRequest().body(body);
+        apiError.setFieldErrors(fieldErrors);
+        
+        return ResponseEntity.badRequest().body(apiError);
     }
 
     @ExceptionHandler(ResponseStatusException.class)
-    public ResponseEntity<Map<String, Object>> handleResponseStatusException(ResponseStatusException ex) {
+    public ResponseEntity<ApiError> handleResponseStatusException(ResponseStatusException ex) {
         HttpStatusCode statusCode = ex.getStatusCode();
         HttpStatus status = HttpStatus.valueOf(statusCode.value());
         String message = ex.getReason() != null ? ex.getReason() : status.getReasonPhrase();
 
-        Map<String, Object> body = createBaseBody(status, message);
-        return ResponseEntity.status(status).body(body);
-    }
-
-    @ExceptionHandler(ConstraintViolationException.class)
-    public ResponseEntity<Map<String, Object>> handleConstraintViolationException(ConstraintViolationException ex) {
-        Map<String, Object> body = createBaseBody(HttpStatus.BAD_REQUEST, "Error de validación");
-        Map<String, String> fieldErrors = new HashMap<>();
-
-        ex.getConstraintViolations().forEach(violation -> {
-            String path = violation.getPropertyPath().toString();
-            fieldErrors.put(path.isBlank() ? "request" : path, violation.getMessage());
-        });
-
-        body.put("fieldErrors", fieldErrors);
-        return ResponseEntity.badRequest().body(body);
+        ApiError apiError = new ApiError(Instant.now().toString(), status.value(), status.getReasonPhrase(), message);
+        return ResponseEntity.status(status).body(apiError);
     }
 
     @ExceptionHandler({
@@ -66,26 +55,23 @@ public class GlobalExceptionHandler {
         ChannelNotFoundException.class, 
         CommentNotFoundException.class
     })
-    public ResponseEntity<Map<String, Object>> handleNotFoundExceptions(RuntimeException ex) {
-        // Mejora: Si el mensaje es null, usamos la razón por defecto del estado HTTP
-        String message = ex.getMessage() != null ? ex.getMessage() : HttpStatus.NOT_FOUND.getReasonPhrase();
-        Map<String, Object> body = createBaseBody(HttpStatus.NOT_FOUND, message);
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(body);
+    public ResponseEntity<ApiError> handleNotFoundExceptions(RuntimeException ex) {
+        HttpStatus status = HttpStatus.NOT_FOUND;
+        String message = ex.getMessage() != null ? ex.getMessage() : status.getReasonPhrase();
+        
+        ApiError apiError = new ApiError(Instant.now().toString(), status.value(), status.getReasonPhrase(), message);
+        return ResponseEntity.status(status).body(apiError);
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<Map<String, Object>> handleUnexpectedException(Exception ex) {
+    public ResponseEntity<ApiError> handleUnexpectedException(Exception ex) {
         logger.error("Unexpected server error", ex);
-        Map<String, Object> body = createBaseBody(HttpStatus.INTERNAL_SERVER_ERROR, "Error inesperado del servidor");
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(body);
-    }
-
-    private Map<String, Object> createBaseBody(HttpStatus status, String message) {
-        Map<String, Object> body = new HashMap<>();
-        body.put("timestamp", Instant.now().toString());
-        body.put("status", status.value());
-        body.put("error", status.getReasonPhrase());
-        body.put("message", message);
-        return body;
+        ApiError apiError = new ApiError(
+            Instant.now().toString(), 
+            HttpStatus.INTERNAL_SERVER_ERROR.value(), 
+            HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(), 
+            "Error inesperado del servidor"
+        );
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(apiError);
     }
 }
