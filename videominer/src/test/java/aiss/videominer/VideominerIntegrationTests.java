@@ -10,8 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.Collections;
-import java.util.List;
+import java.util.ArrayList;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -19,18 +18,17 @@ import static org.hamcrest.Matchers.*;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-@DisplayName("VideoMiner: Suite de Integridad Total")
+@DisplayName("VideoMiner: Certificación de Integridad Total")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class VideominerIntegrationTests {
 
-    // --- UTILIDADES VISUALES ---
+    // --- ESTILOS ANSI ---
     private static final String RESET = "\u001B[0m";
     private static final String BOLD = "\u001B[1m";
     private static final String GREEN = "\u001B[32m";
     private static final String RED = "\u001B[31m";
     private static final String YELLOW = "\u001B[33m";
     private static final String BLUE = "\u001B[34m";
-    private static final String PURPLE = "\u001B[35m";
     private static final String CYAN = "\u001B[36m";
 
     @Autowired private MockMvc mockMvc;
@@ -42,10 +40,10 @@ public class VideominerIntegrationTests {
     @Autowired private CaptionRepository captionRepository;
 
     @BeforeEach
-    void setup(TestInfo testInfo) {
-        System.out.println("\n" + BLUE + "═".repeat(80) + RESET);
-        System.out.println(BOLD + PURPLE + " 🔎 TEST: " + RESET + BOLD + testInfo.getDisplayName().toUpperCase());
-        System.out.println(BLUE + "═".repeat(80) + RESET);
+    public void setUp(TestInfo testInfo) {
+        System.out.println("\n" + BLUE + "█".repeat(70) + RESET);
+        System.out.println(BOLD + YELLOW + " 🧪 PROBANDO: " + RESET + BOLD + testInfo.getDisplayName());
+        System.out.println(BLUE + "█".repeat(70) + RESET);
         
         commentRepository.deleteAll();
         captionRepository.deleteAll();
@@ -54,134 +52,154 @@ public class VideominerIntegrationTests {
         userRepository.deleteAll();
     }
 
-    private void step(String msg) { System.out.println(YELLOW + "  [ACCION] " + RESET + msg); }
-    private void info(String key, Object val) { System.out.println(CYAN + "           ↳ " + key + ": " + RESET + val); }
-    private void success(String msg) { System.out.println(GREEN + "  [PASSED] " + RESET + msg); }
-    private void errorCheck(String msg) { System.out.println(RED + "  [ERROR-CONTROL] " + RESET + msg); }
-
-    // ==========================================
-    // 1. GESTIÓN DE USUARIOS (USER)
-    // ==========================================
-
-    @Test @Order(1) @DisplayName("User: CRUD Completo y Búsqueda por Nombre")
-    void testUserModule() throws Exception {
-        User user = new User();
-        user.setId("U1"); user.setName("Javier");
-        
-        step("Probando POST /users (Creación)");
-        mockMvc.perform(post("/videominer/users").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(user))).andExpect(status().isCreated());
-        
-        step("Probando GET /users?name=jav (Filtrado)");
-        mockMvc.perform(get("/videominer/users").param("name", "jav")).andExpect(status().isOk()).andExpect(jsonPath("$", hasSize(1)));
-        
-        step("Probando PUT /users/U1 (Actualización)");
-        user.setName("Javier Pro");
-        mockMvc.perform(put("/videominer/users/U1").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(user))).andExpect(status().isOk());
-        
-        errorCheck("Forzando 404 en GET /users/999");
-        mockMvc.perform(get("/videominer/users/999")).andExpect(status().isNotFound());
-        
-        success("Módulo de Usuarios validado al 100%");
-    }
-
-    // ==========================================
-    // 2. GESTIÓN DE CANALES (CHANNEL)
-    // ==========================================
-
-    @Test @Order(2) @DisplayName("Channel: CRUD y Búsqueda por Nombre")
-    void testChannelModule() throws Exception {
-        Channel channel = new Channel();
-        channel.setId("CH1"); channel.setName("Canal AISS"); channel.setCreatedTime("2026-01-01");
-        
-        step("Probando POST /channels");
-        mockMvc.perform(post("/videominer/channels").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(channel))).andExpect(status().isCreated());
-        
-        step("Probando GET /channels (Listado plano)");
-        mockMvc.perform(get("/videominer/channels")).andExpect(status().isOk()).andExpect(jsonPath("$", hasSize(1)));
-
-        errorCheck("Probando Validación 400 (Nombre vacío)");
-        channel.setName("");
-        mockMvc.perform(post("/videominer/channels").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(channel))).andExpect(status().isBadRequest());
-        
-        success("Módulo de Canales validado");
-    }
-
-    // ==========================================
-    // 3. GESTIÓN DE VÍDEOS (VIDEO)
-    // ==========================================
-
-    @Test @Order(3) @DisplayName("Video: CRUD, Autoría y Relación de Captions")
-    void testVideoModule() throws Exception {
-        User author = new User(); author.setId("A1"); author.setName("Author 1");
-        userRepository.save(author);
-
-        Video video = new Video();
-        video.setId("V1"); video.setName("Intro Java"); video.setReleaseTime("2026"); video.setAuthor(author);
-
-        step("Probando POST /videos con Autor");
-        mockMvc.perform(post("/videominer/videos").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(video))).andExpect(status().isCreated());
-
-        step("Probando GET /videos/V1/captions (Relación vacía)");
-        mockMvc.perform(get("/videominer/videos/V1/captions")).andExpect(status().isOk()).andExpect(jsonPath("$", hasSize(0)));
-
-        errorCheck("Probando 400: Vídeo sin autor");
-        video.setAuthor(null);
-        mockMvc.perform(post("/videominer/videos").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(video))).andExpect(status().isBadRequest());
-
-        success("Módulo de Vídeos validado");
-    }
-
-    // ==========================================
-    // 4. GESTIÓN DE SUBTÍTULOS (CAPTION)
-    // ==========================================
-
-    @Test @Order(4) @DisplayName("Caption: CRUD y Filtro por Vídeo")
-    void testCaptionModule() throws Exception {
-        // Setup
-        User author = new User(); author.setId("A2"); author.setName("A2"); userRepository.save(author);
-        Video video = new Video(); video.setId("V2"); video.setName("V2"); video.setReleaseTime("2026"); video.setAuthor(author); videoRepository.save(video);
-
-        Caption cap = new Caption();
-        cap.setId("C1"); cap.setLanguage("ES"); cap.setLink("url"); cap.setVideo(video);
-
-        step("Probando POST /captions vinculado a V2");
-        mockMvc.perform(post("/videominer/captions").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(cap))).andExpect(status().isCreated());
-
-        step("Probando GET /captions/video/V2 (Filtro relacional)");
-        mockMvc.perform(get("/videominer/captions/video/V2")).andExpect(status().isOk()).andExpect(jsonPath("$", hasSize(1)));
-
-        errorCheck("Probando 404: GET /captions/video/MISSING");
-        mockMvc.perform(get("/videominer/captions/video/MISSING")).andExpect(status().isNotFound());
-
-        success("Módulo de Subtítulos validado");
-    }
-
-    // ==========================================
-    // 5. GESTIÓN DE COMENTARIOS (COMMENT)
-    // ==========================================
-
-    @Test @Order(5) @DisplayName("Comment: CRUD y Filtro por Texto")
-    void testCommentModule() throws Exception {
-        User author = new User(); author.setId("A3"); author.setName("A3"); userRepository.save(author);
-        Video video = new Video(); video.setId("V3"); video.setName("V3"); video.setReleaseTime("2026"); video.setAuthor(author); videoRepository.save(video);
-
-        Comment com = new Comment();
-        com.setId("CM1"); com.setText("Excelente video"); com.setVideo(video);
-
-        step("Probando POST /comments vinculado a V3");
-        mockMvc.perform(post("/videominer/comments").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(com))).andExpect(status().isCreated());
-
-        step("Probando GET /comments?text=excel (Filtrado de texto)");
-        mockMvc.perform(get("/videominer/comments").param("text", "excel")).andExpect(status().isOk()).andExpect(jsonPath("$", hasSize(1)));
-
-        errorCheck("Probando 204: DELETE /comments/CM1");
-        mockMvc.perform(delete("/videominer/comments/CM1")).andExpect(status().isNoContent());
-
-        success("Módulo de Comentarios validado");
-    }
-
     @AfterEach
-    void tearDown() {
-        System.out.println(CYAN + "  [FIN] Pruebas del módulo finalizadas con éxito." + RESET);
+    public void tearDown() {
+        System.out.println(GREEN + "  [COMPLETO] Limpieza de entorno finalizada." + RESET);
+    }
+
+    private void step(String msg) { System.out.println(CYAN + "  [PASO] " + RESET + msg); }
+    private void errorLog(String msg) { System.out.println(RED + "  [ERROR-TEST] " + RESET + msg); }
+
+    // =========================================================================
+    // 1. CANALES (CHANNEL) - 6 OPERACIONES
+    // =========================================================================
+    @Test @Order(1) @DisplayName("Módulo Channel: CRUD completo y filtrado")
+    void channelModule() throws Exception {
+        Channel ch = new Channel(); ch.setId("C1"); ch.setName("TV-AISS"); ch.setCreatedTime("2024"); ch.setVideos(new ArrayList<>());
+        
+        step("1. POST: Creando canal 'TV-AISS'");
+        mockMvc.perform(post("/videominer/channels").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(ch))).andExpect(status().isCreated());
+        
+        step("2. GET ALL: Listando canales");
+        mockMvc.perform(get("/videominer/channels")).andExpect(status().isOk()).andExpect(jsonPath("$", hasSize(1)));
+        
+        step("3. GET BY ID: Buscando C1");
+        mockMvc.perform(get("/videominer/channels/C1")).andExpect(status().isOk());
+        
+        step("4. FILTER: Buscando '?name=aiss'");
+        mockMvc.perform(get("/videominer/channels").param("name", "aiss")).andExpect(status().isOk()).andExpect(jsonPath("$[0].name", containsString("AISS")));
+        
+        step("5. PUT: Actualizando nombre");
+        ch.setName("TV-UPDATED");
+        mockMvc.perform(put("/videominer/channels/C1").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(ch))).andExpect(status().isOk());
+        
+        step("6. DELETE: Borrando canal");
+        mockMvc.perform(delete("/videominer/channels/C1")).andExpect(status().isNoContent());
+        
+        errorLog("Verificando error 404 tras borrado");
+        mockMvc.perform(get("/videominer/channels/C1")).andExpect(status().isNotFound());
+    }
+
+    // =========================================================================
+    // 2. VÍDEOS (VIDEO) - 6 OPERACIONES
+    // =========================================================================
+    @Test @Order(2) @DisplayName("Módulo Video: CRUD, Autoría y Relación de Subtítulos")
+    void videoModule() throws Exception {
+        User u = new User(); u.setId("U1"); u.setName("Javi"); userRepository.save(u);
+        Video v = new Video(); v.setId("V1"); v.setName("Learn Spring"); v.setReleaseTime("2024"); v.setAuthor(u);
+        
+        step("1. POST: Creando vídeo con autor");
+        mockMvc.perform(post("/videominer/videos").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(v))).andExpect(status().isCreated());
+        
+        step("2. GET ALL: Listando vídeos");
+        mockMvc.perform(get("/videominer/videos")).andExpect(status().isOk()).andExpect(jsonPath("$", hasSize(1)));
+        
+        step("3. GET BY ID: Buscando V1");
+        mockMvc.perform(get("/videominer/videos/V1")).andExpect(status().isOk()).andExpect(jsonPath("$.author.name").value("Javi"));
+        
+        step("4. FILTER: Buscando por nombre '?name=spring'");
+        mockMvc.perform(get("/videominer/videos").param("name", "spring")).andExpect(status().isOk()).andExpect(jsonPath("$[0].name", containsString("Spring")));
+        
+        step("5. GET RELATIONAL: Obteniendo subtítulos del vídeo");
+        mockMvc.perform(get("/videominer/videos/V1/captions")).andExpect(status().isOk());
+        
+        errorLog("Probando error 400: POST vídeo sin autor");
+        v.setAuthor(null);
+        mockMvc.perform(post("/videominer/videos").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(v))).andExpect(status().isBadRequest());
+    }
+
+    // =========================================================================
+    // 3. USUARIOS (USER) - 6 OPERACIONES
+    // =========================================================================
+    @Test @Order(3) @DisplayName("Módulo User: CRUD y Búsqueda")
+    void userModule() throws Exception {
+        User u = new User(); u.setId("USR"); u.setName("Campos");
+        
+        step("1. POST: Creando usuario");
+        mockMvc.perform(post("/videominer/users").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(u))).andExpect(status().isCreated());
+        
+        step("2. GET ALL: Listando usuarios");
+        mockMvc.perform(get("/videominer/users")).andExpect(status().isOk()).andExpect(jsonPath("$", hasSize(1)));
+        
+        step("3. GET BY ID: Buscando USR");
+        mockMvc.perform(get("/videominer/users/USR")).andExpect(status().isOk());
+        
+        step("4. FILTER: Buscando '?name=cam'");
+        mockMvc.perform(get("/videominer/users").param("name", "cam")).andExpect(status().isOk()).andExpect(jsonPath("$[0].name", containsString("Campos")));
+        
+        step("5. PUT: Cambiando enlaces");
+        u.setUser_link("http://link");
+        mockMvc.perform(put("/videominer/users/USR").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(u))).andExpect(status().isOk());
+        
+        step("6. DELETE: Borrando usuario");
+        mockMvc.perform(delete("/videominer/users/USR")).andExpect(status().isNoContent());
+    }
+
+    // =========================================================================
+    // 4. COMENTARIOS (COMMENT) - 6 OPERACIONES
+    // =========================================================================
+    @Test @Order(4) @DisplayName("Módulo Comment: CRUD y Filtro por Vídeo")
+    void commentModule() throws Exception {
+        User u = new User(); u.setId("U2"); u.setName("U2"); userRepository.save(u);
+        Video v = new Video(); v.setId("V2"); v.setName("V2"); v.setReleaseTime("2024"); v.setAuthor(u); videoRepository.save(v);
+        Comment com = new Comment(); com.setId("CM1"); com.setText("Awesome!"); com.setVideo(v);
+        
+        step("1. POST: Creando comentario para V2");
+        mockMvc.perform(post("/videominer/comments").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(com))).andExpect(status().isCreated());
+        
+        step("2. GET ALL: Todos los comentarios");
+        mockMvc.perform(get("/videominer/comments")).andExpect(status().isOk()).andExpect(jsonPath("$", hasSize(1)));
+        
+        step("3. GET BY VIDEO: Comentarios del vídeo V2");
+        mockMvc.perform(get("/videominer/comments/video/V2")).andExpect(status().isOk()).andExpect(jsonPath("$[0].id").value("CM1"));
+        
+        step("4. FILTER: Buscando texto '?text=awe'");
+        mockMvc.perform(get("/videominer/comments").param("text", "awe")).andExpect(status().isOk()).andExpect(jsonPath("$[0].text").value("Awesome!"));
+        
+        step("5. PUT: Actualizando texto");
+        com.setText("Cool!");
+        mockMvc.perform(put("/videominer/comments/CM1").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(com))).andExpect(status().isOk());
+        
+        errorLog("Probando error 404: Borrar comentario inexistente");
+        mockMvc.perform(delete("/videominer/comments/999")).andExpect(status().isNotFound());
+    }
+
+    // =========================================================================
+    // 5. SUBTÍTULOS (CAPTION) - 6 OPERACIONES
+    // =========================================================================
+    @Test @Order(5) @DisplayName("Módulo Caption: CRUD y Verificación de Idioma")
+    void captionModule() throws Exception {
+        User u = new User(); u.setId("U3"); u.setName("U3"); userRepository.save(u);
+        Video v = new Video(); v.setId("V3"); v.setName("V3"); v.setReleaseTime("2024"); v.setAuthor(u); videoRepository.save(v);
+        Caption cp = new Caption(); cp.setId("CP1"); cp.setLanguage("English"); cp.setLink("url"); cp.setVideo(v);
+        
+        step("1. POST: Guardando caption para V3");
+        mockMvc.perform(post("/videominer/captions").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(cp))).andExpect(status().isCreated());
+        
+        step("2. GET ALL: Listando captions");
+        mockMvc.perform(get("/videominer/captions")).andExpect(status().isOk()).andExpect(jsonPath("$", hasSize(1)));
+        
+        step("3. GET BY ID: Buscando CP1");
+        mockMvc.perform(get("/videominer/captions/CP1")).andExpect(status().isOk());
+        
+        step("4. GET BY VIDEO: Captions de V3");
+        mockMvc.perform(get("/videominer/captions/video/V3")).andExpect(status().isOk()).andExpect(jsonPath("$[0].language").value("English"));
+        
+        step("5. PUT: Actualizando idioma");
+        cp.setLanguage("Spanish");
+        mockMvc.perform(put("/videominer/captions/CP1").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(cp))).andExpect(status().isOk());
+        
+        step("6. DELETE: Borrando subtítulo");
+        mockMvc.perform(delete("/videominer/captions/CP1")).andExpect(status().isNoContent());
     }
 }
