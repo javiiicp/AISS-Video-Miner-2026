@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 import aiss.videominer.model.Channel;
 import aiss.videominer.service.ChannelService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
@@ -28,50 +29,45 @@ import jakarta.validation.constraints.Min;
 
 @RestController
 @RequestMapping("/videominer/channels")
-@Tag(name = "Controlador Canales", description = "Operaciones para gestionar los canales")
+@Tag(name = "Canales", description = "Operaciones para gestionar los canales de vídeo")
 @Validated
 public class ChannelController {
 
 	@Autowired
 	ChannelService service;
 
-	// GET http://localhost:8080/videominer/channels
-	@Operation(summary = "Listar canales", description = "Lista canales con paginación, ordenación y filtro por nombre")
+	@Operation(summary = "Listar canales", description = "Lista canales con paginación, ordenación y filtro opcional por nombre (búsqueda parcial)")
 	@GetMapping
 	public Page<Channel> findAll(
-			@RequestParam(required = false) String name,
-			@RequestParam(defaultValue = "0") @Min(0) int page,
-			@RequestParam(defaultValue = "10") @Min(1) @Max(100) int size,
-			@RequestParam(defaultValue = "id") String sortBy) {
+			@Parameter(description = "Filtrar por nombre del canal") @RequestParam(required = false) String name,
+			@Parameter(description = "Número de página (0-N)") @RequestParam(defaultValue = "0") @Min(0) int page,
+			@Parameter(description = "Elementos por página") @RequestParam(defaultValue = "10") @Min(1) @Max(100) int size,
+			@Parameter(description = "Atributo de ordenación (id, name, createdTime)") @RequestParam(defaultValue = "id") String sortBy) {
 
 		Pageable paging = PageRequest.of(page, size, Sort.by(sortBy));
 		return service.findAll(name, paging);
 	}
 
-	// GET http://localhost:8080/videominer/channels/{id}
-	@Operation(summary = "Obtener un canal por ID")
+	@Operation(summary = "Obtener un canal por ID", description = "Busca un canal específico mediante su identificador único")
 	@GetMapping("/{id}")
 	public Channel findOne(@PathVariable String id) {
 		return service.findOne(id);
 	}
 
-	// POST http://localhost:8080/videominer/channels
-	@Operation(summary = "Crear un nuevo canal", description = "Crea un canal manualmente en el sistema")
+	@Operation(summary = "Crear un nuevo canal", description = "Crea un canal. No es necesario enviar el ID en el JSON, se genera automáticamente")
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	public Channel create(@Valid @RequestBody Channel channel) {
 		return service.create(channel);
 	}
 
-	// PUT http://localhost:8080/videominer/channels/{id}
-	@Operation(summary = "Actualizar un canal", description = "Modifica los datos de un canal existente")
+	@Operation(summary = "Actualizar un canal", description = "Modifica los datos de un canal existente por su ID")
 	@PutMapping("/{id}")
 	public Channel update(@PathVariable String id, @Valid @RequestBody Channel updatedChannel) {
 		return service.update(id, updatedChannel);
 	}
 
-	// DELETE http://localhost:8080/videominer/channels/{id}
-	@Operation(summary = "Eliminar un canal", description = "Borra permanentemente un canal por su ID")
+	@Operation(summary = "Eliminar un canal", description = "Borra un canal y sus vídeos asociados permanentemente")
 	@DeleteMapping("/{id}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void delete(@PathVariable String id) {
