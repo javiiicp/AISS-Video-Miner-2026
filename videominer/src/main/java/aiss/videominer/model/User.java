@@ -2,20 +2,11 @@ package aiss.videominer.model;
 
 import java.util.List;
 import java.util.UUID;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.PrePersist;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 
-/**
- * @author Juan C. Alonso
- */
 @Entity
 @Table(name = "VMUser")
 public class User {
@@ -87,13 +78,8 @@ public class User {
 
     @Override
     public String toString() {
-        return "User{" +
-                "id='" + id + '\'' +
-                ", name='" + name + '\'' +
-                ", user_link='" + user_link + '\'' +
-                ", picture_link='" + picture_link + '\'' +
-                ", videos=" + videos +
-                '}';
+        return "User [id=" + id + ", name=" + name + ", user_link=" + user_link + ", picture_link=" + picture_link
+                + ", videos=" + videos + "]";
     }
 
 }
