@@ -41,10 +41,10 @@ public class ChannelController {
             @ApiResponse(responseCode = "200", description = "Canal obtenido con éxito"),
             @ApiResponse(responseCode = "404", description = "El nombre (handle) del canal no existe en PeerTube")
     })
-    @GetMapping("/{handle}")
+    @GetMapping("/{id}")
     public Channel getChannel(
-            @Parameter(description = "Nombre corto o 'handle' del canal en PeerTube (ej. 'aiss_channel')", example = "aiss_channel") 
-            @PathVariable String handle,
+            @Parameter(description = "ID del canal en PeerTube", example = "1") 
+            @PathVariable String id,
             
             @Parameter(description = "Número máximo de vídeos a extraer de la plataforma") 
             @RequestParam(defaultValue = "10") @Min(1) Integer maxVideos,
@@ -67,8 +67,8 @@ public class ChannelController {
             @Parameter(description = "Dirección del orden (asc/desc)") 
             @RequestParam(defaultValue = "asc") String sortDir) {
         
-        // El servicio usa el handle (nombre) para buscar en la API de PeerTube
-        return channelService.getChannelFromPeerTube(handle, maxVideos, maxComments, name, page, size, sortBy, sortDir);
+        // El servicio usa el ID del canal para buscar en la API de PeerTube
+        return channelService.getChannelFromPeerTube(id, maxVideos, maxComments, name, page, size, sortBy, sortDir);
     }
 
     @Operation(
@@ -80,11 +80,11 @@ public class ChannelController {
             @ApiResponse(responseCode = "404", description = "Canal no encontrado en PeerTube"),
             @ApiResponse(responseCode = "400", description = "Error de validación en los datos enviados a VideoMiner")
     })
-    @PostMapping("/{handle}")
+    @PostMapping("/{id}")
     @ResponseStatus(HttpStatus.CREATED)
     public Channel postChannel(
-            @Parameter(description = "Nombre corto o 'handle' del canal") 
-            @PathVariable String handle,
+            @Parameter(description = "ID del canal en PeerTube") 
+            @PathVariable String id,
             
             @Parameter(description = "Máximo de vídeos a persistir") 
             @RequestParam(defaultValue = "10") @Min(1) Integer maxVideos,
@@ -107,7 +107,7 @@ public class ChannelController {
             @Parameter(description = "Dirección del orden") 
             @RequestParam(defaultValue = "asc") String sortDir) {
         
-        Channel channel = channelService.getChannelFromPeerTube(handle, maxVideos, maxComments, name, page, size, sortBy, sortDir);
+        Channel channel = channelService.getChannelFromPeerTube(id, maxVideos, maxComments, name, page, size, sortBy, sortDir);
         
         if (channel != null) {
             videoMinerService.saveChannel(channel);
