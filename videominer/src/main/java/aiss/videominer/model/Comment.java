@@ -1,17 +1,28 @@
 package aiss.videominer.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
-import java.util.UUID;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+
+/**
+ * @author Juan C. Alonso
+ */
 @Entity
 @Table(name = "Comment")
 public class Comment {
 
     @Id
     @JsonProperty("id")
+    @NotEmpty(message = "El id del comentario no puede estar vacío")
     private String id;
 
     @JsonProperty("text")
@@ -21,18 +32,14 @@ public class Comment {
     @JsonProperty("createdOn")
     private String createdOn;
 
-    @ManyToOne
-    @JoinColumn(name = "videoId")
+    @ManyToOne() // Un comentario pertenece a un vídeo
+    @JoinColumn(name = "videoId") // Columna de unión en la BD
     @NotNull(message = "El comentario debe estar asociado a un vídeo")
     @JsonIgnoreProperties({"comments", "captions"})
+    @JsonIgnore
     private Video video;
 
-    @PrePersist
-    public void generateId() {
-        if (this.id == null || this.id.isEmpty()) {
-            this.id = UUID.randomUUID().toString();
-        }
-    }
+   
 
     public String getId() {
         return id;
@@ -57,18 +64,27 @@ public class Comment {
     public void setCreatedOn(String createdOn) {
         this.createdOn = createdOn;
     }
+    
+    public void setVideo(Video video) {
+    this.video = video;
+}
+
+    @JsonProperty("videoId")
+    public String getVideoId() {
+        return video != null ? video.getId() : null;
+}
 
     public Video getVideo() {
-        return video;
-    }
+    return video;
+}
 
-    public void setVideo(Video video) {
-        this.video = video;
-    }
 
     @Override
     public String toString() {
-        return "Comment [id=" + id + ", text=" + text + ", createdOn=" + createdOn + ", video=" + video + "]";
+        return "Comment{" +
+                "id='" + id + '\'' +
+                ", text='" + text + '\'' +
+                ", createdOn='" + createdOn + '\'' +
+                '}';
     }
-
 }
