@@ -30,11 +30,13 @@ public class ChannelController {
 
     @Operation(
             summary = "Previsualizar Canal (Playlist) desde Dailymotion",
-            description = "### Guía de Minería de Dailymotion:\n" +
-                    "Este endpoint extrae una playlist y sus vídeos, transformándolos al modelo de datos central.\n\n" +
-                    "1. **Transformación Social**: Dailymotion no expone comentarios públicos vía API gratuita; por ello, este minero **transforma los Tags de cada vídeo en objetos Comment** para preservar la integridad social en VideoMiner.\n" +
-                    "2. **Filtrado in-memory**: Permite buscar vídeos específicos por nombre dentro de la playlist extraída.\n" +
-                    "3. **Control de Flujo**: Gestiona el volumen de datos mediante `maxVideos` y parámetros de paginación.")
+            description = """
+                          ### Gu\u00eda de Miner\u00eda de Dailymotion:
+                          Este endpoint extrae una playlist y sus v\u00eddeos, transform\u00e1ndolos al modelo de datos central.
+                          
+                          1. **Transformaci\u00f3n Social**: Dailymotion no expone comentarios p\u00fablicos v\u00eda API gratuita; por ello, este minero **transforma los Tags de cada v\u00eddeo en objetos Comment** para preservar la integridad social en VideoMiner.
+                          2. **Filtrado in-memory**: Permite buscar v\u00eddeos espec\u00edficos por nombre dentro de la playlist extra\u00edda.
+                          3. **Control de Flujo**: Gestiona el volumen de datos mediante `maxVideos` y par\u00e1metros de paginaci\u00f3n.""")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Canal extraído y mapeado correctamente.",
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = Channel.class))),
@@ -66,8 +68,10 @@ public class ChannelController {
 
     @Operation(
             summary = "Minar y Persistir en VideoMiner",
-            description = "Ejecuta el ciclo completo de Integración: **Extrae** de Dailymotion, **Transforma** los metadatos y **Carga** (POST) el resultado en la API central.\n\n" +
-                    "**Garantía de Integridad**: El sistema asegura que los autores de Dailymotion se mapeen a usuarios únicos en VideoMiner.")
+            description = """
+                          Ejecuta el ciclo completo de Integraci\u00f3n: **Extrae** de Dailymotion, **Transforma** los metadatos y **Carga** (POST) el resultado en la API central.
+                          
+                          **Garant\u00eda de Integridad**: El sistema asegura que los autores de Dailymotion se mapeen a usuarios \u00fanicos en VideoMiner.""")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Canal minado y guardado exitosamente en el almacén central."),
             @ApiResponse(responseCode = "404", description = "No se pudo localizar el recurso de origen en Dailymotion."),
