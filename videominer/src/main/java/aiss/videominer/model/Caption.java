@@ -1,5 +1,8 @@
 package aiss.videominer.model;
 
+import java.util.UUID;
+
+import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -8,6 +11,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -25,6 +29,7 @@ public class Caption {
     private String id;
 
     @JsonProperty("link")
+    @JsonAlias("name")
     private String link;
 
     @JsonProperty("language")
@@ -36,6 +41,13 @@ public class Caption {
     @JsonIgnoreProperties({"comments", "captions"})
     @JsonIgnore
     private Video video;
+
+    @PrePersist
+    public void generateIdIfNull() {
+        if (this.id == null || this.id.isEmpty()) {
+            this.id = UUID.randomUUID().toString();
+        }
+    }
 
     public String getId() {
         return id;
