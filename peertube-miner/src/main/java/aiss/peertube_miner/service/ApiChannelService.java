@@ -1,18 +1,20 @@
 package aiss.peertube_miner.service;
 
-import aiss.peertube_miner.exception.ChannelNotFoundException;
-import aiss.peertube_miner.mapper.PeertubeMapper;
-import aiss.peertube_miner.model.*;
-import aiss.peertube_miner.model.external.ApiChannel;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Locale;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Locale;
+import aiss.peertube_miner.exception.ChannelNotFoundException;
+import aiss.peertube_miner.mapper.PeertubeMapper;
+import aiss.peertube_miner.model.Channel;
+import aiss.peertube_miner.model.Video;
+import aiss.peertube_miner.model.external.ApiChannel;
 
 @Service
 public class ApiChannelService {

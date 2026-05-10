@@ -6,6 +6,7 @@
 
 ## 1. Descripción General
 DailymotionMiner funciona como un adaptador (o miner) que se conecta a la API de **Dailymotion** para extraer información de canales (basados en playlists), sus vídeos, comentarios (etiquetas) y subtítulos. Los datos se normalizan al modelo común y se envían a **VideoMiner** para su almacenamiento definitivo.
+
 ---
 
 ## 2. Arquitectura y Tecnologías
@@ -55,9 +56,7 @@ El microservicio gestiona las excepciones de red y recursos de forma estandariza
 ## 6. Calidad y Testing
 Se ha implementado una suite de pruebas completa para asegurar el correcto funcionamiento del adaptador:
 
-*   **Tests de Integración (MockMvc)**: `DailymotionMinerApiTests` verifica el comportamiento de los controladores y la integración de servicios.
-*   **Tests Unitarios (Mockito)**: `ApiChannelServiceTests` valida la lógica de extracción, construcción de URLs y manejo de respuestas nulas.
-*   **Tests de Modelo**: `CaptionValidationTests` asegura la integridad de los datos en los modelos internos.
+*   **Tests de Integración (MockMvc)**: `DailymotionMinerFullIntegrityTests` verifica el comportamiento de los controladores y la integración de servicios.
 
 ---
 

@@ -57,15 +57,18 @@ Utilizamos una base de datos **H2 en memoria**, ideal para desarrollo y pruebas 
 
 ---
 
-## 6. Pruebas con Postman
-Incluimos una colección completa con **34 peticiones** organizadas por recurso.
+## 6. Pruebas con Postman (Flujo Dinámico)
+Incluimos una colección avanzada diseñada para entornos con **IDs autogenerativos (UUID)**. El sistema genera identificadores aleatorios en cada inserción, por lo que la colección no utiliza IDs fijos.
 
-*   **Archivo**: `postman/VideoMiner.postman_collection.json`
-*   **Pasos para realizar las pruebas**:
-    1.  Abrir Postman y pulsar en **"Import"**.
-    2.  Seleccionar el archivo de la colección mencionado arriba.
-    3.  Asegurarse de que la variable `{{baseUrl}}` apunta a `http://localhost:8080`.
-    4.  Las peticiones están numeradas para probar primero la creación (POST) de usuarios y canales, y luego sus relaciones.
+* **Archivo**: `postman/VideoMiner.postman_collection.json`
+* **Gestión Dinámica de IDs**:
+    * La colección utiliza **scripts de prueba (Tests)** que capturan automáticamente el ID generado por la base de datos tras un `POST`.
+    * Este ID se almacena en variables de colección (ej: `{{lastUserId}}`, `{{lastChannelId}}`).
+    * Las peticiones de `UPDATE` y `DELETE` consumen estas variables automáticamente para probar el ciclo de vida completo de cada recurso.
+* **Pasos para realizar las pruebas**:
+    1.  Importar la colección en Postman.
+    2.  Asegurarse de que la variable base apunta a `http://localhost:8080`.
+    3.  **Ejecutar en orden**: Es obligatorio realizar primero los `POST` para que las variables de ID se rellenen antes de intentar actualizar o borrar.
 ---
 
 ## 7. Manejo de Errores y Calidad
@@ -81,7 +84,7 @@ El microservicio garantiza respuestas profesionales mediante un manejador global
 ### Requisitos: Java 21+ instalado.
 
 ```powershell
-# 1. Compilar y ejecutar tests de integración (21 tests)
+# 1. Compilar y ejecutar tests de integración
 .\mvnw.cmd clean test
 
 # 2. Iniciar el microservicio

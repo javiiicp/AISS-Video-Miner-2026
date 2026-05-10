@@ -33,8 +33,8 @@ public class Comment {
     @JsonProperty("createdOn")
     private String createdOn;
 
-    @ManyToOne() // Un comentario pertenece a un vídeo
-    @JoinColumn(name = "videoId") // Columna de unión en la BD
+    @ManyToOne()
+    @JoinColumn(name = "videoId")
     @NotNull(message = "El comentario debe estar asociado a un vídeo")
     @JsonIgnoreProperties({"comments", "captions"})
     @JsonIgnore

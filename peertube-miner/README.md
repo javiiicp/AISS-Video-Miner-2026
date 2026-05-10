@@ -58,8 +58,6 @@ El microservicio garantiza una comunicación REST limpia:
 Hemos implementado una suite de pruebas exhaustiva para asegurar la fiabilidad del adaptador:
 
 *   **Tests de Integración (MockMvc)**: Validan el comportamiento de los endpoints y el respeto a los parámetros por defecto.
-*   **Tests de Servicio (Mockito)**: Prueban la lógica de extracción, filtrado manual y manejo de errores de red.
-*   **Validación de Modelos**: Pruebas unitarias que aseguran la correcta construcción de los objetos internos.
 
 ---
 
