@@ -13,7 +13,6 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 
 /**
@@ -25,7 +24,6 @@ public class Comment {
 
     @Id
     @JsonProperty("id")
-    @NotEmpty(message = "El id del comentario no puede estar vacío")
     private String id;
 
     @JsonProperty("text")
@@ -81,6 +79,13 @@ public class Comment {
     public String getVideoId() {
         return video != null ? video.getId() : null;
 }
+
+    public void setVideoId(String videoId) {
+        if (this.video == null) {
+            this.video = new Video();
+        }
+        this.video.setId(videoId);
+    }
 
     public Video getVideo() {
     return video;

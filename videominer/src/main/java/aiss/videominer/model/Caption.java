@@ -25,7 +25,6 @@ public class Caption {
 
     @Id
     @JsonProperty("id")
-    @NotEmpty(message = "El id del subtítulo no puede estar vacío")
     private String id;
 
     @JsonProperty("link")
@@ -76,6 +75,13 @@ public class Caption {
     @JsonProperty("videoId")
     public String getVideoId() {
         return video != null ? video.getId() : null;
+    }
+
+    public void setVideoId(String videoId) {
+        if (this.video == null) {
+            this.video = new Video();
+        }
+        this.video.setId(videoId);
     }
 
     public Video getVideo() {
