@@ -59,7 +59,7 @@ public class ApiChannelService {
                 
                 // Enriquecimiento relacional usando servicios especializados
                 video.setAuthor(userService.getAuthor(extVideo.getOwner()));
-                video.setComments(commentService.getComments(extVideo.getTags(), video.getId()));
+                video.setComments(commentService.getComments(extVideo.getTags(), video.getId(), maxComments));
                 video.setCaptions(subtitleService.getSubtitles(video.getId()));
 
                 listaVideosLimpia.add(video);
